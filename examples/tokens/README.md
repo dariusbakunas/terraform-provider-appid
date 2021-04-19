@@ -1,4 +1,4 @@
-# AppID Config Tokens Datasource Exmaple
+# AppID Config Tokens Datasource Example
 
 Make sure `IAM_API_KEY`, `APPID_BASE_URL` and `IAM_BASE_URL` environment variables are set, then initialize:
 
