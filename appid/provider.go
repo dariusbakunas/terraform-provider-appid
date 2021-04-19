@@ -24,9 +24,15 @@ func Provider() *schema.Provider {
 			"iam_api_key": {
 				Type:        schema.TypeString,
 				Description: "IBM Cloud IAM api key",
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("IAM_API_KEY", nil),
+			},
+			"iam_access_token": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"iam_api_key"},
+				DefaultFunc:   schema.EnvDefaultFunc("IAM_ACCESS_TOKEN", nil),
 			},
 			"appid_base_url": {
 				Type:        schema.TypeString,
@@ -112,8 +118,16 @@ func getAccessToken(ctx context.Context, url string, apiKey string) (*TokenRespo
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics
+	var iamApiKey, iamAccesToken string
 
-	iamApiKey := d.Get("iam_api_key").(string)
+	if apiKey, ok := d.GetOk("iam_api_key"); ok {
+		iamApiKey = apiKey.(string)
+	}
+
+	if accessToken, ok := d.GetOk("iam_access_token"); ok {
+		iamAccesToken = accessToken.(string)
+	}
+
 	appIDBaseURL := d.Get("appid_base_url").(string)
 	iamBaseURL, err := url.Parse(d.Get("iam_base_url").(string))
 
@@ -127,14 +141,22 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		return nil, diag.FromErr(err)
 	}
 
-	token, err := getAccessToken(ctx, tokenURL.String(), iamApiKey)
+	if iamAccesToken == "" {
+		if iamApiKey == "" {
+			return nil, diag.Errorf("iam_api_key or iam_access_token must be specified")
+		}
 
-	if err != nil {
-		return nil, diag.FromErr(err)
+		token, err := getAccessToken(ctx, tokenURL.String(), iamApiKey)
+
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
+
+		iamAccesToken = token.AccessToken
 	}
 
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: token.AccessToken},
+		&oauth2.Token{AccessToken: iamAccesToken},
 	)
 
 	tc := oauth2.NewClient(ctx, ts)
