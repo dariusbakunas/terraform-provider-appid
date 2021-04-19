@@ -28,7 +28,7 @@ type Client struct {
 	baseURL   *url.URL
 	userAgent string
 
-	Config *ConfigService
+	ConfigAPI *ConfigService
 }
 
 func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
@@ -51,7 +51,7 @@ func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
 
 	baseService := service{c}
 
-	c.Config = (*ConfigService)(&baseService)
+	c.ConfigAPI = (*ConfigService)(&baseService)
 
 	return c, nil
 }

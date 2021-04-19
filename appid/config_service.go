@@ -7,13 +7,15 @@ import (
 
 type ConfigService service
 
-type IDTokenClaim struct {
-	Source      string `json:"source"`
-	SourceClaim string `json:"sourceClaim,omitempty"`
+type TokenClaim struct {
+	Source           string `json:"source"`
+	SourceClaim      string `json:"sourceClaim,omitempty"`
+	DestinationClaim string `json:"destinationClaim,omitempty"`
 }
 
 type TokensResponse struct {
-	IDTokenClaims []IDTokenClaim `json:"idTokenClaims"`
+	IDTokenClaims     []TokenClaim `json:"idTokenClaims"`
+	AccessTokenClaims []TokenClaim `json:"accessTokenClaims"`
 }
 
 func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*TokensResponse, error) {
