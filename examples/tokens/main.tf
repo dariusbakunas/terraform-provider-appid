@@ -2,7 +2,7 @@ terraform {
   required_providers {
     appid = {
       version = "0.1"
-      source  = "ibm.com/watson-health/appid"
+      source  = "us.ibm.com/watson-health/appid"
     }
   }
 }

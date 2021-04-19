@@ -1,5 +1,5 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
-HOSTNAME=ibm.com
+HOSTNAME=us.ibm.com
 NAMESPACE=watson-health
 NAME=appid
 BINARY=terraform-provider-${NAME}

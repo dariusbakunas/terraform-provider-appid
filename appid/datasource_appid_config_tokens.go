@@ -15,6 +15,26 @@ func dataSourceAppIDConfigTokens() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"access_token_expires_in": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"refresh_token_expires_in": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"anonymous_token_expires_in": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"anonymous_access_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"refresh_token_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
 			"access_token_claims": {
 				Type:     schema.TypeSet,
 				Computed: true,
@@ -99,6 +119,36 @@ func dataSourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData
 
 	if err := d.Set("id_token_claims", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
 		return diag.FromErr(err)
+	}
+
+	if tokenConfig.Access != nil {
+		if err := d.Set("access_token_expires_in", tokenConfig.Access.ExpiresIn); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	if tokenConfig.Refresh != nil {
+		if err := d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn); err != nil {
+			return diag.FromErr(err)
+		}
+
+		if tokenConfig.Refresh.Enabled != nil {
+			if err := d.Set("refresh_token_enabled", *tokenConfig.Refresh.Enabled); err != nil {
+				return diag.FromErr(err)
+			}
+		}
+	}
+
+	if tokenConfig.AnonymousAccess != nil {
+		if err := d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn); err != nil {
+			return diag.FromErr(err)
+		}
+
+		if tokenConfig.AnonymousAccess.Enabled != nil {
+			if err := d.Set("anonymous_access_enabled", *tokenConfig.AnonymousAccess.Enabled); err != nil {
+				return diag.FromErr(err)
+			}
+		}
 	}
 
 	return diags
