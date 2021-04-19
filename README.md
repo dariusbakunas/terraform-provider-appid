@@ -10,7 +10,7 @@ Check `examples` folder for working examples
 
 ### Requirements
 
-- [Terraform](https://www.terraform.io/downloads.html) 0.15.0+ (to run acceptance tests)
+- [Terraform](https://www.terraform.io/downloads.html) 0.13.6+ (to run acceptance tests)
 - [Go](https://golang.org/doc/install) 1.15.8+ (to build the provider plugin)
 
 ### Quick Start
