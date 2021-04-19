@@ -1,6 +1,6 @@
 # AppID Config Tokens Datasource Example
 
-Make sure `IAM_API_KEY`, `APPID_BASE_URL` and `IAM_BASE_URL` environment variables are set, then initialize:
+Make sure `IAM_API_KEY` environment variable is set, then initialize:
 
 ```bash
 terraform init
