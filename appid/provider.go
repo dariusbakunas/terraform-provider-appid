@@ -32,6 +32,7 @@ func Provider() *schema.Provider {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"iam_api_key"},
+				Sensitive:     true,
 				DefaultFunc:   schema.EnvDefaultFunc("IAM_ACCESS_TOKEN", nil),
 			},
 			"appid_base_url": {
