@@ -29,20 +29,33 @@ func resourceAppIDConfigTokens() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"anonymous_token_expires_in": {
+				Type:     schema.TypeInt,
+				Computed: true,
+				Optional: true,
+			},
+			"anonymous_access_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
+			"refresh_token_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 		},
 	}
 }
 
 func resourceAppIDConfigTokensCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
 	tenantID := d.Get("tenant_id").(string)
 
 	c := m.(*Client)
 
 	input := expandTokenConfig(d)
 
-	log.Printf("[DEBUG] Applying AppID token config: %+v", input)
+	log.Printf("[DEBUG] Applying AppID token config: %v", input)
 	err := c.ConfigAPI.UpdateTokens(ctx, tenantID, input)
 
 	if err != nil {
@@ -51,7 +64,7 @@ func resourceAppIDConfigTokensCreate(ctx context.Context, d *schema.ResourceData
 
 	d.SetId(tenantID)
 
-	return diags
+	return resourceAppIDConfigTokensRead(ctx, d, m)
 }
 
 func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -67,6 +80,8 @@ func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, 
 		return diag.FromErr(err)
 	}
 
+	log.Printf("[DEBUG] Received AppID token config: %v", tokenConfig)
+
 	if tokenConfig.Access != nil {
 		if err := d.Set("access_token_expires_in", tokenConfig.Access.ExpiresIn); err != nil {
 			return diag.FromErr(err)
@@ -74,7 +89,19 @@ func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if tokenConfig.Refresh != nil {
+		if err := d.Set("refresh_token_enabled", *tokenConfig.Refresh.Enabled); err != nil {
+			return diag.FromErr(err)
+		}
 		if err := d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	if tokenConfig.AnonymousAccess != nil {
+		if err := d.Set("anonymous_access_enabled", *tokenConfig.AnonymousAccess.Enabled); err != nil {
+			return diag.FromErr(err)
+		}
+		if err := d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn); err != nil {
 			return diag.FromErr(err)
 		}
 	}
@@ -91,10 +118,37 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 		}
 	}
 
+	if anonymousExpiresIn, ok := d.GetOk("anonymous_token_expires_in"); ok {
+		config.AnonymousAccess = &AnonymusAccessConfig{
+			ExpiresIn: anonymousExpiresIn.(int),
+		}
+	}
+
 	if refreshExpiresIn, ok := d.GetOk("refresh_token_expires_in"); ok {
 		config.Refresh = &RefreshTokenConfig{
 			ExpiresIn: refreshExpiresIn.(int),
 		}
+	}
+
+	// can't really use GetOk with bool
+	anonymousAccessEnabled := d.Get("anonymous_access_enabled")
+
+	if anonymousAccessEnabled != nil {
+		if config.AnonymousAccess == nil {
+			config.AnonymousAccess = &AnonymusAccessConfig{}
+		}
+
+		config.AnonymousAccess.Enabled = getBoolPtr(anonymousAccessEnabled.(bool))
+	}
+
+	refreshTokenEnabled := d.Get("refresh_token_enabled")
+
+	if refreshTokenEnabled != nil {
+		if config.Refresh == nil {
+			config.Refresh = &RefreshTokenConfig{}
+		}
+
+		config.Refresh.Enabled = getBoolPtr(refreshTokenEnabled.(bool))
 	}
 
 	return config
@@ -108,7 +162,7 @@ func resourceAppIDConfigTokensUpdate(ctx context.Context, d *schema.ResourceData
 	// AppID resets value to default if it is not provided, so we can't do partial updates
 	input := expandTokenConfig(d)
 
-	log.Printf("[DEBUG] Updating AppID token config: %+v", input)
+	log.Printf("[DEBUG] Updating AppID token config: %#v", input)
 	err := c.ConfigAPI.UpdateTokens(ctx, tenantID, input)
 
 	if err != nil {

@@ -2,22 +2,23 @@ package appid
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
 type ConfigService service
 type AccessTokenConfig struct {
-	ExpiresIn int `json:"expires_in"`
+	ExpiresIn int `json:"expires_in,omitempty"`
 }
 
 type RefreshTokenConfig struct {
 	Enabled   *bool `json:"enabled,omitempty"`
-	ExpiresIn int   `json:"expires_in"`
+	ExpiresIn int   `json:"expires_in,omitempty"`
 }
 
 type AnonymusAccessConfig struct {
 	Enabled   *bool `json:"enabled,omitempty"`
-	ExpiresIn int   `json:"expires_in"`
+	ExpiresIn int   `json:"expires_in,omitempty"`
 }
 type TokenClaim struct {
 	Source           string `json:"source"`
@@ -31,6 +32,11 @@ type TokenConfig struct {
 	AnonymousAccess   *AnonymusAccessConfig `json:"anonymousAccess,omitempty"`
 	IDTokenClaims     []TokenClaim          `json:"idTokenClaims"`
 	AccessTokenClaims []TokenClaim          `json:"accessTokenClaims"`
+}
+
+func (c *TokenConfig) String() string {
+	str, _ := json.Marshal(c)
+	return string(str)
 }
 
 func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*TokenConfig, error) {
