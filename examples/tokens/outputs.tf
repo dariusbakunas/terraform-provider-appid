@@ -1,3 +1,3 @@
-output "access_token_claims" {
+output "token_config" {
   value = data.appid_config_tokens.tokens
 }
