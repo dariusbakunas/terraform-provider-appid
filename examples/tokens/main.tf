@@ -15,4 +15,5 @@ provider "appid" {
 resource "appid_config_tokens" "tokens" {
     tenant_id = var.tenant_id
     access_token_expires_in = 7200
+    refresh_token_expires_in = 7200
 }
