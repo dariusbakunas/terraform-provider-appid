@@ -12,6 +12,7 @@ provider "appid" {
     appid_base_url = "https://us-south.appid.cloud.ibm.com"
 }
 
-data "appid_config_tokens" "tokens" {
+resource "appid_config_tokens" "tokens" {
     tenant_id = var.tenant_id
+    access_token_expires_in = 7200
 }

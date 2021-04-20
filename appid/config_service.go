@@ -25,7 +25,7 @@ type TokenClaim struct {
 	DestinationClaim string `json:"destinationClaim,omitempty"`
 }
 
-type TokensResponse struct {
+type TokenConfig struct {
 	Access            *AccessTokenConfig    `json:"access,omitempty"`
 	Refresh           *RefreshTokenConfig   `json:"refresh,omitempty"`
 	AnonymousAccess   *AnonymusAccessConfig `json:"anonymousAccess,omitempty"`
@@ -33,7 +33,7 @@ type TokensResponse struct {
 	AccessTokenClaims []TokenClaim          `json:"accessTokenClaims"`
 }
 
-func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*TokensResponse, error) {
+func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*TokenConfig, error) {
 	path := fmt.Sprintf("/management/v4/%s/config/tokens", tenantID)
 
 	req, err := s.client.NewRequest("GET", path, nil)
@@ -41,7 +41,7 @@ func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*Tokens
 		return nil, err
 	}
 
-	resp := &TokensResponse{}
+	resp := &TokenConfig{}
 
 	_, err = s.client.Do(ctx, req, resp)
 	if err != nil {
@@ -49,4 +49,18 @@ func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*Tokens
 	}
 
 	return resp, nil
+}
+
+func (s *ConfigService) UpdateTokens(ctx context.Context, tenantID string, config *TokenConfig) error {
+	path := fmt.Sprintf("/management/v4/%s/config/tokens", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, config)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, config)
+
+	return err
 }
