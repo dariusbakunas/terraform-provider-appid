@@ -85,12 +85,15 @@ func flattenTokenClaims(c []TokenClaim) []interface{} {
 
 	for _, v := range c {
 		claim := map[string]interface{}{
-			"source":            v.Source,
-			"destination_claim": v.DestinationClaim,
+			"source": v.Source,
 		}
 
 		if v.SourceClaim != nil {
 			claim["source_claim"] = *v.SourceClaim
+		}
+
+		if v.DestinationClaim != nil {
+			claim["destination_claim"] = *v.DestinationClaim
 		}
 
 		s = append(s, claim)

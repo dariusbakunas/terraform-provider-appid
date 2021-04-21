@@ -62,7 +62,7 @@ func resourceAppIDConfigTokens() *schema.Resource {
 						},
 						"destination_claim": {
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
 						},
 					},
 				},
@@ -155,13 +155,16 @@ func expandTokenClaims(l []interface{}) []TokenClaim {
 		cMap := item.(map[string]interface{})
 
 		claim := TokenClaim{
-			Source:           cMap["source"].(string),
-			DestinationClaim: cMap["destination_claim"].(string),
+			Source: cMap["source"].(string),
 		}
 
-		// source_claim is optional
+		// source_claim and destination_claim are optional
 		if sClaim, ok := cMap["source_claim"]; ok {
 			claim.SourceClaim = getStringPtr(sClaim.(string))
+		}
+
+		if dClaim, ok := cMap["destination_claim"]; ok {
+			claim.DestinationClaim = getStringPtr(dClaim.(string))
 		}
 
 		result[i] = claim

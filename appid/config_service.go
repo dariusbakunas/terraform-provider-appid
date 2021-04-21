@@ -23,7 +23,7 @@ type AnonymusAccessConfig struct {
 type TokenClaim struct {
 	Source           string  `json:"source"`
 	SourceClaim      *string `json:"sourceClaim,omitempty"`
-	DestinationClaim string  `json:"destinationClaim,omitempty"`
+	DestinationClaim *string `json:"destinationClaim,omitempty"`
 }
 
 type TokenConfig struct {
