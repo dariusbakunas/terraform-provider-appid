@@ -67,6 +67,28 @@ func resourceAppIDConfigTokens() *schema.Resource {
 					},
 				},
 			},
+			"id_token_claim": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"saml", "cloud_directory", "appid_custom", "facebook", "google", "ibmid", "attributes", "roles"}, false),
+						},
+						"source_claim": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"destination_claim": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -135,11 +157,11 @@ func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, 
 		}
 	}
 
-	// if tokenConfig.IDTokenClaims != nil {
-	// 	if err := d.Set("id_token_claim", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
-	// 		return diag.FromErr(err)
-	// 	}
-	// }
+	if tokenConfig.IDTokenClaims != nil {
+		if err := d.Set("id_token_claim", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 
 	return diags
 }
@@ -219,9 +241,9 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 		config.AccessTokenClaims = expandTokenClaims(accessClaims.(*schema.Set).List())
 	}
 
-	// if idClaims, ok := d.GetOk("id_token_claim"); ok {
-	// 	config.IDTokenClaims = expandTokenClaims(idClaims.(*schema.Set).List())
-	// }
+	if idClaims, ok := d.GetOk("id_token_claim"); ok {
+		config.IDTokenClaims = expandTokenClaims(idClaims.(*schema.Set).List())
+	}
 
 	return config
 }
