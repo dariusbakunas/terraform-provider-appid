@@ -23,6 +23,7 @@ resource "appid_config_tokens" "destination" {
     anonymous_access_enabled = data.appid_config_tokens.source.anonymous_access_enabled
     anonymous_token_expires_in = data.appid_config_tokens.source.anonymous_token_expires_in
     refresh_token_enabled = data.appid_config_tokens.source.refresh_token_enabled    
+    refresh_token_expires_in = data.appid_config_tokens.source.refresh_token_expires_in    
 
     dynamic "access_token_claim" {
         for_each = data.appid_config_tokens.source.access_token_claim
