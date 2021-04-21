@@ -3,3 +3,6 @@ variable "tenant_id" {
   default = ""
   description = "AppID tenant ID"
 }
+variable "iam_access_token" {
+    type = string
+}

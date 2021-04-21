@@ -21,9 +21,9 @@ type AnonymusAccessConfig struct {
 	ExpiresIn int   `json:"expires_in,omitempty"`
 }
 type TokenClaim struct {
-	Source           string `json:"source"`
-	SourceClaim      string `json:"sourceClaim,omitempty"`
-	DestinationClaim string `json:"destinationClaim,omitempty"`
+	Source           string  `json:"source"`
+	SourceClaim      *string `json:"sourceClaim,omitempty"`
+	DestinationClaim string  `json:"destinationClaim,omitempty"`
 }
 
 type TokenConfig struct {

@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceAppIDConfigTokens() *schema.Resource {
@@ -43,6 +44,28 @@ func resourceAppIDConfigTokens() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Computed: true,
+			},
+			"access_token_claim": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source": {
+							Type:         schema.TypeString,
+							Required:     true,
+							ValidateFunc: validation.StringInSlice([]string{"saml", "cloud_directory", "appid_custom", "facebook", "google", "ibmid", "attributes", "roles"}, false),
+						},
+						"source_claim": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"destination_claim": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -106,7 +129,45 @@ func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, 
 		}
 	}
 
+	if tokenConfig.AccessTokenClaims != nil {
+		if err := d.Set("access_token_claim", flattenTokenClaims(tokenConfig.AccessTokenClaims)); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	// if tokenConfig.IDTokenClaims != nil {
+	// 	if err := d.Set("id_token_claim", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
+	// 		return diag.FromErr(err)
+	// 	}
+	// }
+
 	return diags
+}
+
+func expandTokenClaims(l []interface{}) []TokenClaim {
+	if len(l) == 0 {
+		return nil
+	}
+
+	result := make([]TokenClaim, len(l))
+
+	for i, item := range l {
+		cMap := item.(map[string]interface{})
+
+		claim := TokenClaim{
+			Source:           cMap["source"].(string),
+			DestinationClaim: cMap["destination_claim"].(string),
+		}
+
+		// source_claim is optional
+		if sClaim, ok := cMap["source_claim"]; ok {
+			claim.SourceClaim = getStringPtr(sClaim.(string))
+		}
+
+		result[i] = claim
+	}
+
+	return result
 }
 
 func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
@@ -150,6 +211,14 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 
 		config.Refresh.Enabled = getBoolPtr(refreshTokenEnabled.(bool))
 	}
+
+	if accessClaims, ok := d.GetOk("access_token_claim"); ok {
+		config.AccessTokenClaims = expandTokenClaims(accessClaims.(*schema.Set).List())
+	}
+
+	// if idClaims, ok := d.GetOk("id_token_claim"); ok {
+	// 	config.IDTokenClaims = expandTokenClaims(idClaims.(*schema.Set).List())
+	// }
 
 	return config
 }

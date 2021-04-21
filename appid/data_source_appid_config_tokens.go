@@ -35,7 +35,7 @@ func dataSourceAppIDConfigTokens() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"access_token_claims": {
+			"access_token_claim": {
 				Type:     schema.TypeSet,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -56,7 +56,7 @@ func dataSourceAppIDConfigTokens() *schema.Resource {
 					},
 				},
 			},
-			"id_token_claims": {
+			"id_token_claim": {
 				Type:     schema.TypeSet,
 				Computed: true,
 				Elem: &schema.Resource{
@@ -86,8 +86,11 @@ func flattenTokenClaims(c []TokenClaim) []interface{} {
 	for _, v := range c {
 		claim := map[string]interface{}{
 			"source":            v.Source,
-			"source_claim":      v.SourceClaim,
 			"destination_claim": v.DestinationClaim,
+		}
+
+		if v.SourceClaim != nil {
+			claim["source_claim"] = *v.SourceClaim
 		}
 
 		s = append(s, claim)
@@ -112,13 +115,15 @@ func dataSourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData
 	d.SetId(tenantID)
 
 	if tokenConfig.AccessTokenClaims != nil {
-		if err := d.Set("access_token_claims", flattenTokenClaims(tokenConfig.AccessTokenClaims)); err != nil {
+		if err := d.Set("access_token_claim", flattenTokenClaims(tokenConfig.AccessTokenClaims)); err != nil {
 			return diag.FromErr(err)
 		}
 	}
 
-	if err := d.Set("id_token_claims", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
-		return diag.FromErr(err)
+	if tokenConfig.IDTokenClaims != nil {
+		if err := d.Set("id_token_claim", flattenTokenClaims(tokenConfig.IDTokenClaims)); err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	if tokenConfig.Access != nil {
