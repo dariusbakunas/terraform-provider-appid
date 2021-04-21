@@ -14,7 +14,7 @@ provider "appid" {
 }
 
 
-resource "appid_config_tokens" "tokens" {
+resource "appid_token_config" "tokens" {
     tenant_id = var.tenant_id
     access_token_expires_in = 7200    
     anonymous_access_enabled = true
