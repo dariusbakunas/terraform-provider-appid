@@ -9,12 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func resourceAppIDConfigTokens() *schema.Resource {
+func resourceAppIDTokenConfig() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceAppIDConfigTokensCreate,
-		ReadContext:   resourceAppIDConfigTokensRead,
-		UpdateContext: resourceAppIDConfigTokensUpdate,
-		DeleteContext: resourceAppIDConfigTokensDelete,
+		CreateContext: resourceAppIDTokenConfigCreate,
+		ReadContext:   resourceAppIDTokenConfigRead,
+		UpdateContext: resourceAppIDTokenConfigUpdate,
+		DeleteContext: resourceAppIDTokenConfigDelete,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:     schema.TypeString,
@@ -93,7 +93,7 @@ func resourceAppIDConfigTokens() *schema.Resource {
 	}
 }
 
-func resourceAppIDConfigTokensCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAppIDTokenConfigCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 
 	c := m.(*Client)
@@ -109,10 +109,10 @@ func resourceAppIDConfigTokensCreate(ctx context.Context, d *schema.ResourceData
 
 	d.SetId(tenantID)
 
-	return resourceAppIDConfigTokensRead(ctx, d, m)
+	return resourceAppIDTokenConfigRead(ctx, d, m)
 }
 
-func resourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
@@ -248,7 +248,7 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 	return config
 }
 
-func resourceAppIDConfigTokensUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAppIDTokenConfigUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 
 	c := m.(*Client)
@@ -263,10 +263,10 @@ func resourceAppIDConfigTokensUpdate(ctx context.Context, d *schema.ResourceData
 		return diag.FromErr(err)
 	}
 
-	return resourceAppIDConfigTokensRead(ctx, d, m)
+	return resourceAppIDTokenConfigRead(ctx, d, m)
 }
 
-func resourceAppIDConfigTokensDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAppIDTokenConfigDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	d.SetId("")
 

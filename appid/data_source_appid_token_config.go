@@ -7,9 +7,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceAppIDConfigTokens() *schema.Resource {
+func dataSourceAppIDTokenConfig() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceAppIDConfigTokensRead,
+		ReadContext: dataSourceAppIDTokenConfigRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:     schema.TypeString,
@@ -102,7 +102,7 @@ func flattenTokenClaims(c []TokenClaim) []interface{} {
 	return s
 }
 
-func dataSourceAppIDConfigTokensRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
