@@ -256,7 +256,7 @@ func resourceAppIDConfigTokensUpdate(ctx context.Context, d *schema.ResourceData
 	// AppID resets value to default if it is not provided, so we can't do partial updates
 	input := expandTokenConfig(d)
 
-	log.Printf("[DEBUG] Updating AppID token config: %#v", input)
+	log.Printf("[DEBUG] Updating AppID token config: %v", input)
 	err := c.ConfigAPI.UpdateTokens(ctx, tenantID, input)
 
 	if err != nil {
