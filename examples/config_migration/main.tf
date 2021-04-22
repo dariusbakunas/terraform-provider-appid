@@ -19,14 +19,14 @@ data "appid_token_config" "source" {
 
 resource "appid_token_config" "destination" {
     tenant_id = var.destination_tenant_id
-    access_token_expires_in = data.appid_config_tokens.source.access_token_expires_in
-    anonymous_access_enabled = data.appid_config_tokens.source.anonymous_access_enabled
-    anonymous_token_expires_in = data.appid_config_tokens.source.anonymous_token_expires_in
-    refresh_token_enabled = data.appid_config_tokens.source.refresh_token_enabled    
-    refresh_token_expires_in = data.appid_config_tokens.source.refresh_token_expires_in    
+    access_token_expires_in = data.appid_token_config.source.access_token_expires_in
+    anonymous_access_enabled = data.appid_token_config.source.anonymous_access_enabled
+    anonymous_token_expires_in = data.appid_token_config.source.anonymous_token_expires_in
+    refresh_token_enabled = data.appid_token_config.source.refresh_token_enabled    
+    refresh_token_expires_in = data.appid_token_config.source.refresh_token_expires_in    
 
     dynamic "access_token_claim" {
-        for_each = data.appid_config_tokens.source.access_token_claim
+        for_each = data.appid_token_config.source.access_token_claim
         content {
             source = access_token_claim.value["source"]
             source_claim = access_token_claim.value["source_claim"]
