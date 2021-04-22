@@ -62,7 +62,7 @@ func resourceAppIDTokenConfig() *schema.Resource {
 						},
 						"destination_claim": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 					},
 				},
