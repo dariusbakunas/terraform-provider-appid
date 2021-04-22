@@ -57,7 +57,7 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	c := m.(*Client)
 
-	app, err := c.ConfigAPI.GetApplication(ctx, tenantID, clientID)
+	app, err := c.ApplicationAPI.GetApplication(ctx, tenantID, clientID)
 
 	if err := d.Set("name", app.Name); err != nil {
 		return diag.FromErr(err)
