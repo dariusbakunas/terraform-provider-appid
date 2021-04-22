@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAccTokenConfigDataSource_basic(t *testing.T) {
@@ -22,6 +23,29 @@ func TestAccTokenConfigDataSource_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func TestFlattenTokenClaims(t *testing.T) {
+	testcases := []struct {
+		claims   []TokenClaim
+		expected []interface{}
+	}{
+		{
+			claims: []TokenClaim{
+				{Source: "appid_custom", SourceClaim: getStringPtr("sClaim"), DestinationClaim: getStringPtr("dClaim")},
+				{Source: "appid_custom", DestinationClaim: getStringPtr("dClaim")},
+			},
+			expected: []interface{}{
+				map[string]interface{}{"source": "appid_custom", "source_claim": "sClaim", "destination_claim": "dClaim"},
+				map[string]interface{}{"source": "appid_custom", "destination_claim": "dClaim"},
+			},
+		},
+	}
+
+	for _, c := range testcases {
+		actual := flattenTokenClaims(c.claims)
+		assert.Equal(t, actual, c.expected)
+	}
 }
 
 func testAccCheckTokenConfigDataSource() string {
