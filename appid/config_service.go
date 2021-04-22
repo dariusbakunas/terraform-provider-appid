@@ -30,8 +30,8 @@ type TokenConfig struct {
 	Access            *AccessTokenConfig    `json:"access,omitempty"`
 	Refresh           *RefreshTokenConfig   `json:"refresh,omitempty"`
 	AnonymousAccess   *AnonymusAccessConfig `json:"anonymousAccess,omitempty"`
-	IDTokenClaims     []TokenClaim          `json:"idTokenClaims"`
-	AccessTokenClaims []TokenClaim          `json:"accessTokenClaims"`
+	IDTokenClaims     []TokenClaim          `json:"idTokenClaims,omitempty"`
+	AccessTokenClaims []TokenClaim          `json:"accessTokenClaims,omitempty"`
 }
 
 func (c *TokenConfig) String() string {

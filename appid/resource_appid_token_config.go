@@ -266,8 +266,36 @@ func resourceAppIDTokenConfigUpdate(ctx context.Context, d *schema.ResourceData,
 	return resourceAppIDTokenConfigRead(ctx, d, m)
 }
 
+func tokenConfigDefaults() *TokenConfig {
+	return &TokenConfig{
+		Access: &AccessTokenConfig{
+			ExpiresIn: 3600,
+		},
+		Refresh: &RefreshTokenConfig{
+			Enabled:   getBoolPtr(false),
+			ExpiresIn: 2592000,
+		},
+		AnonymousAccess: &AnonymusAccessConfig{
+			Enabled:   getBoolPtr(true),
+			ExpiresIn: 2592000,
+		},
+	}
+}
+
 func resourceAppIDTokenConfigDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
+	c := m.(*Client)
+	tenantID := d.Get("tenant_id").(string)
+
+	config := tokenConfigDefaults()
+
+	log.Printf("[DEBUG] Resetting AppID token config: %v", config)
+	err := c.ConfigAPI.UpdateTokens(ctx, tenantID, config)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	d.SetId("")
 
 	return diags
