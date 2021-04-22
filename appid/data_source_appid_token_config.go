@@ -115,8 +115,6 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	}
 
-	d.SetId(tenantID)
-
 	if tokenConfig.AccessTokenClaims != nil {
 		if err := d.Set("access_token_claim", flattenTokenClaims(tokenConfig.AccessTokenClaims)); err != nil {
 			return diag.FromErr(err)
@@ -158,6 +156,8 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 			}
 		}
 	}
+
+	d.SetId(tenantID)
 
 	return diags
 }
