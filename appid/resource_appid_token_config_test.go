@@ -45,7 +45,7 @@ func testAccCheckAppIDTokenConfigCreate(tenantID string) string {
 		resource "appid_token_config" "test_config" {
 			tenant_id = "%s"
 			access_token_expires_in = 7200    
-    		anonymous_access_enabled = false
+			anonymous_access_enabled = false
 			anonymous_token_expires_in = 7200
 			refresh_token_enabled = true
 			refresh_token_expires_in = 7200
