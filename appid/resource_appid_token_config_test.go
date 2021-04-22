@@ -26,6 +26,7 @@ func TestAccAppIDTokenConfig_Basic(t *testing.T) {
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "refresh_token_enabled", "true"),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "refresh_token_expires_in", "7200"),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "access_token_claim.#", "2"),
+					resource.TestCheckResourceAttr("appid_token_config.test_config", "id_token_claim.#", "0"),
 					// the order here is deterministic: https://github.com/hashicorp/terraform-plugin-sdk/blob/main/helper/schema/set.go#L268
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "access_token_claim.0.destination_claim", "employeeId"),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "access_token_claim.0.source", "appid_custom"),
