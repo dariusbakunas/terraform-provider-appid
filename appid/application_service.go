@@ -55,7 +55,7 @@ func (s *ApplicationService) ListApplications(ctx context.Context, tenantID stri
 	}
 
 	resp := &struct {
-		Applications []Application `json:"appliations"`
+		Applications []Application `json:"applications"`
 	}{}
 
 	_, err = s.client.Do(ctx, req, resp)
