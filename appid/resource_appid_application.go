@@ -33,8 +33,9 @@ func resourceAppIDApplication() *schema.Resource {
 			},
 			"type": {
 				Type:         schema.TypeString,
-				Required:     true,
 				ForceNew:     true,
+				Optional:     true,
+				Default:      "regularwebapp",
 				ValidateFunc: validation.StringInSlice([]string{"regularwebapp", "singlepageapp"}, false),
 			},
 			"secret": {
@@ -78,6 +79,11 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, app.ClientID))
+
+	if err := d.Set("client_id", app.ClientID); err != nil {
+		return diag.FromErr(err)
+	}
+
 	return dataSourceAppIDApplicationRead(ctx, d, m)
 }
 
