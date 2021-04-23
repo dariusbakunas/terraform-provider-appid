@@ -3,6 +3,7 @@ package appid
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -45,6 +46,20 @@ func dataSourceAppIDApplication() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"roles": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Computed: true,
+			},
+			"scopes": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Computed: true,
+			},
 		},
 	}
 }
@@ -58,6 +73,23 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	c := m.(*Client)
 
 	app, err := c.ApplicationAPI.GetApplication(ctx, tenantID, clientID)
+
+	log.Printf("[DEBUG] Read application: %+v", app)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	scopes, err := c.ApplicationAPI.GetApplicationScopes(ctx, tenantID, clientID)
+	log.Printf("[DEBUG] Read application scopes: %v", scopes)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := d.Set("name", app.Name); err != nil {
+		return diag.FromErr(err)
+	}
 
 	if err := d.Set("name", app.Name); err != nil {
 		return diag.FromErr(err)
@@ -85,8 +117,10 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	}
 
-	if err != nil {
-		return diag.FromErr(err)
+	if scopes != nil {
+		if err := d.Set("scopes", scopes); err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, clientID))
