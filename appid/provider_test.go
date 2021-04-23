@@ -8,20 +8,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const testResourcePrefix = "tf-acc-test-"
+const testResourcePrefix = "tf_acc_test"
 
 var testAccProviders map[string]*schema.Provider
 var testAccProvider *schema.Provider
 
-var tenantID string
+var testTenantID string
 var appIDBaseURL string
 var iamBaseURL string
 
 func init() {
-	tenantID = os.Getenv("APPID_TENANT_ID")
-	if tenantID == "" {
-		tenantID = "24565a1c-2dac-409b-a60c-0ff130c6943c"
-		log.Printf("[INFO] Set the environment variable APPID_TENANT_ID for testing AppID resources else it is set to default '%s'", tenantID)
+	testTenantID = os.Getenv("APPID_TENANT_ID")
+	if testTenantID == "" {
+		testTenantID = "24565a1c-2dac-409b-a60c-0ff130c6943c"
+		log.Printf("[INFO] Set the environment variable APPID_TENANT_ID for testing AppID resources else it is set to default '%s'", testTenantID)
 	}
 
 	appIDBaseURL = os.Getenv("APPID_BASE_URL")

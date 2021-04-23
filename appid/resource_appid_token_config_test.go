@@ -17,9 +17,9 @@ func TestAccAppIDTokenConfig_Basic(t *testing.T) {
 		CheckDestroy: testAccCheckTokenConfigDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckAppIDTokenConfigCreate(tenantID),
+				Config: testAccCheckAppIDTokenConfigCreate(testTenantID),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("appid_token_config.test_config", "tenant_id", tenantID),
+					resource.TestCheckResourceAttr("appid_token_config.test_config", "tenant_id", testTenantID),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "access_token_expires_in", "7200"),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "anonymous_access_enabled", "false"),
 					resource.TestCheckResourceAttr("appid_token_config.test_config", "anonymous_token_expires_in", "7200"),
