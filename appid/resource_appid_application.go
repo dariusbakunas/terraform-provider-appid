@@ -109,10 +109,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, app.ClientID))
-
-	if err := d.Set("client_id", app.ClientID); err != nil {
-		return diag.FromErr(err)
-	}
+	d.Set("client_id", app.ClientID)
 
 	return dataSourceAppIDApplicationRead(ctx, d, m)
 }

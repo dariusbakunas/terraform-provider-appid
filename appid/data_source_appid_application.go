@@ -92,8 +92,8 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	d.Set("discovery_endpoint", app.DiscoveryEndpoint)
 	d.Set("type", app.Type)
 
-	if scopes != nil {
-		d.Set("scopes", scopes)
+	if err := d.Set("scopes", scopes); err != nil {
+		return diag.FromErr(err)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, clientID))
