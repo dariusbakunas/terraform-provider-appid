@@ -71,6 +71,13 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	name := d.Get("name").(string)
 	appType := d.Get("type").(string)
 
+	var scopes = make([]string, 0)
+	if data, ok := d.GetOk("scopes"); ok {
+		for _, scope := range data.([]interface{}) {
+			scopes = append(scopes, scope.(string))
+		}
+	}
+
 	c := m.(*Client)
 
 	input := &CreateApplicationInput{
@@ -83,6 +90,22 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 
 	if err != nil {
 		return diag.FromErr(err)
+	}
+
+	if len(scopes) != 0 {
+		_, err := c.ApplicationAPI.SetApplicationScopes(ctx, tenantID, app.ClientID, scopes)
+
+		if err != nil {
+			// this is not ideal, but we have to delete created app otherwise next apply will fail
+			// another option would be adding separate application_scopes resource
+			deleteErr := c.ApplicationAPI.DeleteApplication(ctx, tenantID, app.ClientID)
+
+			if deleteErr != nil {
+				log.Printf("[WARN] Failed cleaning up partially created application: %s/%s", app.TenantID, app.ClientID)
+			}
+
+			return diag.FromErr(err)
+		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, app.ClientID))

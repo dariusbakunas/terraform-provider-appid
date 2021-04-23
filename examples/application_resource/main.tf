@@ -17,6 +17,7 @@ resource "appid_application" "app" {
   tenant_id = var.tenant_id
   name = "test-tf-application"  
   type = "singlepageapp"
+  scopes = ["test_scope_1", "test_scope_2", "test_scope_3"]
 }
 
 output "application" {

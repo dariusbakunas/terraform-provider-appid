@@ -128,6 +128,34 @@ func (s *ApplicationService) UpdateApplication(ctx context.Context, tenantID str
 	return resp, nil
 }
 
+func (s *ApplicationService) SetApplicationScopes(ctx context.Context, tenantID string, clientID string, scopes []string) ([]string, error) {
+	path := fmt.Sprintf("/management/v4/%s/applications/%s/scopes", tenantID, clientID)
+
+	input := struct {
+		Scopes []string `json:"scopes"`
+	}{
+		Scopes: scopes,
+	}
+
+	req, err := s.client.NewRequest("PUT", path, input)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &struct {
+		Scopes []string `json:"scopes"`
+	}{
+		Scopes: scopes,
+	}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Scopes, nil
+}
+
 func (s *ApplicationService) DeleteApplication(ctx context.Context, tenantID string, clientID string) error {
 	path := fmt.Sprintf("/management/v4/%s/applications/%s", tenantID, clientID)
 
