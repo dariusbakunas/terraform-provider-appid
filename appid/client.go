@@ -147,10 +147,14 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		return resp, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(v)
+	switch v := v.(type) {
+	case nil:
+	default:
+		err = json.NewDecoder(resp.Body).Decode(v)
 
-	if err == io.EOF {
-		err = nil // ignore EOF errors caused by empty response body
+		if err == io.EOF {
+			err = nil // ignore EOF errors caused by empty response body
+		}
 	}
 
 	return resp, err
