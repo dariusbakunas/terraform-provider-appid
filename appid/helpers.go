@@ -9,3 +9,11 @@ func getStringPtr(s string) *string {
 	val := s
 	return &val
 }
+
+func flattenStringList(list []string) []interface{} {
+	vs := make([]interface{}, len(list))
+	for i, v := range list {
+		vs[i] = v
+	}
+	return vs
+}
