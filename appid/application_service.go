@@ -46,6 +46,26 @@ func (s *ApplicationService) GetApplication(ctx context.Context, tenantID string
 	return resp, nil
 }
 
+func (s *ApplicationService) ListApplications(ctx context.Context, tenantID string) ([]Application, error) {
+	path := fmt.Sprintf("/management/v4/%s/applications", tenantID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &struct {
+		Applications []Application `json:"appliations"`
+	}{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Applications, nil
+}
+
 func (s *ApplicationService) GetApplicationScopes(ctx context.Context, tenantID string, clientID string) ([]string, error) {
 	path := fmt.Sprintf("/management/v4/%s/applications/%s/scopes", tenantID, clientID)
 

@@ -99,12 +99,14 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 			// this is not ideal, but we have to delete created app otherwise next apply will fail
 			// another option would be adding separate application_scopes resource
 			deleteErr := c.ApplicationAPI.DeleteApplication(ctx, tenantID, app.ClientID)
+			diags := diag.FromErr(err)
 
 			if deleteErr != nil {
 				log.Printf("[WARN] Failed cleaning up partially created application: %s/%s", app.TenantID, app.ClientID)
+				diags = append(diags, diag.FromErr(deleteErr)...)
 			}
 
-			return diag.FromErr(err)
+			return diags
 		}
 	}
 

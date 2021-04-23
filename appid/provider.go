@@ -52,8 +52,9 @@ func Provider() *schema.Provider {
 			"appid_application":  resourceAppIDApplication(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"appid_token_config": dataSourceAppIDTokenConfig(),
-			"appid_application":  dataSourceAppIDApplication(),
+			"appid_token_config":    dataSourceAppIDTokenConfig(),
+			"appid_application":     dataSourceAppIDApplication(),
+			"appid_application_ids": dataSourceAppIDApplicationIDs(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
