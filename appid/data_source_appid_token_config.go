@@ -128,32 +128,22 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if tokenConfig.Access != nil {
-		if err := d.Set("access_token_expires_in", tokenConfig.Access.ExpiresIn); err != nil {
-			return diag.FromErr(err)
-		}
+		d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn)
 	}
 
 	if tokenConfig.Refresh != nil {
-		if err := d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn); err != nil {
-			return diag.FromErr(err)
-		}
+		d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn)
 
 		if tokenConfig.Refresh.Enabled != nil {
-			if err := d.Set("refresh_token_enabled", *tokenConfig.Refresh.Enabled); err != nil {
-				return diag.FromErr(err)
-			}
+			d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn)
 		}
 	}
 
 	if tokenConfig.AnonymousAccess != nil {
-		if err := d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn); err != nil {
-			return diag.FromErr(err)
-		}
+		d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn)
 
 		if tokenConfig.AnonymousAccess.Enabled != nil {
-			if err := d.Set("anonymous_access_enabled", *tokenConfig.AnonymousAccess.Enabled); err != nil {
-				return diag.FromErr(err)
-			}
+			d.Set("anonymous_access_enabled", *tokenConfig.AnonymousAccess.Enabled)
 		}
 	}
 

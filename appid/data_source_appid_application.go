@@ -81,40 +81,19 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)
 
-	if err := d.Set("name", app.Name); err != nil {
-		return diag.FromErr(err)
-	}
-
-	if err := d.Set("name", app.Name); err != nil {
-		return diag.FromErr(err)
-	}
+	d.Set("name", app.Name)
 
 	if app.Secret != nil {
-		if err := d.Set("secret", *app.Secret); err != nil {
-			return diag.FromErr(err)
-		}
+		d.Set("secret", *app.Secret)
 	}
 
-	if err := d.Set("oauth_server_url", app.OAuthServerURL); err != nil {
-		return diag.FromErr(err)
-	}
-
-	if err := d.Set("profiles_url", app.ProfilesURL); err != nil {
-		return diag.FromErr(err)
-	}
-
-	if err := d.Set("discovery_endpoint", app.DiscoveryEndpoint); err != nil {
-		return diag.FromErr(err)
-	}
-
-	if err := d.Set("type", app.Type); err != nil {
-		return diag.FromErr(err)
-	}
+	d.Set("oauth_server_url", app.OAuthServerURL)
+	d.Set("profiles_url", app.ProfilesURL)
+	d.Set("discovery_endpoint", app.DiscoveryEndpoint)
+	d.Set("type", app.Type)
 
 	if scopes != nil {
-		if err := d.Set("scopes", scopes); err != nil {
-			return diag.FromErr(err)
-		}
+		d.Set("scopes", scopes)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, clientID))
