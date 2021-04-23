@@ -16,6 +16,7 @@ provider "appid" {
 resource "appid_application" "app" {
   tenant_id = var.tenant_id
   name = "test-tf-application"  
+  type = "singlepageapp"
 }
 
 output "application" {

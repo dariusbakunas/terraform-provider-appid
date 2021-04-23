@@ -71,7 +71,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 		Type: appType,
 	}
 
-	log.Printf("[DEBUG] Creating AppID application: %v", input)
+	log.Printf("[DEBUG] Creating AppID application: %+v", input)
 	app, err := c.ApplicationAPI.CreateApplication(ctx, tenantID, input)
 
 	if err != nil {
