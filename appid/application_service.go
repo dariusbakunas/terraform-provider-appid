@@ -23,6 +23,11 @@ type CreateApplicationInput struct {
 	Type string `json:"type"`
 }
 
+type ApplicationRole struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
 func (s *ApplicationService) GetApplication(ctx context.Context, tenantID string, clientID string) (*Application, error) {
 	path := fmt.Sprintf("/management/v4/%s/applications/%s", tenantID, clientID)
 
@@ -59,6 +64,26 @@ func (s *ApplicationService) GetApplicationScopes(ctx context.Context, tenantID 
 	}
 
 	return resp.Scopes, nil
+}
+
+func (s *ApplicationService) GetApplicationRoles(ctx context.Context, tenantID string, clientID string) ([]ApplicationRole, error) {
+	path := fmt.Sprintf("/management/v4/%s/applications/%s/roles", tenantID, clientID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &struct {
+		Roles []ApplicationRole `json:"roles"`
+	}{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Roles, nil
 }
 
 func (s *ApplicationService) CreateApplication(ctx context.Context, tenantID string, input *CreateApplicationInput) (*Application, error) {

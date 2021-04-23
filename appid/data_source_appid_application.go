@@ -81,10 +81,25 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	scopes, err := c.ApplicationAPI.GetApplicationScopes(ctx, tenantID, clientID)
-	log.Printf("[DEBUG] Read application scopes: %v", scopes)
 
 	if err != nil {
 		return diag.FromErr(err)
+	}
+
+	log.Printf("[DEBUG] Read application scopes: %v", scopes)
+
+	roles, err := c.ApplicationAPI.GetApplicationRoles(ctx, tenantID, clientID)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	log.Printf("[DEBUG] Read application roles: %v", roles)
+
+	var roleIDs []string
+
+	for _, role := range roles {
+		roleIDs = append(roleIDs, role.ID)
 	}
 
 	if err := d.Set("name", app.Name); err != nil {
@@ -119,6 +134,12 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	if scopes != nil {
 		if err := d.Set("scopes", scopes); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	if roleIDs != nil {
+		if err := d.Set("roles", roleIDs); err != nil {
 			return diag.FromErr(err)
 		}
 	}
