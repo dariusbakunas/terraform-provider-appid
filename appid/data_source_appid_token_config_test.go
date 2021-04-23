@@ -14,9 +14,9 @@ func TestAccTokenConfigDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckTokenConfigDataSource(),
+				Config: testAccCheckTokenConfigDataSource(testTenantID),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("data.appid_token_config.test_config", "tenant_id", tenantID),
+					resource.TestCheckResourceAttr("data.appid_token_config.test_config", "tenant_id", testTenantID),
 					resource.TestCheckResourceAttrSet(
 						"data.appid_token_config.test_config", "id"),
 				),
@@ -48,7 +48,7 @@ func TestFlattenTokenClaims(t *testing.T) {
 	}
 }
 
-func testAccCheckTokenConfigDataSource() string {
+func testAccCheckTokenConfigDataSource(tenantID string) string {
 	return fmt.Sprintf(`
 data "appid_token_config" "test_config" {
 	tenant_id = "%s"

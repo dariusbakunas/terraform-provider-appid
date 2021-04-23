@@ -28,7 +28,8 @@ type Client struct {
 	baseURL   *url.URL
 	userAgent string
 
-	ConfigAPI *ConfigService
+	ConfigAPI      *ConfigService
+	ApplicationAPI *ApplicationService
 }
 
 func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
@@ -52,6 +53,7 @@ func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
 	baseService := service{c}
 
 	c.ConfigAPI = (*ConfigService)(&baseService)
+	c.ApplicationAPI = (*ApplicationService)(&baseService)
 
 	return c, nil
 }
@@ -145,10 +147,14 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 		return resp, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(v)
+	switch v := v.(type) {
+	case nil:
+	default:
+		err = json.NewDecoder(resp.Body).Decode(v)
 
-	if err == io.EOF {
-		err = nil // ignore EOF errors caused by empty response body
+		if err == io.EOF {
+			err = nil // ignore EOF errors caused by empty response body
+		}
 	}
 
 	return resp, err
