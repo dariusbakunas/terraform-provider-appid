@@ -30,6 +30,7 @@ type Client struct {
 
 	ConfigAPI      *ConfigService
 	ApplicationAPI *ApplicationService
+	IDPService     *IDPService
 }
 
 func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
@@ -54,6 +55,7 @@ func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
 
 	c.ConfigAPI = (*ConfigService)(&baseService)
 	c.ApplicationAPI = (*ApplicationService)(&baseService)
+	c.IDPService = (*IDPService)(&baseService)
 
 	return c, nil
 }
