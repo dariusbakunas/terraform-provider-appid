@@ -50,6 +50,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_token_config": resourceAppIDTokenConfig(),
 			"appid_application":  resourceAppIDApplication(),
+			"appid_idp_saml":     resourceAppIDIDPSaml(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"appid_token_config":    dataSourceAppIDTokenConfig(),

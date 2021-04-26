@@ -14,21 +14,21 @@ type AuthNContext struct {
 
 type SAMLConfig struct {
 	EntityID        string        `json:"entityID"`
-	DisplayName     string        `json:"displayName"`
+	DisplayName     string        `json:"displayName,omitempty"`
 	SignInURL       string        `json:"signInUrl"`
 	Certificates    []string      `json:"certificates"`
-	AuthNContext    *AuthNContext `json:"authnContext"`
-	SignRequest     *bool         `json:"signRequest"`
-	EncryptResponse *bool         `json:"encryptResponse"`
-	IncludeScoping  *bool         `json:"includeScoping"`
+	AuthNContext    *AuthNContext `json:"authnContext,omitempty"`
+	SignRequest     *bool         `json:"signRequest,omitempty"`
+	EncryptResponse *bool         `json:"encryptResponse,omitempty"`
+	IncludeScoping  *bool         `json:"includeScoping,omitempty"`
 }
 
-type SAMLResponse struct {
+type SAML struct {
 	IsActive bool        `json:"isActive"`
 	Config   *SAMLConfig `json:"config,omitempty"`
 }
 
-func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLResponse, error) {
+func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAML, error) {
 	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
 
 	req, err := s.client.NewRequest("GET", path, nil)
@@ -36,7 +36,7 @@ func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLR
 		return nil, err
 	}
 
-	resp := &SAMLResponse{}
+	resp := &SAML{}
 
 	_, err = s.client.Do(ctx, req, resp)
 	if err != nil {
@@ -44,4 +44,18 @@ func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLR
 	}
 
 	return resp, nil
+}
+
+func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, config *SAML) error {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, config)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, config)
+
+	return err
 }
