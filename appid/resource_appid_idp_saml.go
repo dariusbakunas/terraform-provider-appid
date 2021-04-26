@@ -201,6 +201,6 @@ func resourceAppIDIDPSAMLDelete(ctx context.Context, d *schema.ResourceData, m i
 }
 
 func resourceAppIDIDPSAMLUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// TODO: add saml idp update
-	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
+	// since this is configuration we can reuse create method
+	return resourceAppIDIDPSAMLCreate(ctx, d, m)
 }

@@ -249,21 +249,7 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 }
 
 func resourceAppIDTokenConfigUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	tenantID := d.Get("tenant_id").(string)
-
-	c := m.(*Client)
-
-	// AppID resets value to default if it is not provided, so we can't do partial updates
-	input := expandTokenConfig(d)
-
-	log.Printf("[DEBUG] Updating AppID token config: %v", input)
-	err := c.ConfigAPI.UpdateTokens(ctx, tenantID, input)
-
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	return resourceAppIDTokenConfigRead(ctx, d, m)
+	return resourceAppIDTokenConfigCreate(ctx, d, m)
 }
 
 func tokenConfigDefaults() *TokenConfig {
