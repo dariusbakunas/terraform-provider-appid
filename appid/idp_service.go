@@ -8,8 +8,8 @@ import (
 type IDPService service
 
 type AuthNContext struct {
-	Class      []string `json:"class, omitempty"`
-	Comparison string   `json:"comparison, omitempty"`
+	Class      []string `json:"class,omitempty"`
+	Comparison string   `json:"comparison,omitempty"`
 }
 
 type SAMLConfig struct {
