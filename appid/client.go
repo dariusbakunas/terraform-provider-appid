@@ -28,9 +28,10 @@ type Client struct {
 	baseURL   *url.URL
 	userAgent string
 
-	ConfigAPI      *ConfigService
-	ApplicationAPI *ApplicationService
-	IDPService     *IDPService
+	ConfigAPI         *ConfigService
+	ApplicationAPI    *ApplicationService
+	IDPAPI            *IDPService
+	CloudDirectoryAPI *CloudDirectoryService
 }
 
 func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
@@ -55,7 +56,8 @@ func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
 
 	c.ConfigAPI = (*ConfigService)(&baseService)
 	c.ApplicationAPI = (*ApplicationService)(&baseService)
-	c.IDPService = (*IDPService)(&baseService)
+	c.IDPAPI = (*IDPService)(&baseService)
+	c.CloudDirectoryAPI = (*CloudDirectoryService)(&baseService)
 
 	return c, nil
 }

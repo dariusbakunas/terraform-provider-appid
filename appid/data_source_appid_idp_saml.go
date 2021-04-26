@@ -89,7 +89,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	tenantID := d.Get("tenant_id").(string)
 	c := m.(*Client)
 
-	saml, err := c.IDPService.GetSAMLConfig(ctx, tenantID)
+	saml, err := c.IDPAPI.GetSAMLConfig(ctx, tenantID)
 
 	if err != nil {
 		return diag.FromErr(err)

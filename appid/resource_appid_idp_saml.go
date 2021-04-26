@@ -107,7 +107,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	log.Printf("[DEBUG] Applying SAML config: %v", config)
-	err := c.IDPService.UpdateSAMLConfig(ctx, tenantID, config)
+	err := c.IDPAPI.UpdateSAMLConfig(ctx, tenantID, config)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -189,7 +189,7 @@ func resourceAppIDIDPSAMLDelete(ctx context.Context, d *schema.ResourceData, m i
 	config := samlConfigDefaults()
 
 	log.Printf("[DEBUG] Resetting SAML config: %v", config)
-	err := c.IDPService.UpdateSAMLConfig(ctx, tenantID, config)
+	err := c.IDPAPI.UpdateSAMLConfig(ctx, tenantID, config)
 
 	if err != nil {
 		return diag.FromErr(err)
