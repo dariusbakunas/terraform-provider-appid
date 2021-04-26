@@ -57,6 +57,13 @@ VrWz2D2R2MUEAyw8m/J1d5k+agb/BmTguAa/pdhI4w6S2Gg0h67eU48Omdr+fQ==
     display_name = "Test IDP"
     encrypt_response = false
     sign_request = true
+    authn_context {
+      class = [
+        "urn:oasis:names:tc:SAML:2.0:ac:classes:Password",
+        "urn:oasis:names:tc:SAML:2.0:ac:classes:SoftwarePKI"
+      ]
+      comparison = "exact"
+    }
   }
 }
 

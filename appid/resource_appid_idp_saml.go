@@ -65,6 +65,26 @@ func resourceAppIDIDPSaml() *schema.Resource {
 							Optional: true,
 							Default:  false,
 						},
+						"authn_context": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"class": {
+										Type: schema.TypeList,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Optional: true,
+									},
+									"comparison": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -86,7 +106,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 		config.Config = expandSAMLConfig(d.Get("config").([]interface{}))
 	}
 
-	log.Printf("[DEBUG] Applying SAML config: %+v", config)
+	log.Printf("[DEBUG] Applying SAML config: %v", config)
 	err := c.IDPService.UpdateSAMLConfig(ctx, tenantID, config)
 
 	if err != nil {
@@ -96,11 +116,33 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
 }
 
+func expandAuthNContext(ctx []interface{}) *AuthNContext {
+	context := &AuthNContext{}
+
+	if len(ctx) == 0 || ctx[0] == nil {
+		return nil
+	}
+
+	mContext := ctx[0].(map[string]interface{})
+
+	context.Comparison = mContext["comparison"].(string)
+
+	if class, ok := mContext["class"].([]interface{}); ok && len(class) > 0 {
+		context.Class = []string{}
+
+		for _, c := range class {
+			context.Class = append(context.Class, c.(string))
+		}
+	}
+
+	return context
+}
+
 func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 	config := &SAMLConfig{}
 
 	if len(cfg) == 0 || cfg[0] == nil {
-		return config
+		return nil
 	}
 
 	mCfg := cfg[0].(map[string]interface{})
@@ -128,6 +170,8 @@ func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 			config.Certificates = append(config.Certificates, cert.(string))
 		}
 	}
+
+	config.AuthNContext = expandAuthNContext(mCfg["authn_context"].([]interface{}))
 
 	return config
 }

@@ -2,6 +2,7 @@ package appid
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 )
 
@@ -21,6 +22,11 @@ type SAMLConfig struct {
 	SignRequest     *bool         `json:"signRequest,omitempty"`
 	EncryptResponse *bool         `json:"encryptResponse,omitempty"`
 	IncludeScoping  *bool         `json:"includeScoping,omitempty"`
+}
+
+func (s *SAMLConfig) String() string {
+	str, _ := json.MarshalIndent(s, "", "\t")
+	return string(str)
 }
 
 type SAML struct {
