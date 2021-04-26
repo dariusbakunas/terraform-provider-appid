@@ -52,6 +52,25 @@ func dataSourceAppIDIDPSAML() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"authn_context": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"class": {
+							Type: schema.TypeList,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Computed: true,
+						},
+						"comparison": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -89,9 +108,35 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 		if saml.Config.IncludeScoping != nil {
 			d.Set("include_scoping", saml.Config.IncludeScoping)
 		}
+
+		if saml.Config.AuthNContext != nil {
+			d.Set("authn_context", flattenAuthNContext(saml.Config.AuthNContext))
+		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/idp/saml", tenantID))
 
 	return diags
+}
+
+func flattenAuthNContext(context *AuthNContext) []interface{} {
+	if context == nil {
+		return []interface{}{}
+	}
+
+	mContext := map[string]interface{}{}
+
+	if context.Class != nil {
+		class := []interface{}{}
+
+		for _, c := range context.Class {
+			class = append(class, c)
+		}
+
+		mContext["class"] = class
+	}
+
+	mContext["comparison"] = context.Comparison
+
+	return []interface{}{mContext}
 }

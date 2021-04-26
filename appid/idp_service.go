@@ -7,20 +7,20 @@ import (
 
 type IDPService service
 
-type AuthContext struct {
-	Class      []string `json:"class"`
-	Comparison string   `json:"comparison"`
+type AuthNContext struct {
+	Class      []string `json:"class, omitempty"`
+	Comparison string   `json:"comparison, omitempty"`
 }
 
 type SAMLConfig struct {
-	EntityID        string       `json:"entityID"`
-	DisplayName     string       `json:"displayName"`
-	SignInURL       string       `json:"signInUrl"`
-	Certificates    []string     `json:"certificates"`
-	AuthContext     *AuthContext `json:"authContext"`
-	SignRequest     *bool        `json:"signRequest"`
-	EncryptResponse *bool        `json:"encryptResponse"`
-	IncludeScoping  *bool        `json:"includeScoping"`
+	EntityID        string        `json:"entityID"`
+	DisplayName     string        `json:"displayName"`
+	SignInURL       string        `json:"signInUrl"`
+	Certificates    []string      `json:"certificates"`
+	AuthNContext    *AuthNContext `json:"authnContext"`
+	SignRequest     *bool         `json:"signRequest"`
+	EncryptResponse *bool         `json:"encryptResponse"`
+	IncludeScoping  *bool         `json:"includeScoping"`
 }
 
 type SAMLResponse struct {
