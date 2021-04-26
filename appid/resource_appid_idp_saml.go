@@ -53,14 +53,17 @@ func resourceAppIDIDPSaml() *schema.Resource {
 						"encrypt_response": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default:  false,
 						},
 						"sign_request": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default:  false,
 						},
 						"include_scoping": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default:  false,
 						},
 					},
 				},
@@ -108,16 +111,16 @@ func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 	config.SignInURL = mCfg["sign_in_url"].(string)
 	config.DisplayName = mCfg["display_name"].(string)
 
-	if encResponse, ok := mCfg["encrypt_response"].(bool); ok {
-		config.EncryptResponse = &encResponse
+	if encResponse, ok := mCfg["encrypt_response"]; ok {
+		config.EncryptResponse = getBoolPtr(encResponse.(bool))
 	}
 
-	if signRequest, ok := mCfg["sign_request"].(bool); ok {
-		config.SignRequest = &signRequest
+	if signRequest, ok := mCfg["sign_request"]; ok {
+		config.SignRequest = getBoolPtr(signRequest.(bool))
 	}
 
-	if includeScoping, ok := mCfg["include_scoping"].(bool); ok {
-		config.IncludeScoping = &includeScoping
+	if includeScoping, ok := mCfg["include_scoping"]; ok {
+		config.IncludeScoping = getBoolPtr(includeScoping.(bool))
 	}
 
 	if certificates, ok := mCfg["certificates"].([]interface{}); ok && len(certificates) > 0 {
