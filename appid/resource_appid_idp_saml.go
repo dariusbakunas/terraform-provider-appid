@@ -83,9 +83,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	if isActive {
-		if cfg, ok := d.GetOk("config"); ok {
-			config.Config = expandSAMLConfig(cfg.([]interface{}))
-		}
+		config.Config = expandSAMLConfig(d.Get("config").([]interface{}))
 	}
 
 	log.Printf("[DEBUG] Applying SAML config: %+v", config)
@@ -111,16 +109,16 @@ func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 	config.SignInURL = mCfg["sign_in_url"].(string)
 	config.DisplayName = mCfg["display_name"].(string)
 
-	if encResponse, ok := mCfg["encrypt_response"]; ok {
-		config.EncryptResponse = getBoolPtr(encResponse.(bool))
+	if encResponse, ok := mCfg["encrypt_response"].(bool); ok {
+		config.EncryptResponse = getBoolPtr(encResponse)
 	}
 
-	if signRequest, ok := mCfg["sign_request"]; ok {
-		config.SignRequest = getBoolPtr(signRequest.(bool))
+	if signRequest, ok := mCfg["sign_request"].(bool); ok {
+		config.SignRequest = getBoolPtr(signRequest)
 	}
 
-	if includeScoping, ok := mCfg["include_scoping"]; ok {
-		config.IncludeScoping = getBoolPtr(includeScoping.(bool))
+	if includeScoping, ok := mCfg["include_scoping"].(bool); ok {
+		config.IncludeScoping = getBoolPtr(includeScoping)
 	}
 
 	if certificates, ok := mCfg["certificates"].([]interface{}); ok && len(certificates) > 0 {
