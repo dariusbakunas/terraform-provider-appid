@@ -21,52 +21,60 @@ func dataSourceAppIDIDPSAML() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"entity_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"sign_in_url": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"certificates": {
-				Type: schema.TypeList,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"encrypt_response": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"sign_request": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"include_scoping": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"authn_context": {
+			"config": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"class": {
+						"entity_id": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"sign_in_url": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"certificates": {
 							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 							Computed: true,
 						},
-						"comparison": {
+						"display_name": {
 							Type:     schema.TypeString,
 							Computed: true,
+						},
+						"encrypt_response": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"sign_request": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"include_scoping": {
+							Type:     schema.TypeBool,
+							Computed: true,
+						},
+						"authn_context": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"class": {
+										Type: schema.TypeList,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Computed: true,
+									},
+									"comparison": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -92,31 +100,44 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	d.Set("is_active", saml.IsActive)
 
 	if saml.Config != nil {
-		d.Set("entity_id", saml.Config.EntityID)
-		d.Set("sign_in_url", saml.Config.SignInURL)
-		d.Set("certificates", flattenStringList(saml.Config.Certificates))
-		d.Set("display_name", saml.Config.DisplayName)
-
-		if saml.Config.SignRequest != nil {
-			d.Set("sign_request", saml.Config.SignRequest)
-		}
-
-		if saml.Config.EncryptResponse != nil {
-			d.Set("encrypt_Response", saml.Config.EncryptResponse)
-		}
-
-		if saml.Config.IncludeScoping != nil {
-			d.Set("include_scoping", saml.Config.IncludeScoping)
-		}
-
-		if saml.Config.AuthNContext != nil {
-			d.Set("authn_context", flattenAuthNContext(saml.Config.AuthNContext))
+		if err := d.Set("config", flattenConfig(saml.Config)); err != nil {
+			return diag.Errorf("failed setting config: %s", err)
 		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/idp/saml", tenantID))
 
 	return diags
+}
+
+func flattenConfig(config *SAMLConfig) []interface{} {
+	if config == nil {
+		return []interface{}{}
+	}
+
+	mConfig := map[string]interface{}{}
+	mConfig["entity_id"] = config.EntityID
+	mConfig["sign_in_url"] = config.SignInURL
+	mConfig["certificates"] = flattenStringList(config.Certificates)
+	mConfig["display_name"] = config.DisplayName
+
+	if config.SignRequest != nil {
+		mConfig["sign_request"] = *config.SignRequest
+	}
+
+	if config.EncryptResponse != nil {
+		mConfig["encrypt_response"] = *config.EncryptResponse
+	}
+
+	if config.IncludeScoping != nil {
+		mConfig["include_scoping"] = *config.IncludeScoping
+	}
+
+	if config.AuthNContext != nil {
+		mConfig["authn_context"] = flattenAuthNContext(config.AuthNContext)
+	}
+
+	return []interface{}{mConfig}
 }
 
 func flattenAuthNContext(context *AuthNContext) []interface{} {
