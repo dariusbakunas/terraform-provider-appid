@@ -41,6 +41,10 @@ func dataSourceAppIDCloudDirectoryTemplate() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"plain_text_body": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -63,6 +67,7 @@ func dataSourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.Re
 	d.Set("subject", template.Subject)
 	d.Set("html_body", template.HTMLBody)
 	d.Set("base64_encoded_html_body", template.B64HTMLBody)
+	d.Set("plain_text_body", template.TextBody)
 
 	d.SetId(fmt.Sprintf("%s/%s/%s", tenantID, templateName, language))
 
