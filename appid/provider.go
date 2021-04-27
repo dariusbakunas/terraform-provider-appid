@@ -48,9 +48,10 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"appid_token_config": resourceAppIDTokenConfig(),
-			"appid_application":  resourceAppIDApplication(),
-			"appid_idp_saml":     resourceAppIDIDPSaml(),
+			"appid_token_config":             resourceAppIDTokenConfig(),
+			"appid_application":              resourceAppIDApplication(),
+			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"appid_token_config":             dataSourceAppIDTokenConfig(),

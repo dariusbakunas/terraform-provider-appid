@@ -66,7 +66,7 @@ func (s *ConfigService) UpdateTokens(ctx context.Context, tenantID string, confi
 		return err
 	}
 
-	_, err = s.client.Do(ctx, req, config)
+	_, err = s.client.Do(ctx, req, nil)
 
 	return err
 }

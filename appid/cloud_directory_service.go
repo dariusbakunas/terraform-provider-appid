@@ -31,3 +31,31 @@ func (s *CloudDirectoryService) GetEmailTemplate(ctx context.Context, tenantID s
 
 	return resp, nil
 }
+
+func (s *CloudDirectoryService) UpdateEmailTemplate(ctx context.Context, tenantID string, templateName string, language string, template *EmailTemplate) error {
+	path := fmt.Sprintf("/management/v4/%s/config/cloud_directory/templates/%s/%s", tenantID, templateName, language)
+
+	req, err := s.client.NewRequest("PUT", path, template)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+
+	return err
+}
+
+func (s *CloudDirectoryService) DeleteEmailTemplate(ctx context.Context, tenantID string, templateName string, language string) error {
+	path := fmt.Sprintf("/management/v4/%s/config/cloud_directory/templates/%s/%s", tenantID, templateName, language)
+
+	req, err := s.client.NewRequest("DELETE", path, nil)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+
+	return err
+}
