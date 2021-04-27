@@ -45,4 +45,4 @@ To run acceptance tests, make sure `IAM_API_KEY` environment variable is set and
 make testacc
 ```
 
-**Note:** Acceptance tests create/destroy real resources, while they are named using `tf-acc-test-` testing prefix, use some caution. Check `provider_test.go` contents for supported environment variables and their default values.
+**Note:** Acceptance tests create/destroy real resources, while they are named using `tf_acc_test` testing prefix, use some caution. Check `provider_test.go` contents for supported environment variables and their default values.
