@@ -7,14 +7,14 @@ import (
 
 type CloudDirectoryService service
 
-type EmailTeamplate struct {
+type EmailTemplate struct {
 	Subject     string `json:"subject"`
 	HTMLBody    string `json:"html_body,omitempty"`
 	B64HTMLBody string `json:"base64_encoded_html_body,omitempty"`
 	TextBody    string `json:"plain_text_body,omitempty"`
 }
 
-func (s *CloudDirectoryService) GetEmailTemplate(ctx context.Context, tenantID string, templateName string, language string) (*EmailTeamplate, error) {
+func (s *CloudDirectoryService) GetEmailTemplate(ctx context.Context, tenantID string, templateName string, language string) (*EmailTemplate, error) {
 	path := fmt.Sprintf("/management/v4/%s/config/cloud_directory/templates/%s/%s", tenantID, templateName, language)
 
 	req, err := s.client.NewRequest("GET", path, nil)
@@ -22,7 +22,7 @@ func (s *CloudDirectoryService) GetEmailTemplate(ctx context.Context, tenantID s
 		return nil, err
 	}
 
-	resp := &EmailTeamplate{}
+	resp := &EmailTemplate{}
 
 	_, err = s.client.Do(ctx, req, resp)
 	if err != nil {
