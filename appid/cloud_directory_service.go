@@ -9,8 +9,9 @@ type CloudDirectoryService service
 
 type EmailTeamplate struct {
 	Subject     string `json:"subject"`
-	HTMLBody    string `json:"html_body"`
-	B64HTMLBody string `json:"base64_encoded_html_body"`
+	HTMLBody    string `json:"html_body,omitempty"`
+	B64HTMLBody string `json:"base64_encoded_html_body,omitempty"`
+	TextBody    string `json:"plain_text_body,omitempty"`
 }
 
 func (s *CloudDirectoryService) GetEmailTemplate(ctx context.Context, tenantID string, templateName string, language string) (*EmailTeamplate, error) {
