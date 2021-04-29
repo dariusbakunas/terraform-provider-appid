@@ -3,12 +3,12 @@
 page_title: "appid_token_config Data Source - terraform-provider-appid"
 subcategory: ""
 description: |-
-  appid_token_config data source can be used to retrieve the token configuration for specific AppID tenant
+  appid_token_config data source can be used to retrieve the token configuration for specific AppID tenant. Learn more. https://cloud.ibm.com/docs/appid?topic=appid-customizing-tokens{target=_blank}
 ---
 
 # appid_token_config (Data Source)
 
-`appid_token_config` data source can be used to retrieve the token configuration for specific AppID tenant
+`appid_token_config` data source can be used to retrieve the token configuration for specific AppID tenant. [Learn more.](https://cloud.ibm.com/docs/appid?topic=appid-customizing-tokens){target=_blank}
 
 ## Example Usage
 
@@ -31,13 +31,13 @@ data "appid_token_config" "default" {
 
 ### Read-Only
 
-- **access_token_claim** (Set of Object) (see [below for nested schema](#nestedatt--access_token_claim))
-- **access_token_expires_in** (Number)
+- **access_token_claim** (Set of Object) A set of objects that are created when claims that are related to access tokens are mapped (see [below for nested schema](#nestedatt--access_token_claim))
+- **access_token_expires_in** (Number) The length of time for which access tokens are valid in seconds
 - **anonymous_access_enabled** (Boolean)
-- **anonymous_token_expires_in** (Number)
-- **id_token_claim** (Set of Object) (see [below for nested schema](#nestedatt--id_token_claim))
+- **anonymous_token_expires_in** (Number) The length of time for which an anonymous token is valid in seconds
+- **id_token_claim** (Set of Object) A set of objects that are created when claims that are related to identity tokens are mapped (see [below for nested schema](#nestedatt--id_token_claim))
 - **refresh_token_enabled** (Boolean)
-- **refresh_token_expires_in** (Number)
+- **refresh_token_expires_in** (Number) The length of time for which refresh tokens are valid in seconds
 
 <a id="nestedatt--access_token_claim"></a>
 ### Nested Schema for `access_token_claim`
