@@ -69,6 +69,8 @@ make testacc
 
         % pipenv shell
 
-6. To generate or update Terraform documentation, run `go generate`.
+#### Generating docs
 
-7. To serve mk-docs locally, run `mkdocs serve`
+1. To generate or update Terraform documentation, run `go generate`.
+
+2. To serve mk-docs locally, run `mkdocs serve`
