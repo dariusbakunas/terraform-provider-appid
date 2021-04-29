@@ -29,20 +29,27 @@ func (s *SAMLConfig) String() string {
 	return string(str)
 }
 
-type SAML struct {
+type SAMLIDP struct {
 	IsActive bool        `json:"isActive"`
 	Config   *SAMLConfig `json:"config,omitempty"`
 }
 
-func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAML, error) {
-	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
+type CloudDirectoryConfig struct {
+}
+type CloudDirectoryIDP struct {
+	IsActive bool                  `json:"isActive"`
+	Config   *CloudDirectoryConfig `json:"config,omitempty"`
+}
+
+func (s *IDPService) GetCloudDirectoryConfig(ctx context.Context, tenantID string) (*CloudDirectoryIDP, error) {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/cloud_directory", tenantID)
 
 	req, err := s.client.NewRequest("GET", path, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := &SAML{}
+	resp := &CloudDirectoryIDP{}
 
 	_, err = s.client.Do(ctx, req, resp)
 	if err != nil {
@@ -52,7 +59,25 @@ func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAML,
 	return resp, nil
 }
 
-func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, config *SAML) error {
+func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLIDP, error) {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &SAMLIDP{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, config *SAMLIDP) error {
 	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
 
 	req, err := s.client.NewRequest("PUT", path, config)

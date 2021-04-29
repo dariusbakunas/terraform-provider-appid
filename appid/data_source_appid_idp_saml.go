@@ -100,7 +100,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	d.Set("is_active", saml.IsActive)
 
 	if saml.Config != nil {
-		if err := d.Set("config", flattenConfig(saml.Config)); err != nil {
+		if err := d.Set("config", flattenSAMLConfig(saml.Config)); err != nil {
 			return diag.Errorf("failed setting config: %s", err)
 		}
 	}
@@ -110,7 +110,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func flattenConfig(config *SAMLConfig) []interface{} {
+func flattenSAMLConfig(config *SAMLConfig) []interface{} {
 	if config == nil {
 		return []interface{}{}
 	}

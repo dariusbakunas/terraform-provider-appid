@@ -74,7 +74,7 @@ func setupSAMLConfig(tenantID string, name string) string {
 				display_name = "%s"
 				encrypt_response = true
 				sign_request = false
-				certificates = [
+				certificates = [					
 					<<EOT
 MIIFmjCCA4ICCQDsTVT6SQ82GTANBgkqhkiG9w0BAQsFADCBjjELMAkGA1UEBhMC
 VVMxDTALBgNVBAgMBE9ISU8xEjAQBgNVBAcMCUNsZXZlbGFuZDEQMA4GA1UECgwH

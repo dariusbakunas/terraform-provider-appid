@@ -17,7 +17,7 @@ data "appid_token_config" "source" {
   tenant_id = var.source_tenant_id
 }
 
-resource "appid_token_config" "destination" {
+resource "appid_token_config" "destination" {    
     tenant_id = var.destination_tenant_id
     access_token_expires_in = data.appid_token_config.source.access_token_expires_in
     anonymous_access_enabled = data.appid_token_config.source.anonymous_access_enabled

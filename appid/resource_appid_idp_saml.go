@@ -98,7 +98,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 
 	c := m.(*Client)
 
-	config := &SAML{
+	config := &SAMLIDP{
 		IsActive: isActive,
 	}
 
@@ -176,8 +176,8 @@ func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 	return config
 }
 
-func samlConfigDefaults() *SAML {
-	return &SAML{
+func samlConfigDefaults() *SAMLIDP {
+	return &SAMLIDP{
 		IsActive: false,
 	}
 }
