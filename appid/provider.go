@@ -60,6 +60,7 @@ func Provider() *schema.Provider {
 			"appid_application_ids":          dataSourceAppIDApplicationIDs(),
 			"appid_idp_saml":                 dataSourceAppIDIDPSAML(),
 			"appid_idp_cloud_directory":      dataSourceAppIDIDPCloudDirectory(),
+			"appid_idp_custom":               dataSourceAppIDIDPCustom(),
 			"appid_cloud_directory_template": dataSourceAppIDCloudDirectoryTemplate(),
 		},
 		ConfigureContextFunc: providerConfigure,
