@@ -82,3 +82,5 @@ make testacc
 1. To generate or update Terraform documentation, run `go generate`.
 
 2. To serve mk-docs locally, run `mkdocs serve`.
+
+3. To push changes to `gh-pages` branch, run `mkdocs gh-deploy`
