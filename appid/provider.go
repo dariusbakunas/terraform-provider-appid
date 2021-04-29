@@ -23,14 +23,14 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"iam_api_key": {
 				Type:        schema.TypeString,
-				Description: "IBM Cloud IAM api key used to retrieve IAM access token if `iam_access_token` is not specified",
+				Description: "The IBM Cloud IAM api key used to retrieve IAM access token if `iam_access_token` is not specified",
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("IAM_API_KEY", nil),
 			},
 			"iam_access_token": {
 				Type:        schema.TypeString,
-				Description: "IBM Cloud Identity and Access Management token used to access AppID APIs",
+				Description: "The IBM Cloud Identity and Access Management token used to access AppID APIs",
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("IAM_ACCESS_TOKEN", nil),
@@ -38,14 +38,14 @@ func Provider() *schema.Provider {
 			"appid_base_url": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "AppID API base URL, eg. https://us-south.appid.cloud.ibm.com",
+				Description: "AppID API base URL (for example 'https://us-south.appid.cloud.ibm.com')",
 				DefaultFunc: schema.EnvDefaultFunc("APPID_BASE_URL", nil),
 			},
 			"iam_base_url": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "IBM IAM base URL, eg. https://iam.cloud.ibm.com",
-				DefaultFunc: schema.EnvDefaultFunc("IAM_BASE_URL", nil),
+				Optional:    true,
+				Description: "IBM IAM base URL (for example 'https://iam.cloud.ibm.com')",
+				Default:     "https://iam.cloud.ibm.com",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
