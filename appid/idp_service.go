@@ -131,3 +131,17 @@ func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, conf
 
 	return err
 }
+
+func (s *IDPService) UpdateCustomIDPConfig(ctx context.Context, tenantID string, config *CustomIDP) error {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/custom", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, config)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, config)
+
+	return err
+}
