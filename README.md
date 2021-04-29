@@ -51,27 +51,27 @@ make testacc
 
 #### Environment setup
 
-1; Install [pipenv](https://pipenv.readthedocs.io/en/latest/#install-pipenv-today)
+1. Install [pipenv](https://pipenv.readthedocs.io/en/latest/#install-pipenv-today)
 
 ```bash
 % brew install pipenv
 ```
 
-2; Install [pyenv](https://github.com/pyenv/pyenv#installation)
+2. Install [pyenv](https://github.com/pyenv/pyenv#installation)
 
 ```bash
 % brew install pyenv
 ```
 
-3; Use `pyenv` to install `Python 3` if not installed already (run `pyenv versions` to check installed versions or `pyenv list` to list available for install):
+3. Use `pyenv` to install `Python 3` if not installed already (run `pyenv versions` to check installed versions or `pyenv list` to list available for install):
 
 ```bash
 % pyenv install 3.8.1
 ```
 
-1; Run `pipenv install` to install `mkdocs` dependencies
+1. Run `pipenv install` to install `mkdocs` dependencies
 
-2; In order to activate the virtual environment associated with this project you can simply use the shell keyword:
+2. In order to activate the virtual environment associated with this project you can simply use the shell keyword:
 
 ```bash
 % pipenv shell
