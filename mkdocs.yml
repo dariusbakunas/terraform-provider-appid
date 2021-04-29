@@ -9,7 +9,7 @@ theme:
   palette:
     primary: 'blue grey'
 
-edit_uri: edit/master/docs
+# edit_uri: edit/master/docs
 
 plugins:
   - search
