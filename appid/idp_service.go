@@ -56,6 +56,14 @@ type CloudDirectoryIDP struct {
 	Config   *CloudDirectoryConfig `json:"config,omitempty"`
 }
 
+type CustomIDPConfig struct {
+	PublicKey string `json:"publicKey,omitempty"`
+}
+type CustomIDP struct {
+	IsActive bool             `json:"isActive"`
+	Config   *CustomIDPConfig `json:"config,omitempty"`
+}
+
 func (s *IDPService) GetCloudDirectoryConfig(ctx context.Context, tenantID string) (*CloudDirectoryIDP, error) {
 	path := fmt.Sprintf("/management/v4/%s/config/idps/cloud_directory", tenantID)
 
@@ -92,8 +100,40 @@ func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLI
 	return resp, nil
 }
 
+func (s *IDPService) GetCustomIDPConfig(ctx context.Context, tenantID string) (*CustomIDP, error) {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/custom", tenantID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &CustomIDP{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, config *SAMLIDP) error {
 	path := fmt.Sprintf("/management/v4/%s/config/idps/saml", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, config)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, config)
+
+	return err
+}
+
+func (s *IDPService) UpdateCustomIDPConfig(ctx context.Context, tenantID string, config *CustomIDP) error {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/custom", tenantID)
 
 	req, err := s.client.NewRequest("PUT", path, config)
 
