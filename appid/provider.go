@@ -23,13 +23,14 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"iam_api_key": {
 				Type:        schema.TypeString,
-				Description: "IBM Cloud IAM api key",
+				Description: "IBM Cloud IAM api key used to retrieve IAM access token if `iam_access_token` is not specified",
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("IAM_API_KEY", nil),
 			},
 			"iam_access_token": {
 				Type:        schema.TypeString,
+				Description: "IBM Cloud Identity and Access Management token used to access AppID APIs",
 				Optional:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("IAM_ACCESS_TOKEN", nil),
