@@ -34,7 +34,22 @@ type SAMLIDP struct {
 	Config   *SAMLConfig `json:"config,omitempty"`
 }
 
+type IdentityConfirmation struct {
+	AccessMode string   `json:"accessMode"`
+	Methods    []string `json:"methods"`
+}
+
+type CloudDirectoryInteractions struct {
+	WelcomeEnabled                   bool                 `json:"welcomeEnabled"`
+	ResetPasswordEnabled             bool                 `json:"resetPasswordEnabled"`
+	ResetPasswordNotificationEnabled bool                 `json:"resetPasswordNotificationEnable"`
+	IdentityConfirmation             IdentityConfirmation `json:"identityConfirmation"`
+}
 type CloudDirectoryConfig struct {
+	SelfServiceEnabled bool                       `json:"selfServiceEnabled"`
+	SignupEnabled      *bool                      `json:"signupEnabled,omitempty"`
+	Interactions       CloudDirectoryInteractions `json:"interactions"`
+	IdentityField      string                     `json:"itentityField,omitempty"`
 }
 type CloudDirectoryIDP struct {
 	IsActive bool                  `json:"isActive"`
