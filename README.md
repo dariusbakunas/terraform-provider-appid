@@ -51,26 +51,34 @@ make testacc
 
 #### Environment setup
 
-1. Install [pipenv](https://pipenv.readthedocs.io/en/latest/#install-pipenv-today)
+1; Install [pipenv](https://pipenv.readthedocs.io/en/latest/#install-pipenv-today)
 
-        % brew install pipenv
-        
-2. Install [pyenv](https://github.com/pyenv/pyenv#installation)
+```bash
+% brew install pipenv
+```
 
-        % brew install pyenv
-        
-3. Use `pyenv` to install `Python 3` if not installed already (run `pyenv versions` to check installed versions or `pyenv list` to list available for install):
+2; Install [pyenv](https://github.com/pyenv/pyenv#installation)
 
-        % pyenv install 3.8.1
+```bash
+% brew install pyenv
+```
 
-4. Run `pipenv install` to install `mkdocs` dependencies
+3; Use `pyenv` to install `Python 3` if not installed already (run `pyenv versions` to check installed versions or `pyenv list` to list available for install):
 
-5. In order to activate the virtual environment associated with this project you can simply use the shell keyword:
+```bash
+% pyenv install 3.8.1
+```
 
-        % pipenv shell
+1; Run `pipenv install` to install `mkdocs` dependencies
+
+2; In order to activate the virtual environment associated with this project you can simply use the shell keyword:
+
+```bash
+% pipenv shell
+```
 
 #### Generating docs
 
 1. To generate or update Terraform documentation, run `go generate`.
 
-2. To serve mk-docs locally, run `mkdocs serve`
+2. To serve mk-docs locally, run `mkdocs serve`.
