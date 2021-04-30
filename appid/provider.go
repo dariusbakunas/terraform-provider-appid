@@ -46,7 +46,7 @@ func Provider() *schema.Provider {
 			"iam_base_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "IBM IAM base URL (for example 'https://iam.cloud.ibm.com')",
+				Description: "IBM IAM base URL",
 				Default:     "https://iam.cloud.ibm.com",
 			},
 			"region": {
@@ -85,8 +85,20 @@ type TokenResponse struct {
 	Scope        string  `json:"scope"`
 }
 
-func getAccessToken(ctx context.Context, url string, apiKey string) (*TokenResponse, error) {
+func getAccessToken(ctx context.Context, iamBaseURL string, apiKey string) (*TokenResponse, error) {
 	log.Printf("[DEBUG] Getting IAM access token")
+
+	baseURL, err := url.Parse(iamBaseURL)
+
+	if err != nil {
+		return nil, err
+	}
+
+	tokenURL, err := baseURL.Parse("/identity/token")
+
+	if err != nil {
+		return nil, err
+	}
 
 	c := &http.Client{
 		Timeout: time.Minute * 2,
@@ -108,7 +120,7 @@ func getAccessToken(ctx context.Context, url string, apiKey string) (*TokenRespo
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", url, strings.NewReader(values.Encode()))
+	req, err := http.NewRequest("POST", tokenURL.String(), strings.NewReader(values.Encode()))
 
 	if err != nil {
 		return nil, err
@@ -158,24 +170,12 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		clientOptions.BaseURL = baseURL.(string)
 	}
 
-	iamBaseURL, err := url.Parse(d.Get("iam_base_url").(string))
-
-	if err != nil {
-		return nil, diag.FromErr(err)
-	}
-
-	tokenURL, err := iamBaseURL.Parse("/identity/token")
-
-	if err != nil {
-		return nil, diag.FromErr(err)
-	}
-
 	if iamAccesToken == "" {
 		if iamApiKey == "" {
 			return nil, diag.Errorf("iam_api_key or iam_access_token must be specified")
 		}
 
-		token, err := getAccessToken(ctx, tokenURL.String(), iamApiKey)
+		token, err := getAccessToken(ctx, d.Get("iam_base_url").(string), iamApiKey)
 
 		if err != nil {
 			return nil, diag.FromErr(err)
