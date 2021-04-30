@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDApplicationIDs() *schema.Resource {
@@ -29,7 +30,7 @@ func dataSourceAppIDApplicationIDs() *schema.Resource {
 
 func dataSourceAppIDApplicationIDsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	apps, err := c.ApplicationAPI.ListApplications(ctx, tenantID)
 

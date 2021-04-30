@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func TestAccAppIDTokenConfig_Basic(t *testing.T) {
@@ -65,7 +66,7 @@ func testAccCheckAppIDTokenConfigCreate(tenantID string) string {
 }
 
 func testAccCheckTokenConfigDestroy(s *terraform.State) error {
-	c := testAccProvider.Meta().(*Client)
+	c := testAccProvider.Meta().(*api.Client)
 
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "appid_token_config" {

@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 var supportedTemplates = []string{"USER_VERIFICATION", "RESET_PASSWORD", "WELCOME", "PASSWORD_CHANGED", "MFA_VERIFICATION"}
@@ -56,7 +57,7 @@ func dataSourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	template, err := c.CloudDirectoryAPI.GetEmailTemplate(ctx, tenantID, templateName, language)
 

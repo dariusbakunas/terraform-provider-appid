@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDTokenConfig() *schema.Resource {
@@ -96,7 +97,7 @@ func resourceAppIDTokenConfig() *schema.Resource {
 func resourceAppIDTokenConfigCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	input := expandTokenConfig(d)
 
@@ -117,7 +118,7 @@ func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m
 
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	tokenConfig, err := c.ConfigAPI.GetTokens(ctx, tenantID)
 
@@ -166,17 +167,17 @@ func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m
 	return diags
 }
 
-func expandTokenClaims(l []interface{}) []TokenClaim {
+func expandTokenClaims(l []interface{}) []api.TokenClaim {
 	if len(l) == 0 {
 		return nil
 	}
 
-	result := make([]TokenClaim, len(l))
+	result := make([]api.TokenClaim, len(l))
 
 	for i, item := range l {
 		cMap := item.(map[string]interface{})
 
-		claim := TokenClaim{
+		claim := api.TokenClaim{
 			Source: cMap["source"].(string),
 		}
 
@@ -195,23 +196,23 @@ func expandTokenClaims(l []interface{}) []TokenClaim {
 	return result
 }
 
-func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
-	config := &TokenConfig{}
+func expandTokenConfig(d *schema.ResourceData) *api.TokenConfig {
+	config := &api.TokenConfig{}
 
 	if accessExpiresIn, ok := d.GetOk("access_token_expires_in"); ok {
-		config.Access = &AccessTokenConfig{
+		config.Access = &api.AccessTokenConfig{
 			ExpiresIn: accessExpiresIn.(int),
 		}
 	}
 
 	if anonymousExpiresIn, ok := d.GetOk("anonymous_token_expires_in"); ok {
-		config.AnonymousAccess = &AnonymusAccessConfig{
+		config.AnonymousAccess = &api.AnonymusAccessConfig{
 			ExpiresIn: anonymousExpiresIn.(int),
 		}
 	}
 
 	if refreshExpiresIn, ok := d.GetOk("refresh_token_expires_in"); ok {
-		config.Refresh = &RefreshTokenConfig{
+		config.Refresh = &api.RefreshTokenConfig{
 			ExpiresIn: refreshExpiresIn.(int),
 		}
 	}
@@ -221,7 +222,7 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 
 	if anonymousAccessEnabled != nil {
 		if config.AnonymousAccess == nil {
-			config.AnonymousAccess = &AnonymusAccessConfig{}
+			config.AnonymousAccess = &api.AnonymusAccessConfig{}
 		}
 
 		config.AnonymousAccess.Enabled = getBoolPtr(anonymousAccessEnabled.(bool))
@@ -231,7 +232,7 @@ func expandTokenConfig(d *schema.ResourceData) *TokenConfig {
 
 	if refreshTokenEnabled != nil {
 		if config.Refresh == nil {
-			config.Refresh = &RefreshTokenConfig{}
+			config.Refresh = &api.RefreshTokenConfig{}
 		}
 
 		config.Refresh.Enabled = getBoolPtr(refreshTokenEnabled.(bool))
@@ -252,16 +253,16 @@ func resourceAppIDTokenConfigUpdate(ctx context.Context, d *schema.ResourceData,
 	return resourceAppIDTokenConfigCreate(ctx, d, m)
 }
 
-func tokenConfigDefaults() *TokenConfig {
-	return &TokenConfig{
-		Access: &AccessTokenConfig{
+func tokenConfigDefaults() *api.TokenConfig {
+	return &api.TokenConfig{
+		Access: &api.AccessTokenConfig{
 			ExpiresIn: 3600,
 		},
-		Refresh: &RefreshTokenConfig{
+		Refresh: &api.RefreshTokenConfig{
 			Enabled:   getBoolPtr(false),
 			ExpiresIn: 2592000,
 		},
-		AnonymousAccess: &AnonymusAccessConfig{
+		AnonymousAccess: &api.AnonymusAccessConfig{
 			Enabled:   getBoolPtr(true),
 			ExpiresIn: 2592000,
 		},
@@ -270,7 +271,7 @@ func tokenConfigDefaults() *TokenConfig {
 
 func resourceAppIDTokenConfigDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*Client)
+	c := m.(*api.Client)
 	tenantID := d.Get("tenant_id").(string)
 
 	config := tokenConfigDefaults()

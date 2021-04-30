@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 	"golang.org/x/oauth2"
 
 	"github.com/google/go-querystring/query"
@@ -46,6 +48,12 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Description: "IBM IAM base URL (for example 'https://iam.cloud.ibm.com')",
 				Default:     "https://iam.cloud.ibm.com",
+			},
+			"region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The IBM cloud Region (for example 'us-south').",
+				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IC_REGION", "IBMCLOUD_REGION"}, "us-south"),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -134,6 +142,10 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	var diags diag.Diagnostics
 	var iamApiKey, iamAccesToken string
 
+	clientOptions := &api.Options{
+		BaseURL: fmt.Sprintf("https://%s.appid.cloud.ibm.com", d.Get("region")),
+	}
+
 	if apiKey, ok := d.GetOk("iam_api_key"); ok {
 		iamApiKey = apiKey.(string)
 	}
@@ -142,7 +154,10 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		iamAccesToken = accessToken.(string)
 	}
 
-	appIDBaseURL := d.Get("appid_base_url").(string)
+	if baseURL, ok := d.GetOk("appid_base_url"); ok {
+		clientOptions.BaseURL = baseURL.(string)
+	}
+
 	iamBaseURL, err := url.Parse(d.Get("iam_base_url").(string))
 
 	if err != nil {
@@ -174,7 +189,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	)
 
 	tc := oauth2.NewClient(ctx, ts)
-	c, err := NewClient(appIDBaseURL, tc)
+	c, err := api.NewClient(clientOptions, tc)
 
 	if err != nil {
 		return nil, diag.FromErr(err)

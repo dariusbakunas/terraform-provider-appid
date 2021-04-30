@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDIDPCustom() *schema.Resource {
@@ -36,14 +37,14 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
-	config := &CustomIDP{
+	config := &api.CustomIDP{
 		IsActive: isActive,
 	}
 
 	if isActive {
-		config.Config = &CustomIDPConfig{}
+		config.Config = &api.CustomIDPConfig{}
 
 		if pKey, ok := d.GetOk("public_key"); ok {
 			config.Config.PublicKey = pKey.(string)
@@ -60,15 +61,15 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 	return dataSourceAppIDIDPCustomRead(ctx, d, m)
 }
 
-func customIDPDefaults() *CustomIDP {
-	return &CustomIDP{
+func customIDPDefaults() *api.CustomIDP {
+	return &api.CustomIDP{
 		IsActive: false,
 	}
 }
 
 func resourceAppIDIDPCustomDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*Client)
+	c := m.(*api.Client)
 	tenantID := d.Get("tenant_id").(string)
 	config := customIDPDefaults()
 

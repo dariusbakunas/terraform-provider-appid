@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDCloudDirectoryTemplate() *schema.Resource {
@@ -56,11 +57,11 @@ func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	input := &EmailTemplate{
+	input := &api.EmailTemplate{
 		Subject: d.Get("subject").(string),
 	}
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	if htmlBody, ok := d.GetOk("html_body"); ok {
 		// don't want to set HTMLBody here otherwise might run into issues with Cloudfare filtering
@@ -87,7 +88,7 @@ func resourceAppIDCloudDirectoryTemplateDelete(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	log.Printf("[DEBUG] Deleting CD Email Template: %s", d.Id())
 

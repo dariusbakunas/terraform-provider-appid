@@ -1,4 +1,4 @@
-package appid
+package api
 
 import (
 	"bytes"
@@ -34,8 +34,12 @@ type Client struct {
 	CloudDirectoryAPI *CloudDirectoryService
 }
 
-func NewClient(baseURL string, httpClient *http.Client) (*Client, error) {
-	bURL, err := url.Parse(baseURL)
+type Options struct {
+	BaseURL string
+}
+
+func NewClient(options *Options, httpClient *http.Client) (*Client, error) {
+	bURL, err := url.Parse(options.BaseURL)
 	if err != nil {
 		return nil, err
 	}

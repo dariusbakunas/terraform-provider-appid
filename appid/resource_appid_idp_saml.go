@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDIDPSaml() *schema.Resource {
@@ -96,9 +97,9 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
-	config := &SAMLIDP{
+	config := &api.SAMLIDP{
 		IsActive: isActive,
 	}
 
@@ -116,8 +117,8 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
 }
 
-func expandAuthNContext(ctx []interface{}) *AuthNContext {
-	context := &AuthNContext{}
+func expandAuthNContext(ctx []interface{}) *api.AuthNContext {
+	context := &api.AuthNContext{}
 
 	if len(ctx) == 0 || ctx[0] == nil {
 		return nil
@@ -138,8 +139,8 @@ func expandAuthNContext(ctx []interface{}) *AuthNContext {
 	return context
 }
 
-func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
-	config := &SAMLConfig{}
+func expandSAMLConfig(cfg []interface{}) *api.SAMLConfig {
+	config := &api.SAMLConfig{}
 
 	if len(cfg) == 0 || cfg[0] == nil {
 		return nil
@@ -176,15 +177,15 @@ func expandSAMLConfig(cfg []interface{}) *SAMLConfig {
 	return config
 }
 
-func samlConfigDefaults() *SAMLIDP {
-	return &SAMLIDP{
+func samlConfigDefaults() *api.SAMLIDP {
+	return &api.SAMLIDP{
 		IsActive: false,
 	}
 }
 
 func resourceAppIDIDPSAMLDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*Client)
+	c := m.(*api.Client)
 	tenantID := d.Get("tenant_id").(string)
 	config := samlConfigDefaults()
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPCustom() *schema.Resource {
@@ -33,7 +34,7 @@ func dataSourceAppIDIDPCustomRead(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	config, err := c.IDPAPI.GetCustomIDPConfig(ctx, tenantID)
 

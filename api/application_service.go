@@ -1,4 +1,4 @@
-package appid
+package api
 
 import (
 	"context"
