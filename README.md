@@ -6,6 +6,8 @@
 
 Check `examples` folder for working examples
 
+(WIP) [documentation](https://pages.github.ibm.com/watson-health-development/terraform-provider-appid/)
+
 ## Development
 
 ### Requirements
