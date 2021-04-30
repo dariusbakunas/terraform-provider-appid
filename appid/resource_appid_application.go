@@ -19,20 +19,24 @@ func resourceAppIDApplication() *schema.Resource {
 		UpdateContext: resourceAppIDApplicationUpdate,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"client_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "The `client_id` is a public identifier for applications",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"name": {
+				Description:  "The application name to be registered. Application name cannot exceed 50 characters.",
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringLenBetween(1, 50),
 			},
 			"type": {
+				Description:  "The type of application to be registered. Allowed types are `regularwebapp` and `singlepageapp`, default is `regularwebapp`.",
 				Type:         schema.TypeString,
 				ForceNew:     true,
 				Optional:     true,
@@ -40,21 +44,24 @@ func resourceAppIDApplication() *schema.Resource {
 				ValidateFunc: validation.StringInSlice([]string{"regularwebapp", "singlepageapp"}, false),
 			},
 			"secret": {
-				Type:      schema.TypeString,
-				Computed:  true,
-				Sensitive: true,
+				Description: "The `secret` is a secret known only to the application and the authorization server",
+				Type:        schema.TypeString,
+				Computed:    true,
+				Sensitive:   true,
 			},
 			"oauth_server_url": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Base URL for common OAuth endpoints, like `/authorization`, `/token` and `/publickeys`",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"profiles_url": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"discovery_endpoint": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "This URL returns OAuth Authorization Server Metadata",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 			"scopes": {
 				Type: schema.TypeList,
