@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPCloudDirectory() *schema.Resource {
@@ -88,7 +89,7 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	config, err := c.IDPAPI.GetCloudDirectoryConfig(ctx, tenantID)
 
@@ -111,7 +112,7 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 	return diags
 }
 
-func flattenCloudDirectoryConfig(config *CloudDirectoryConfig) []interface{} {
+func flattenCloudDirectoryConfig(config *api.CloudDirectoryConfig) []interface{} {
 	if config == nil {
 		return []interface{}{}
 	}
@@ -132,7 +133,7 @@ func flattenCloudDirectoryConfig(config *CloudDirectoryConfig) []interface{} {
 	return []interface{}{mConfig}
 }
 
-func flattenCloudDirectoryConfigInteractions(interactions *CloudDirectoryInteractions) []interface{} {
+func flattenCloudDirectoryConfigInteractions(interactions *api.CloudDirectoryInteractions) []interface{} {
 	if interactions == nil {
 		return []interface{}{}
 	}
@@ -147,7 +148,7 @@ func flattenCloudDirectoryConfigInteractions(interactions *CloudDirectoryInterac
 	return []interface{}{mInteractions}
 }
 
-func flattenIdentityConfirmation(confirmation *IdentityConfirmation) []interface{} {
+func flattenIdentityConfirmation(confirmation *api.IdentityConfirmation) []interface{} {
 	if confirmation == nil {
 		return []interface{}{}
 	}

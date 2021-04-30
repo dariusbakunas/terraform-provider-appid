@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDApplication() *schema.Resource {
@@ -78,9 +79,9 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 		}
 	}
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
-	input := &CreateApplicationInput{
+	input := &api.CreateApplicationInput{
 		Name: name,
 		Type: appType,
 	}
@@ -118,7 +119,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 
 func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*Client)
+	c := m.(*api.Client)
 	tenantID := d.Get("tenant_id").(string)
 	clientID := d.Get("client_id").(string)
 
@@ -136,7 +137,7 @@ func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData,
 }
 
 func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	tenantID := d.Get("tenant_id").(string)
 	clientID := d.Get("client_id").(string)
 

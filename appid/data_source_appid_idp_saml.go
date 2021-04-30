@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPSAML() *schema.Resource {
@@ -87,7 +88,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	saml, err := c.IDPAPI.GetSAMLConfig(ctx, tenantID)
 
@@ -110,7 +111,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func flattenSAMLConfig(config *SAMLConfig) []interface{} {
+func flattenSAMLConfig(config *api.SAMLConfig) []interface{} {
 	if config == nil {
 		return []interface{}{}
 	}
@@ -140,7 +141,7 @@ func flattenSAMLConfig(config *SAMLConfig) []interface{} {
 	return []interface{}{mConfig}
 }
 
-func flattenAuthNContext(context *AuthNContext) []interface{} {
+func flattenAuthNContext(context *api.AuthNContext) []interface{} {
 	if context == nil {
 		return []interface{}{}
 	}

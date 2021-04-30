@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/stretchr/testify/assert"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func TestAccTokenConfigDataSource_basic(t *testing.T) {
@@ -27,11 +28,11 @@ func TestAccTokenConfigDataSource_basic(t *testing.T) {
 
 func TestFlattenTokenClaims(t *testing.T) {
 	testcases := []struct {
-		claims   []TokenClaim
+		claims   []api.TokenClaim
 		expected []interface{}
 	}{
 		{
-			claims: []TokenClaim{
+			claims: []api.TokenClaim{
 				{Source: "appid_custom", SourceClaim: getStringPtr("sClaim"), DestinationClaim: getStringPtr("dClaim")},
 				{Source: "appid_custom", DestinationClaim: getStringPtr("dClaim")},
 			},

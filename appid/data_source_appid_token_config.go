@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDTokenConfig() *schema.Resource {
@@ -89,7 +90,7 @@ func dataSourceAppIDTokenConfig() *schema.Resource {
 	}
 }
 
-func flattenTokenClaims(c []TokenClaim) []interface{} {
+func flattenTokenClaims(c []api.TokenClaim) []interface{} {
 	var s []interface{}
 
 	for _, v := range c {
@@ -116,7 +117,7 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	tokenConfig, err := c.ConfigAPI.GetTokens(ctx, tenantID)
 
