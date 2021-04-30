@@ -9,23 +9,28 @@ import (
 
 func dataSourceAppIDTokenConfig() *schema.Resource {
 	return &schema.Resource{
+		Description: "`appid_token_config` data source can be used to retrieve the token configuration for specific AppID tenant. [Learn more.](https://cloud.ibm.com/docs/appid?topic=appid-customizing-tokens){target=_blank}",
 		ReadContext: dataSourceAppIDTokenConfigRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The service `tenantId`",
 			},
 			"access_token_expires_in": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The length of time for which access tokens are valid in seconds",
 			},
 			"refresh_token_expires_in": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The length of time for which refresh tokens are valid in seconds",
 			},
 			"anonymous_token_expires_in": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The length of time for which an anonymous token is valid in seconds",
 			},
 			"anonymous_access_enabled": {
 				Type:     schema.TypeBool,
@@ -36,29 +41,33 @@ func dataSourceAppIDTokenConfig() *schema.Resource {
 				Computed: true,
 			},
 			"access_token_claim": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "A set of objects that are created when claims that are related to access tokens are mapped",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "Defines the source of the claim. Options include: `saml`, `cloud_directory`, `facebook`, `google`, `appid_custom`, and `attributes`.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"source_claim": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Optional: true,
+							Description: "Defines the claim as provided by the source. It can refer to the identity provider's user information or the user's App ID custom attributes.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"destination_claim": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "Optional: Defines the custom attribute that can override the current claim in token.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 					},
 				},
 			},
 			"id_token_claim": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "A set of objects that are created when claims that are related to identity tokens are mapped",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {

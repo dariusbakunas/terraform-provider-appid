@@ -6,6 +6,8 @@ import (
 	"github.ibm.com/dbakuna/terraform-provider-appid/appid"
 )
 
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: func() *schema.Provider {
