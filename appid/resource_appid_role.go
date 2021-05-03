@@ -105,7 +105,7 @@ func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m inte
 
 func expandRoleAccess(l []interface{}) []api.RoleAccess {
 	if len(l) == 0 {
-		return nil
+		return []api.RoleAccess{}
 	}
 
 	result := make([]api.RoleAccess, len(l))
