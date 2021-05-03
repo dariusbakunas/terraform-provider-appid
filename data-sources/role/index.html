@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="A role is a group of scopes that apply to the user.">
+        <meta name="description" content="A role is a collection of scopes that allow varying permissions to different types of app users">
       
       
       
@@ -597,7 +597,7 @@
                 
                 
                 <h1 id="appid_role-data-source">appid_role (Data Source)</h1>
-<p>A role is a group of scopes that apply to the user.</p>
+<p>A role is a collection of <code>scopes</code> that allow varying permissions to different types of app users</p>
 <h2 id="example-usage">Example Usage</h2>
 <div class="highlight"><pre><span></span><code><span class="kr">data</span> <span class="s">&quot;appid_role&quot; &quot;default&quot;</span> <span class=" -Punctuation">{</span>
 <span class="na">    tenant_id</span> <span class="o">=</span> <span class="s2">&quot;&lt;your appid tenant_id&gt;&quot;</span>
@@ -608,6 +608,7 @@
 <h2 id="schema">Schema</h2>
 <h3 id="required">Required</h3>
 <ul>
+<li><strong>role_id</strong> (String) Role ID</li>
 <li><strong>tenant_id</strong> (String) The service <code>tenantId</code></li>
 </ul>
 <h3 id="optional">Optional</h3>
@@ -635,7 +636,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-03T17:12:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-03</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-03T18:21:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-03</span>
     
   </small>
 </div>

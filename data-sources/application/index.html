@@ -571,8 +571,8 @@
 <h2 id="schema">Schema</h2>
 <h3 id="required">Required</h3>
 <ul>
-<li><strong>client_id</strong> (String)</li>
-<li><strong>tenant_id</strong> (String)</li>
+<li><strong>client_id</strong> (String) The <code>client_id</code> is a public identifier for applications</li>
+<li><strong>tenant_id</strong> (String) The service <code>tenantId</code></li>
 </ul>
 <h3 id="optional">Optional</h3>
 <ul>
@@ -580,13 +580,13 @@
 </ul>
 <h3 id="read-only">Read-Only</h3>
 <ul>
-<li><strong>discovery_endpoint</strong> (String)</li>
-<li><strong>name</strong> (String)</li>
-<li><strong>oauth_server_url</strong> (String)</li>
+<li><strong>discovery_endpoint</strong> (String) This URL returns OAuth Authorization Server Metadata</li>
+<li><strong>name</strong> (String) The application name</li>
+<li><strong>oauth_server_url</strong> (String) Base URL for common OAuth endpoints, like <code>/authorization</code>, <code>/token</code> and <code>/publickeys</code></li>
 <li><strong>profiles_url</strong> (String)</li>
-<li><strong>scopes</strong> (List of String)</li>
-<li><strong>secret</strong> (String, Sensitive)</li>
-<li><strong>type</strong> (String)</li>
+<li><strong>scopes</strong> (List of String) A <code>scope</code> is a runtime action in your application that you register with IBM Cloud App ID to create an access permission</li>
+<li><strong>secret</strong> (String, Sensitive) The <code>secret</code> is a secret known only to the application and the authorization server</li>
+<li><strong>type</strong> (String) The type of application to be registered. Allowed types are <code>regularwebapp</code> and <code>singlepageapp</code>.</li>
 </ul>
                 
                   
@@ -596,7 +596,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-04-29T20:22:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-04-29</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-03T18:21:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-03</span>
     
   </small>
 </div>
