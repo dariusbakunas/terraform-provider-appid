@@ -7,15 +7,19 @@ import (
 
 type RolesService service
 
-type Role struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+type RoleAccess struct {
+	ApplicationID string   `json:"application_id"`
+	Scopes        []string `json:"scopes"`
 }
 
 type RoleInput struct {
-	Name        string `json:"name"`
-	Description string `json:"description,omitempty"`
+	Name        string       `json:"name"`
+	Description string       `json:"description,omitempty"`
+	Access      []RoleAccess `json:"access"`
+}
+type Role struct {
+	RoleInput
+	ID string `json:"id"`
 }
 
 func (s *RolesService) GetRole(ctx context.Context, tenantID string, roleID string) (*Role, error) {

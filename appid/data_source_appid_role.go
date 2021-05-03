@@ -57,7 +57,7 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	c := m.(*api.Client)
 
 	tenantID := d.Get("tenant_id").(string)
-	id := d.Get("id").(string)
+	id := d.Id()
 
 	role, err := c.RolesAPI.GetRole(ctx, tenantID, id)
 
@@ -69,6 +69,22 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	d.Set("id", role.ID)
 	d.Set("name", role.Name)
 	d.Set("description", role.Description)
+	d.Set("access", flattenRoleAccess(role.Access))
 
 	return diags
+}
+
+func flattenRoleAccess(ra []api.RoleAccess) []interface{} {
+	var result []interface{}
+
+	for _, a := range ra {
+		access := map[string]interface{}{
+			"application_id": a.ApplicationID,
+			"scopes":         flattenStringList(a.Scopes),
+		}
+
+		result = append(result, access)
+	}
+
+	return result
 }
