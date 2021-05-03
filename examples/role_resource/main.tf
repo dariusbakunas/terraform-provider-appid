@@ -35,6 +35,10 @@ resource "appid_role" "role" {
 data "appid_role" "role" {
   tenant_id = appid_role.role.tenant_id
   role_id = appid_role.role.role_id
+
+  depends_on = [
+    appid_role.role
+  ]
 }
 
 output "role" {

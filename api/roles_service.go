@@ -58,6 +58,24 @@ func (s *RolesService) CreateRole(ctx context.Context, tenantID string, input *R
 	return resp, nil
 }
 
+func (s *RolesService) UpdateRole(ctx context.Context, tenantID string, roleID string, input *RoleInput) (*Role, error) {
+	path := fmt.Sprintf("/management/v4/%s/roles/%s", tenantID, roleID)
+
+	req, err := s.client.NewRequest("PUT", path, input)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &Role{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
 func (s *RolesService) DeleteRole(ctx context.Context, tenantID string, roleID string) error {
 	path := fmt.Sprintf("/management/v4/%s/roles/%s", tenantID, roleID)
 

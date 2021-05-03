@@ -140,6 +140,27 @@ func expandRoleAccess(l []interface{}) []api.RoleAccess {
 }
 
 func resourceAppIDRoleUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// TODO: implement role update
+	tenantID := d.Get("tenant_id").(string)
+	roleID := d.Id()
+
+	input := &api.RoleInput{
+		Name: d.Get("name").(string),
+	}
+
+	if description, ok := d.GetOk("description"); ok {
+		input.Description = description.(string)
+	}
+
+	input.Access = expandRoleAccess(d.Get("access").(*schema.Set).List())
+
+	c := m.(*api.Client)
+
+	log.Printf("[DEBUG] Updating AppID role: %+v", input)
+	_, err := c.RolesAPI.UpdateRole(ctx, tenantID, roleID, input)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	return dataSourceAppIDRoleRead(ctx, d, m)
 }
