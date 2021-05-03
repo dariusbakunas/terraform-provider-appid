@@ -17,8 +17,8 @@ description: |-
 
 ### Required
 
-- **client_id** (String)
-- **tenant_id** (String)
+- **client_id** (String) The `client_id` is a public identifier for applications
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
@@ -26,12 +26,12 @@ description: |-
 
 ### Read-Only
 
-- **discovery_endpoint** (String)
-- **name** (String)
-- **oauth_server_url** (String)
+- **discovery_endpoint** (String) This URL returns OAuth Authorization Server Metadata
+- **name** (String) The application name
+- **oauth_server_url** (String) Base URL for common OAuth endpoints, like `/authorization`, `/token` and `/publickeys`
 - **profiles_url** (String)
-- **scopes** (List of String)
-- **secret** (String, Sensitive)
-- **type** (String)
+- **scopes** (List of String) A `scope` is a runtime action in your application that you register with IBM Cloud App ID to create an access permission
+- **secret** (String, Sensitive) The `secret` is a secret known only to the application and the authorization server
+- **type** (String) The type of application to be registered. Allowed types are `regularwebapp` and `singlepageapp`.
 
 

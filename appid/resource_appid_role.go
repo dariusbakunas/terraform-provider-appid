@@ -11,14 +11,16 @@ import (
 
 func resourceAppIDRole() *schema.Resource {
 	return &schema.Resource{
+		Description:   "A role is a collection of `scopes` that allow varying permissions to different types of app users",
 		CreateContext: resourceAppIDRoleCreate,
 		ReadContext:   dataSourceAppIDRoleRead,
 		DeleteContext: resourceAppIDRoleDelete,
 		UpdateContext: resourceAppIDRoleUpdate,
 		Schema: map[string]*schema.Schema{
 			"role_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Role ID",
 			},
 			"tenant_id": {
 				Type:        schema.TypeString,
@@ -42,8 +44,9 @@ func resourceAppIDRole() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"application_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Application `client_id`",
 						},
 						"scopes": {
 							Type: schema.TypeList,

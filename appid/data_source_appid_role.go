@@ -10,12 +10,13 @@ import (
 
 func dataSourceAppIDRole() *schema.Resource {
 	return &schema.Resource{
-		Description: "A role is a group of scopes that apply to the user.",
+		Description: "A role is a collection of `scopes` that allow varying permissions to different types of app users",
 		ReadContext: dataSourceAppIDRoleRead,
 		Schema: map[string]*schema.Schema{
 			"role_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "Role ID",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"tenant_id": {
 				Type:        schema.TypeString,

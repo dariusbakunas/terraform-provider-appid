@@ -3,12 +3,12 @@
 page_title: "appid_role Resource - terraform-provider-appid"
 subcategory: ""
 description: |-
-  
+  A role is a collection of scopes that allow varying permissions to different types of app users
 ---
 
 # appid_role (Resource)
 
-
+A role is a collection of `scopes` that allow varying permissions to different types of app users
 
 ## Example Usage
 
@@ -57,12 +57,16 @@ resource "appid_role" "role" {
 - **description** (String) Optional role description
 - **id** (String) The ID of this resource.
 
+### Read-Only
+
+- **role_id** (String) Role ID
+
 <a id="nestedblock--access"></a>
 ### Nested Schema for `access`
 
 Required:
 
-- **application_id** (String)
+- **application_id** (String) Application `client_id`
 - **scopes** (List of String)
 
 

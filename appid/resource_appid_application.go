@@ -64,7 +64,8 @@ func resourceAppIDApplication() *schema.Resource {
 				Computed:    true,
 			},
 			"scopes": {
-				Type: schema.TypeList,
+				Description: "A `scope` is a runtime action in your application that you register with IBM Cloud App ID to create an access permission",
+				Type:        schema.TypeList,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

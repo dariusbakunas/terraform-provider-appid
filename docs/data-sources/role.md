@@ -3,12 +3,12 @@
 page_title: "appid_role Data Source - terraform-provider-appid"
 subcategory: ""
 description: |-
-  A role is a group of scopes that apply to the user.
+  A role is a collection of scopes that allow varying permissions to different types of app users
 ---
 
 # appid_role (Data Source)
 
-A role is a group of scopes that apply to the user.
+A role is a collection of `scopes` that allow varying permissions to different types of app users
 
 ## Example Usage
 
@@ -24,6 +24,7 @@ data "appid_role" "default" {
 
 ### Required
 
+- **role_id** (String) Role ID
 - **tenant_id** (String) The service `tenantId`
 
 ### Optional
