@@ -52,6 +52,7 @@ func Provider() *schema.Provider {
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
 			"appid_idp_custom":               resourceAppIDIDPCustom(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_role":                     resourceAppIDRole(),
 			"appid_token_config":             resourceAppIDTokenConfig(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
