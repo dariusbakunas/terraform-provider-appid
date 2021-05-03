@@ -6,6 +6,8 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="An example of using variable to create applications and associated roles.">
+      
       
       
       
@@ -14,7 +16,7 @@
     
     
       
-        <title>appid_cloud_directory_template (Data Source) - Terraform Provider for AppID</title>
+        <title>Application roles - Terraform Provider for AppID</title>
       
     
     
@@ -62,11 +64,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#appid_cloud_directory_template-data-source" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -93,7 +90,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              appid_cloud_directory_template (Data Source)
+              Application roles
             
           </span>
         </div>
@@ -203,12 +200,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
     <label class="md-nav__link" for="nav-2">
       Data sources
       <span class="md-nav__icon md-icon"></span>
@@ -227,7 +222,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../application/" class="md-nav__link">
+    <a href="../../data-sources/application/" class="md-nav__link">
       appid_application (Data Source)
     </a>
   </li>
@@ -239,7 +234,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../application_ids/" class="md-nav__link">
+    <a href="../../data-sources/application_ids/" class="md-nav__link">
       appid_application_ids (Data Source)
     </a>
   </li>
@@ -251,7 +246,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../applications/" class="md-nav__link">
+    <a href="../../data-sources/applications/" class="md-nav__link">
       appid_applications (Data Source)
     </a>
   </li>
@@ -261,76 +256,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        appid_cloud_directory_template (Data Source)
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../data-sources/cloud_directory_template/" class="md-nav__link">
       appid_cloud_directory_template (Data Source)
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#schema" class="md-nav__link">
-    Schema
-  </a>
-  
-    <nav class="md-nav" aria-label="Schema">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#required" class="md-nav__link">
-    Required
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional" class="md-nav__link">
-    Optional
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#read-only" class="md-nav__link">
-    Read-Only
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -340,7 +270,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../idp_cloud_directory/" class="md-nav__link">
+    <a href="../../data-sources/idp_cloud_directory/" class="md-nav__link">
       appid_idp_cloud_directory (Data Source)
     </a>
   </li>
@@ -352,7 +282,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../idp_custom/" class="md-nav__link">
+    <a href="../../data-sources/idp_custom/" class="md-nav__link">
       appid_idp_custom (Data Source)
     </a>
   </li>
@@ -364,7 +294,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../idp_saml/" class="md-nav__link">
+    <a href="../../data-sources/idp_saml/" class="md-nav__link">
       appid_idp_saml (Data Source)
     </a>
   </li>
@@ -376,7 +306,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../role/" class="md-nav__link">
+    <a href="../../data-sources/role/" class="md-nav__link">
       appid_role (Data Source)
     </a>
   </li>
@@ -388,7 +318,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../token_config/" class="md-nav__link">
+    <a href="../../data-sources/token_config/" class="md-nav__link">
       appid_token_config (Data Source)
     </a>
   </li>
@@ -403,10 +333,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
+    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     <label class="md-nav__link" for="nav-3">
       Guides
       <span class="md-nav__icon md-icon"></span>
@@ -423,11 +355,18 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../guides/application-roles/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Application roles
     </a>
+    
   </li>
 
         
@@ -540,89 +479,122 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#schema" class="md-nav__link">
-    Schema
-  </a>
-  
-    <nav class="md-nav" aria-label="Schema">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#required" class="md-nav__link">
-    Required
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional" class="md-nav__link">
-    Optional
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#read-only" class="md-nav__link">
-    Read-Only
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                <h1 id="appid_cloud_directory_template-data-source">appid_cloud_directory_template (Data Source)</h1>
-<!-- schema generated by tfplugindocs -->
-<h2 id="schema">Schema</h2>
-<h3 id="required">Required</h3>
-<ul>
-<li><strong>template_name</strong> (String)</li>
-<li><strong>tenant_id</strong> (String)</li>
-</ul>
-<h3 id="optional">Optional</h3>
-<ul>
-<li><strong>id</strong> (String) The ID of this resource.</li>
-<li><strong>language</strong> (String)</li>
-</ul>
-<h3 id="read-only">Read-Only</h3>
-<ul>
-<li><strong>base64_encoded_html_body</strong> (String)</li>
-<li><strong>html_body</strong> (String)</li>
-<li><strong>plain_text_body</strong> (String)</li>
-<li><strong>subject</strong> (String)</li>
-</ul>
+                  <h1>Application roles</h1>
+                
+                <p>Given variable file:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">variable</span> <span class="s">&quot;tenant_id&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">  type</span> <span class="o">=</span> <span class="err">string</span>  
+  <span class="na">description</span> <span class="o">=</span> <span class="s2">&quot;AppID tenant ID&quot;</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">variable</span> <span class="s">&quot;iam_access_token&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">    type</span> <span class="o">=</span> <span class="err">string</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">variable</span> <span class="s">&quot;applications&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">    type</span> <span class="o">=</span> <span class="err">map</span>
+<span class="na">    default</span> <span class="o">=</span> <span class=" -Punctuation">{</span>
+        <span class="s2">&quot;Web App #1&quot;</span><span class="err">:</span> <span class=" -Punctuation">{</span>
+<span class="na">            type</span> <span class="o">=</span> <span class="s2">&quot;regularwebapp&quot;</span>
+<span class="na">            roles</span> <span class="o">=</span> <span class="p">[</span>
+                <span class=" -Punctuation">{</span> <span class="err">name:</span> <span class="s2">&quot;admin&quot;, scopes: [&quot;create_posts&quot;</span><span class="p">]</span><span class=" -Punctuation">}</span><span class="p">,</span>
+                <span class=" -Punctuation">{</span> <span class="err">name:</span> <span class="s2">&quot;regular_user&quot;, scopes: [&quot;read_posts&quot;, &quot;fav_posts&quot;</span><span class="p">]</span><span class=" -Punctuation">}</span>
+            <span class="p">],</span>            
+        <span class=" -Punctuation">}</span><span class="p">,</span>
+        <span class="s2">&quot;Web App #2&quot;</span><span class="err">:</span> <span class=" -Punctuation">{</span>
+<span class="na">            type</span> <span class="o">=</span> <span class="s2">&quot;singlepageapp&quot;</span>
+<span class="na">            roles</span> <span class="o">=</span> <span class="p">[</span>
+                <span class=" -Punctuation">{</span> <span class="err">name:</span> <span class="s2">&quot;admin&quot;, scopes: [&quot;create_posts&quot;</span><span class="p">]</span><span class=" -Punctuation">}</span><span class="p">,</span>
+                <span class=" -Punctuation">{</span> <span class="err">name:</span> <span class="s2">&quot;regular_user&quot;, scopes: [&quot;read_posts&quot;</span><span class="p">]</span><span class=" -Punctuation">}</span><span class="p">,</span>
+                <span class=" -Punctuation">{</span> <span class="err">name:</span> <span class="s2">&quot;guest&quot;, scopes: [&quot;list_posts&quot;</span><span class="p">]</span><span class=" -Punctuation">}</span><span class="p">,</span>
+            <span class="p">],</span>            
+        <span class=" -Punctuation">}</span>
+    <span class=" -Punctuation">}</span>        
+<span class=" -Punctuation">}</span>
+</code></pre></div>
+<p>You could create AppID applications and associate roles:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">terraform</span> <span class=" -Punctuation">{</span>
+  <span class="err">required_providers</span> <span class=" -Punctuation">{</span>
+<span class="na">    appid</span> <span class="o">=</span> <span class=" -Punctuation">{</span>
+<span class="na">      version</span> <span class="o">=</span> <span class="s2">&quot;0.1&quot;</span>
+<span class="na">      source</span>  <span class="o">=</span> <span class="s2">&quot;us.ibm.com/watson-health/appid&quot;</span>
+    <span class=" -Punctuation">}</span>
+  <span class=" -Punctuation">}</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">provider</span> <span class="s">&quot;appid&quot;</span> <span class=" -Punctuation">{</span><span class="err">  </span>
+<span class="na">    iam_access_token</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">iam_access_token</span>  
+    <span class="na">iam_base_url</span> <span class="o">=</span> <span class="s2">&quot;https://iam.cloud.ibm.com&quot;</span>
+<span class="na">    appid_base_url</span> <span class="o">=</span> <span class="s2">&quot;https://us-south.appid.cloud.ibm.com&quot;</span>
+<span class=" -Punctuation">}</span>
+
+<span class="err">locals</span> <span class=" -Punctuation">{</span>
+<span class="na">    applications</span> <span class="o">=</span> <span class=" -Punctuation">{</span>
+        <span class="err">for</span> <span class="err">app_name</span><span class="p">,</span> <span class="err">app</span> <span class="err">in</span> <span class="err">var</span><span class="p">.</span><span class="err">applications:</span>
+<span class="na">        app_name</span> <span class="o">=</span><span class="err">&gt;</span> <span class=" -Punctuation">{</span>
+<span class="na">            &quot;type&quot;</span> <span class="o">=</span> <span class="err">app</span><span class="p">.</span><span class="err">type</span>
+<span class="na">            &quot;scopes&quot;</span> <span class="o">=</span> <span class="err">toset</span><span class="p">(</span><span class="err">flatten</span><span class="p">(</span><span class="err">app</span><span class="p">.</span><span class="err">roles</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">scopes</span><span class="p">))</span>
+        <span class=" -Punctuation">}</span>
+    <span class=" -Punctuation">}</span>
+<span class="na">    all_roles</span> <span class="o">=</span> <span class="err">flatten</span><span class="p">([</span>
+        <span class="err">for</span> <span class="err">app_name</span><span class="p">,</span> <span class="err">app</span> <span class="err">in</span> <span class="err">var</span><span class="p">.</span><span class="err">applications:</span> <span class="p">[</span>
+            <span class="err">for</span> <span class="err">role</span> <span class="err">in</span> <span class="err">app</span><span class="p">.</span><span class="err">roles:</span>
+            <span class=" -Punctuation">{</span>
+<span class="na">                name</span> <span class="o">=</span> <span class="err">role</span><span class="p">.</span><span class="err">name</span>
+<span class="na">                access</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class=" -Punctuation">{</span>
+<span class="na">                        application</span> <span class="o">=</span> <span class="err">app_name</span>
+<span class="na">                        scopes</span> <span class="o">=</span> <span class="err">role</span><span class="p">.</span><span class="err">scopes</span>
+                    <span class=" -Punctuation">}</span>                    
+                <span class="p">]</span>
+            <span class=" -Punctuation">}</span>
+        <span class="p">]</span> 
+    <span class="p">])</span>
+
+<span class="na">    roles</span> <span class="o">=</span> <span class=" -Punctuation">{</span>
+        <span class="err">for</span> <span class="err">role_name</span> <span class="err">in</span> <span class="err">toset</span><span class="p">(</span><span class="err">local</span><span class="p">.</span><span class="err">all_roles</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">name</span><span class="p">)</span><span class="err">:</span>
+<span class="na">        role_name</span> <span class="o">=</span><span class="err">&gt;</span> <span class=" -Punctuation">{</span>            
+            <span class="na">access</span> <span class="o">=</span> <span class="err">flatten</span><span class="p">(</span><span class="err">matchkeys</span><span class="p">(</span><span class="err">local</span><span class="p">.</span><span class="err">all_roles</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">access</span><span class="p">,</span> <span class="err">local</span><span class="p">.</span><span class="err">all_roles</span><span class="p">[</span><span class="err">*</span><span class="p">].</span><span class="err">name</span><span class="p">,</span> <span class="p">[</span><span class="err">role_name</span><span class="p">]))</span>
+        <span class=" -Punctuation">}</span>
+    <span class=" -Punctuation">}</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">resource</span> <span class="s">&quot;appid_application&quot; &quot;apps&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">    for_each</span> <span class="o">=</span> <span class="err">local</span><span class="p">.</span><span class="err">applications</span>
+<span class="na">    tenant_id</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">tenant_id</span>
+<span class="na">    name</span> <span class="o">=</span> <span class="err">each</span><span class="p">.</span><span class="err">key</span>
+<span class="na">    type</span> <span class="o">=</span> <span class="err">each</span><span class="p">.</span><span class="err">value</span><span class="p">.</span><span class="err">type</span>
+<span class="na">    scopes</span> <span class="o">=</span> <span class="err">each</span><span class="p">.</span><span class="err">value</span><span class="p">.</span><span class="err">scopes</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">resource</span> <span class="s">&quot;appid_role&quot; &quot;roles&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">    for_each</span> <span class="o">=</span> <span class="err">local</span><span class="p">.</span><span class="err">roles</span>
+<span class="na">    tenant_id</span> <span class="o">=</span> <span class="err">var</span><span class="p">.</span><span class="err">tenant_id</span>
+<span class="na">    name</span> <span class="o">=</span> <span class="err">each</span><span class="p">.</span><span class="err">key</span>
+
+    <span class="err">dynamic</span> <span class="s2">&quot;access&quot;</span> <span class=" -Punctuation">{</span>
+<span class="na">        for_each</span> <span class="o">=</span> <span class="err">each</span><span class="p">.</span><span class="err">value</span><span class="p">.</span><span class="err">access</span>
+        <span class="err">content</span> <span class=" -Punctuation">{</span>
+<span class="na">            application_id</span> <span class="o">=</span> <span class="err">appid_application</span><span class="p">.</span><span class="err">apps</span><span class="p">[</span><span class="err">access</span><span class="p">.</span><span class="err">value</span><span class="p">.</span><span class="err">application</span><span class="p">].</span><span class="err">client_id</span>
+<span class="na">            scopes</span> <span class="o">=</span> <span class="err">access</span><span class="p">.</span><span class="err">value</span><span class="p">.</span><span class="err">scopes</span>
+        <span class=" -Punctuation">}</span>        
+    <span class=" -Punctuation">}</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">output</span><span class="err"> applications </span><span class=" -Punctuation">{</span>
+<span class="na">    value</span> <span class="o">=</span> <span class="err">local</span><span class="p">.</span><span class="err">applications</span>
+<span class=" -Punctuation">}</span>
+
+<span class="kr">output</span><span class="err"> roles </span><span class=" -Punctuation">{</span>
+<span class="na">    value</span> <span class="o">=</span> <span class="err">local</span><span class="p">.</span><span class="err">roles</span>
+<span class=" -Punctuation">}</span>
+</code></pre></div>
                 
                   
                     
@@ -631,7 +603,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-04-29T20:22:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-04-29</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-03T22:23:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-03</span>
     
   </small>
 </div>
@@ -654,7 +626,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../applications/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../data-sources/token_config/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -663,19 +635,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                appid_applications (Data Source)
+                appid_token_config (Data Source)
               </div>
             </div>
           </a>
         
         
-          <a href="../idp_cloud_directory/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../resources/application/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                appid_idp_cloud_directory (Data Source)
+                appid_application (Resource)
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
