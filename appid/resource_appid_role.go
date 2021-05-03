@@ -16,6 +16,10 @@ func resourceAppIDRole() *schema.Resource {
 		DeleteContext: resourceAppIDRoleDelete,
 		UpdateContext: resourceAppIDRoleUpdate,
 		Schema: map[string]*schema.Schema{
+			"role_id": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"tenant_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -78,6 +82,7 @@ func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	d.SetId(role.ID)
+	d.Set("role_id", role.ID)
 
 	return dataSourceAppIDRoleRead(ctx, d, m)
 }

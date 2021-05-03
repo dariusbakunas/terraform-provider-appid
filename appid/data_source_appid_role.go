@@ -13,6 +13,10 @@ func dataSourceAppIDRole() *schema.Resource {
 		Description: "A role is a group of scopes that apply to the user.",
 		ReadContext: dataSourceAppIDRoleRead,
 		Schema: map[string]*schema.Schema{
+			"role_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"tenant_id": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -57,7 +61,7 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	c := m.(*api.Client)
 
 	tenantID := d.Get("tenant_id").(string)
-	id := d.Id()
+	id := d.Get("role_id").(string)
 
 	role, err := c.RolesAPI.GetRole(ctx, tenantID, id)
 
@@ -66,7 +70,6 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	d.SetId(role.ID)
-	d.Set("id", role.ID)
 	d.Set("name", role.Name)
 	d.Set("description", role.Description)
 	d.Set("access", flattenRoleAccess(role.Access))

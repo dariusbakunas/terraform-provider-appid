@@ -31,6 +31,12 @@ resource "appid_role" "role" {
   }
 }
 
+
+data "appid_role" "role" {
+  tenant_id = appid_role.role.tenant_id
+  role_id = appid_role.role.role_id
+}
+
 output "role" {
-  value = appid_role.role
+  value = data.appid_role.role
 }
