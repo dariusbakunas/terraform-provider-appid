@@ -32,7 +32,7 @@ resource "appid_application" "app" {
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **scopes** (List of String)
+- **scopes** (List of String) A `scope` is a runtime action in your application that you register with IBM Cloud App ID to create an access permission
 - **type** (String) The type of application to be registered. Allowed types are `regularwebapp` and `singlepageapp`, default is `regularwebapp`.
 
 ### Read-Only

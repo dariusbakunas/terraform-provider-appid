@@ -52,6 +52,7 @@ func Provider() *schema.Provider {
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
 			"appid_idp_custom":               resourceAppIDIDPCustom(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_role":                     resourceAppIDRole(),
 			"appid_token_config":             resourceAppIDTokenConfig(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -62,6 +63,7 @@ func Provider() *schema.Provider {
 			"appid_idp_cloud_directory":      dataSourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               dataSourceAppIDIDPCustom(),
 			"appid_idp_saml":                 dataSourceAppIDIDPSAML(),
+			"appid_role":                     dataSourceAppIDRole(),
 			"appid_token_config":             dataSourceAppIDTokenConfig(),
 		},
 		ConfigureContextFunc: providerConfigure,

@@ -32,6 +32,7 @@ type Client struct {
 	ApplicationAPI    *ApplicationService
 	IDPAPI            *IDPService
 	CloudDirectoryAPI *CloudDirectoryService
+	RolesAPI          *RolesService
 }
 
 type Options struct {
@@ -62,6 +63,7 @@ func NewClient(options *Options, httpClient *http.Client) (*Client, error) {
 	c.ApplicationAPI = (*ApplicationService)(&baseService)
 	c.IDPAPI = (*IDPService)(&baseService)
 	c.CloudDirectoryAPI = (*CloudDirectoryService)(&baseService)
+	c.RolesAPI = (*RolesService)(&baseService)
 
 	return c, nil
 }
@@ -76,7 +78,6 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}) (*http.Requ
 	if body != nil {
 		buf = &bytes.Buffer{}
 		enc := json.NewEncoder(buf)
-		enc.SetEscapeHTML(false)
 		err := enc.Encode(body)
 		if err != nil {
 			return nil, err

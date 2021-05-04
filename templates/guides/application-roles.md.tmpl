@@ -1,0 +1,14 @@
+---
+subcategory: ""
+page_title: "Manage Applications/Roles using variables"
+description: |-
+    An example of using variable to create applications and associated roles.
+---
+
+Given variable file:
+
+{{ tffile "examples/guides/application_roles/variables.tf" }}
+
+You could create AppID applications and associate roles:
+
+{{ tffile "examples/guides/application_roles/main.tf" }}
