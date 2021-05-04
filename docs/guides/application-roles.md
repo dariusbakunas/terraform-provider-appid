@@ -109,12 +109,4 @@ resource "appid_role" "roles" {
         }        
     }
 }
-
-output applications {
-    value = local.applications
-}
-
-output roles {
-    value = local.roles
-}
 ```
