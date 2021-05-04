@@ -138,14 +138,14 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if tokenConfig.Access != nil {
-		d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn)
+		d.Set("access_token_expires_in", tokenConfig.Access.ExpiresIn)
 	}
 
 	if tokenConfig.Refresh != nil {
 		d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn)
 
 		if tokenConfig.Refresh.Enabled != nil {
-			d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn)
+			d.Set("refresh_token_enabled", *tokenConfig.Refresh.Enabled)
 		}
 	}
 
