@@ -53,7 +53,7 @@ type CloudDirectoryConfig struct {
 }
 type CloudDirectoryIDP struct {
 	IsActive bool                  `json:"isActive"`
-	Config   *CloudDirectoryConfig `json:"config,omitempty"`
+	Config   *CloudDirectoryConfig `json:"config"`
 }
 
 type CustomIDPConfig struct {
@@ -61,7 +61,7 @@ type CustomIDPConfig struct {
 }
 type CustomIDP struct {
 	IsActive bool             `json:"isActive"`
-	Config   *CustomIDPConfig `json:"config"`
+	Config   *CustomIDPConfig `json:"config,omitempty"`
 }
 
 func (s *IDPService) GetCloudDirectoryConfig(ctx context.Context, tenantID string) (*CloudDirectoryIDP, error) {
