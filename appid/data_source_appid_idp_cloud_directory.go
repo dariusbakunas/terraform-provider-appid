@@ -22,64 +22,48 @@ func dataSourceAppIDIDPCloudDirectory() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"config": {
+			"self_service_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"signup_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"welcome_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"reset_password_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"reset_password_notification_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"identity_confirmation": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"self_service_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"signup_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"interactions": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"welcome_enabled": {
-										Type:     schema.TypeBool,
-										Computed: true,
-									},
-									"reset_password_enabled": {
-										Type:     schema.TypeBool,
-										Computed: true,
-									},
-									"reset_password_notification_enabled": {
-										Type:     schema.TypeBool,
-										Computed: true,
-									},
-									"identity_confirmation": {
-										Type:     schema.TypeList,
-										Computed: true,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"access_mode": {
-													Type:     schema.TypeString,
-													Computed: true,
-												},
-												"methods": {
-													Type: schema.TypeList,
-													Elem: &schema.Schema{
-														Type: schema.TypeString,
-													},
-													Computed: true,
-												},
-											},
-										},
-									},
-								},
-							},
-						},
-						"identity_field": {
+						"access_mode": {
 							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"methods": {
+							Type: schema.TypeList,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Computed: true,
 						},
 					},
 				},
+			},
+			"identity_field": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -102,50 +86,26 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 	d.Set("is_active", config.IsActive)
 
 	if config.Config != nil {
-		if err := d.Set("config", flattenCloudDirectoryConfig(config.Config)); err != nil {
-			return diag.Errorf("failed setting config: %s", err)
+		d.Set("self_service_enabled", config.Config.SelfServiceEnabled)
+		d.Set("signup_enabled", config.Config.SignupEnabled)
+
+		if config.Config.IdentityField != "" {
+			d.Set("identity_field", config.Config.IdentityField)
+		}
+
+		if config.Config.Interactions != nil {
+			d.Set("welcome_enabled", config.Config.Interactions.WelcomeEnabled)
+			d.Set("reset_password_enabled", config.Config.Interactions.ResetPasswordEnabled)
+			d.Set("reset_password_notification_enabled", config.Config.Interactions.ResetPasswordNotificationEnabled)
+			if config.Config.Interactions.IdentityConfirmation != nil {
+				d.Set("identity_confirmation", flattenIdentityConfirmation(config.Config.Interactions.IdentityConfirmation))
+			}
 		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/idp/cloud_directory", tenantID))
 
 	return diags
-}
-
-func flattenCloudDirectoryConfig(config *api.CloudDirectoryConfig) []interface{} {
-	if config == nil {
-		return []interface{}{}
-	}
-
-	mConfig := map[string]interface{}{}
-	mConfig["self_service_enabled"] = config.SelfServiceEnabled
-
-	if config.SignupEnabled != nil {
-		mConfig["signup_enabled"] = *config.SignupEnabled
-	}
-
-	if config.IdentityField != "" {
-		mConfig["identity_field"] = config.IdentityField
-	}
-
-	mConfig["interactions"] = flattenCloudDirectoryConfigInteractions(&config.Interactions)
-
-	return []interface{}{mConfig}
-}
-
-func flattenCloudDirectoryConfigInteractions(interactions *api.CloudDirectoryInteractions) []interface{} {
-	if interactions == nil {
-		return []interface{}{}
-	}
-
-	mInteractions := map[string]interface{}{}
-
-	mInteractions["welcome_enabled"] = interactions.WelcomeEnabled
-	mInteractions["reset_password_enabled"] = interactions.ResetPasswordEnabled
-	mInteractions["reset_password_notification_enabled"] = interactions.ResetPasswordNotificationEnabled
-	mInteractions["identity_confirmation"] = flattenIdentityConfirmation(&interactions.IdentityConfirmation)
-
-	return []interface{}{mInteractions}
 }
 
 func flattenIdentityConfirmation(confirmation *api.IdentityConfirmation) []interface{} {

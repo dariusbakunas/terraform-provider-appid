@@ -40,16 +40,16 @@ type IdentityConfirmation struct {
 }
 
 type CloudDirectoryInteractions struct {
-	WelcomeEnabled                   bool                 `json:"welcomeEnabled"`
-	ResetPasswordEnabled             bool                 `json:"resetPasswordEnabled"`
-	ResetPasswordNotificationEnabled bool                 `json:"resetPasswordNotificationEnable"`
-	IdentityConfirmation             IdentityConfirmation `json:"identityConfirmation"`
+	WelcomeEnabled                   bool                  `json:"welcomeEnabled"`
+	ResetPasswordEnabled             bool                  `json:"resetPasswordEnabled"`
+	ResetPasswordNotificationEnabled bool                  `json:"resetPasswordNotificationEnable"`
+	IdentityConfirmation             *IdentityConfirmation `json:"identityConfirmation"`
 }
 type CloudDirectoryConfig struct {
-	SelfServiceEnabled bool                       `json:"selfServiceEnabled"`
-	SignupEnabled      *bool                      `json:"signupEnabled,omitempty"`
-	Interactions       CloudDirectoryInteractions `json:"interactions"`
-	IdentityField      string                     `json:"itentityField,omitempty"`
+	SelfServiceEnabled bool                        `json:"selfServiceEnabled"`
+	SignupEnabled      *bool                       `json:"signupEnabled,omitempty"`
+	Interactions       *CloudDirectoryInteractions `json:"interactions"`
+	IdentityField      string                      `json:"itentityField,omitempty"`
 }
 type CloudDirectoryIDP struct {
 	IsActive bool                  `json:"isActive"`
@@ -61,7 +61,7 @@ type CustomIDPConfig struct {
 }
 type CustomIDP struct {
 	IsActive bool             `json:"isActive"`
-	Config   *CustomIDPConfig `json:"config,omitempty"`
+	Config   *CustomIDPConfig `json:"config"`
 }
 
 func (s *IDPService) GetCloudDirectoryConfig(ctx context.Context, tenantID string) (*CloudDirectoryIDP, error) {
@@ -80,6 +80,20 @@ func (s *IDPService) GetCloudDirectoryConfig(ctx context.Context, tenantID strin
 	}
 
 	return resp, nil
+}
+
+func (s *IDPService) UpdateCloudDirectoryConfig(ctx context.Context, tenantID string, config *CloudDirectoryIDP) error {
+	path := fmt.Sprintf("/management/v4/%s/config/idps/cloud_directory", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, config)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+
+	return err
 }
 
 func (s *IDPService) GetSAMLConfig(ctx context.Context, tenantID string) (*SAMLIDP, error) {
@@ -127,7 +141,7 @@ func (s *IDPService) UpdateSAMLConfig(ctx context.Context, tenantID string, conf
 		return err
 	}
 
-	_, err = s.client.Do(ctx, req, config)
+	_, err = s.client.Do(ctx, req, nil)
 
 	return err
 }
@@ -141,7 +155,7 @@ func (s *IDPService) UpdateCustomIDPConfig(ctx context.Context, tenantID string,
 		return err
 	}
 
-	_, err = s.client.Do(ctx, req, config)
+	_, err = s.client.Do(ctx, req, nil)
 
 	return err
 }

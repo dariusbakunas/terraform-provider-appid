@@ -51,6 +51,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_application":              resourceAppIDApplication(),
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
+			"appid_idp_cloud_directory":      resourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               resourceAppIDIDPCustom(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
 			"appid_redirect_urls":            resourceAppIDRedirectURLs(),
