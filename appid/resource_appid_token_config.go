@@ -49,7 +49,6 @@ func resourceAppIDTokenConfig() *schema.Resource {
 			"access_token_claim": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {
@@ -71,7 +70,6 @@ func resourceAppIDTokenConfig() *schema.Resource {
 			"id_token_claim": {
 				Type:     schema.TypeSet,
 				Optional: true,
-				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {

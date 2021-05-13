@@ -70,3 +70,45 @@ func (s *ConfigService) UpdateTokens(ctx context.Context, tenantID string, confi
 
 	return err
 }
+
+func (s *ConfigService) ListRedirectURLs(ctx context.Context, tenantID string) ([]string, error) {
+	path := fmt.Sprintf("/management/v4/%s/config/redirect_uris", tenantID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := struct {
+		RedirectURIs []string `json:"redirectUris"`
+	}{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.RedirectURIs, nil
+}
+
+func (s *ConfigService) UpdateRedirectURLs(ctx context.Context, tenantID string, urls []string) error {
+	path := fmt.Sprintf("/management/v4/%s/config/redirect_uris", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, nil)
+	if err != nil {
+		return err
+	}
+
+	input := struct {
+		RedirectURIs []string `json:"redirectUris"`
+	}{
+		RedirectURIs: urls,
+	}
+
+	_, err = s.client.Do(ctx, req, input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
