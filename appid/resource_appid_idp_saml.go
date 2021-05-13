@@ -129,11 +129,7 @@ func expandAuthNContext(ctx []interface{}) *api.AuthNContext {
 	context.Comparison = mContext["comparison"].(string)
 
 	if class, ok := mContext["class"].([]interface{}); ok && len(class) > 0 {
-		context.Class = []string{}
-
-		for _, c := range class {
-			context.Class = append(context.Class, c.(string))
-		}
+		context.Class = expandStringList(class)
 	}
 
 	return context

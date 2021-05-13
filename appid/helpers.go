@@ -17,3 +17,14 @@ func flattenStringList(list []string) []interface{} {
 	}
 	return vs
 }
+
+func expandStringList(list []interface{}) []string {
+	vs := make([]string, 0, len(list))
+	for _, v := range list {
+		val, ok := v.(string)
+		if ok && val != "" {
+			vs = append(vs, val)
+		}
+	}
+	return vs
+}

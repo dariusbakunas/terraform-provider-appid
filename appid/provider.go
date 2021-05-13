@@ -3,6 +3,7 @@ package appid
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -30,7 +31,7 @@ func Provider() *schema.Provider {
 			},
 			"appid_base_url": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "AppID API base URL (for example 'https://us-south.appid.cloud.ibm.com')",
 				DefaultFunc: schema.EnvDefaultFunc("APPID_BASE_URL", nil),
 			},
@@ -52,6 +53,7 @@ func Provider() *schema.Provider {
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
 			"appid_idp_custom":               resourceAppIDIDPCustom(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_redirect_urls":            resourceAppIDRedirectURLs(),
 			"appid_role":                     resourceAppIDRole(),
 			"appid_token_config":             resourceAppIDTokenConfig(),
 		},
@@ -63,6 +65,7 @@ func Provider() *schema.Provider {
 			"appid_idp_cloud_directory":      dataSourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               dataSourceAppIDIDPCustom(),
 			"appid_idp_saml":                 dataSourceAppIDIDPSAML(),
+			"appid_redirect_urls":            dataSourceAppIDRedirectURLs(),
 			"appid_role":                     dataSourceAppIDRole(),
 			"appid_token_config":             dataSourceAppIDTokenConfig(),
 		},
@@ -74,8 +77,17 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	var diags diag.Diagnostics
 	var iamApiKey, iamAccesToken string
 
-	clientOptions := &api.Options{
-		BaseURL: fmt.Sprintf("https://%s.appid.cloud.ibm.com", d.Get("region")),
+	clientOptions := &api.Options{}
+
+	region := d.Get("region").(string)
+	baseURL := d.Get("appid_base_url").(string)
+
+	if region == "" && baseURL == "" {
+		return nil, diag.Errorf("region or baseURL must be specified")
+	}
+
+	if region != "" && baseURL != "" {
+		log.Printf("[WARN] both region and baseURL were specified, baseURL will take precendence")
 	}
 
 	if apiKey, ok := d.GetOk("iam_api_key"); ok {
@@ -86,8 +98,12 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		iamAccesToken = accessToken.(string)
 	}
 
-	if baseURL, ok := d.GetOk("appid_base_url"); ok {
-		clientOptions.BaseURL = baseURL.(string)
+	if region != "" {
+		clientOptions.BaseURL = fmt.Sprintf("https://%s.appid.cloud.ibm.com", region)
+	}
+
+	if baseURL != "" {
+		clientOptions.BaseURL = baseURL
 	}
 
 	if iamAccesToken == "" {
