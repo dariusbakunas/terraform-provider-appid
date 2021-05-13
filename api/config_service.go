@@ -94,18 +94,18 @@ func (s *ConfigService) ListRedirectURLs(ctx context.Context, tenantID string) (
 func (s *ConfigService) UpdateRedirectURLs(ctx context.Context, tenantID string, urls []string) error {
 	path := fmt.Sprintf("/management/v4/%s/config/redirect_uris", tenantID)
 
-	req, err := s.client.NewRequest("PUT", path, nil)
-	if err != nil {
-		return err
-	}
-
 	input := struct {
 		RedirectURIs []string `json:"redirectUris"`
 	}{
 		RedirectURIs: urls,
 	}
 
-	_, err = s.client.Do(ctx, req, input)
+	req, err := s.client.NewRequest("PUT", path, input)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
 	if err != nil {
 		return err
 	}
