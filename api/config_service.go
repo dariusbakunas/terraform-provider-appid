@@ -79,7 +79,7 @@ func (s *ConfigService) ListRedirectURLs(ctx context.Context, tenantID string) (
 		return nil, err
 	}
 
-	resp := struct {
+	resp := &struct {
 		RedirectURIs []string `json:"redirectUris"`
 	}{}
 
@@ -94,7 +94,7 @@ func (s *ConfigService) ListRedirectURLs(ctx context.Context, tenantID string) (
 func (s *ConfigService) UpdateRedirectURLs(ctx context.Context, tenantID string, urls []string) error {
 	path := fmt.Sprintf("/management/v4/%s/config/redirect_uris", tenantID)
 
-	input := &struct {
+	input := struct {
 		RedirectURIs []string `json:"redirectUris"`
 	}{
 		RedirectURIs: urls,
