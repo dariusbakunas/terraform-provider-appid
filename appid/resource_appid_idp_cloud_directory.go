@@ -50,27 +50,18 @@ func resourceAppIDIDPCloudDirectory() *schema.Resource {
 				Optional: true,
 				Default:  true,
 			},
-			"identity_confirmation": {
-				Type:     schema.TypeList,
-				Required: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"access_mode": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      "FULL",
-							ValidateFunc: validation.StringInSlice([]string{"FULL", "RESTRICTIVE", "OFF"}, false),
-						},
-						"methods": {
-							Type: schema.TypeList,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-							Optional: true,
-						},
-					},
+			"identity_confirm_access_mode": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "FULL",
+				ValidateFunc: validation.StringInSlice([]string{"FULL", "RESTRICTIVE", "OFF"}, false),
+			},
+			"identity_confirm_methods": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
+				Optional: true,
 			},
 			"identity_field": {
 				Type:     schema.TypeString,
@@ -88,23 +79,26 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 
 	config := &api.CloudDirectoryIDP{
 		IsActive: isActive,
-	}
-
-	if isActive {
-		config.Config = &api.CloudDirectoryConfig{
+		Config: &api.CloudDirectoryConfig{
 			SelfServiceEnabled: d.Get("self_service_enabled").(bool),
 			SignupEnabled:      getBoolPtr(d.Get("signup_enabled").(bool)),
 			Interactions: &api.CloudDirectoryInteractions{
 				WelcomeEnabled:                   d.Get("welcome_enabled").(bool),
 				ResetPasswordEnabled:             d.Get("reset_password_enabled").(bool),
 				ResetPasswordNotificationEnabled: d.Get("reset_password_notification_enabled").(bool),
-				IdentityConfirmation:             expandIdentityConfirmation(d.Get("identity_confirmation").([]interface{})),
+				IdentityConfirmation: &api.IdentityConfirmation{
+					AccessMode: d.Get("identity_confirm_access_mode").(string),
+				},
 			},
 			IdentityField: d.Get("identity_field").(string),
-		}
+		},
 	}
 
-	log.Printf("[DEBUG] Applying Cloud Directory IDP config: %v", config)
+	if methods, ok := d.GetOk("identity_confirm_methods"); ok {
+		config.Config.Interactions.IdentityConfirmation.Methods = expandStringList(methods.([]interface{}))
+	}
+
+	log.Printf("[DEBUG] Applying Cloud Directory IDP config: %+v", config)
 	err := c.IDPAPI.UpdateCloudDirectoryConfig(ctx, tenantID, config)
 
 	if err != nil {
@@ -135,23 +129,6 @@ func resourceAppIDIDPCloudDirectoryDelete(ctx context.Context, d *schema.Resourc
 	d.SetId("")
 
 	return diags
-}
-
-func expandIdentityConfirmation(ic []interface{}) *api.IdentityConfirmation {
-	confirmation := &api.IdentityConfirmation{}
-
-	if len(ic) == 0 || ic[0] == nil {
-		return nil
-	}
-
-	mIc := ic[0].(map[string]interface{})
-
-	confirmation.AccessMode = mIc["access_mode"].(string)
-	if methods, ok := mIc["methods"]; ok {
-		confirmation.Methods = expandStringList(methods.([]interface{}))
-	}
-
-	return confirmation
 }
 
 func cloudDirectoryDefaults() *api.CloudDirectoryIDP {

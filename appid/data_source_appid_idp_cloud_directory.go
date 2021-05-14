@@ -42,24 +42,16 @@ func dataSourceAppIDIDPCloudDirectory() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"identity_confirmation": {
-				Type:     schema.TypeList,
+			"identity_confirm_access_mode": {
+				Type:     schema.TypeString,
 				Computed: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"access_mode": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"methods": {
-							Type: schema.TypeList,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-							Computed: true,
-						},
-					},
+			},
+			"identity_confirm_methods": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
+				Computed: true,
 			},
 			"identity_field": {
 				Type:     schema.TypeString,
@@ -97,25 +89,12 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 			d.Set("welcome_enabled", config.Config.Interactions.WelcomeEnabled)
 			d.Set("reset_password_enabled", config.Config.Interactions.ResetPasswordEnabled)
 			d.Set("reset_password_notification_enabled", config.Config.Interactions.ResetPasswordNotificationEnabled)
-			if config.Config.Interactions.IdentityConfirmation != nil {
-				d.Set("identity_confirmation", flattenIdentityConfirmation(config.Config.Interactions.IdentityConfirmation))
-			}
+			d.Set("identity_confirm_access_mode", config.Config.Interactions.IdentityConfirmation.AccessMode)
+			d.Set("identity_confirm_methods", config.Config.Interactions.IdentityConfirmation.Methods)
 		}
 	}
 
 	d.SetId(fmt.Sprintf("%s/idp/cloud_directory", tenantID))
 
 	return diags
-}
-
-func flattenIdentityConfirmation(confirmation *api.IdentityConfirmation) []interface{} {
-	if confirmation == nil {
-		return []interface{}{}
-	}
-
-	mConfirmation := map[string]interface{}{}
-	mConfirmation["access_mode"] = confirmation.AccessMode
-	mConfirmation["methods"] = flattenStringList(confirmation.Methods)
-
-	return []interface{}{mConfirmation}
 }

@@ -36,7 +36,7 @@ type SAMLIDP struct {
 
 type IdentityConfirmation struct {
 	AccessMode string   `json:"accessMode"`
-	Methods    []string `json:"methods"`
+	Methods    []string `json:"methods,omitempty"`
 }
 
 type CloudDirectoryInteractions struct {

@@ -1,5 +1,7 @@
 package appid
 
+import "encoding/json"
+
 func getBoolPtr(b bool) *bool {
 	val := b
 	return &val
@@ -27,4 +29,9 @@ func expandStringList(list []interface{}) []string {
 		}
 	}
 	return vs
+}
+
+func dbgPrint(data interface{}) string {
+	dataJSON, _ := json.MarshalIndent(data, "", "  ")
+	return string(dataJSON)
 }
