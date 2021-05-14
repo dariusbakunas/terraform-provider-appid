@@ -50,6 +50,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_application":              resourceAppIDApplication(),
+			"appid_audit_status":             resourceAppIDAuditStatus(),
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
 			"appid_idp_cloud_directory":      resourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               resourceAppIDIDPCustom(),
@@ -62,6 +63,7 @@ func Provider() *schema.Provider {
 			"appid_application":              dataSourceAppIDApplication(),
 			"appid_applications":             dataSourceAppIDApplications(),
 			"appid_application_ids":          dataSourceAppIDApplicationIDs(),
+			"appid_audit_status":             dataSourceAppIDAuditStatus(),
 			"appid_cloud_directory_template": dataSourceAppIDCloudDirectoryTemplate(),
 			"appid_idp_cloud_directory":      dataSourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               dataSourceAppIDIDPCustom(),

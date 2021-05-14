@@ -34,9 +34,45 @@ type TokenConfig struct {
 	AccessTokenClaims []TokenClaim          `json:"accessTokenClaims,omitempty"`
 }
 
+type AuditStatus struct {
+	IsActive bool `json:"isActive"`
+}
+
 func (c *TokenConfig) String() string {
 	str, _ := json.Marshal(c)
 	return string(str)
+}
+
+func (s *ConfigService) GetAuditStatus(ctx context.Context, tenantID string) (*AuditStatus, error) {
+	path := fmt.Sprintf("/management/v4/%s/config/capture_runtime_activity", tenantID)
+
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &AuditStatus{}
+
+	_, err = s.client.Do(ctx, req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (s *ConfigService) SetAuditStatuts(ctx context.Context, tenantID string, status *AuditStatus) error {
+	path := fmt.Sprintf("/management/v4/%s/config/capture_runtime_activity", tenantID)
+
+	req, err := s.client.NewRequest("PUT", path, status)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = s.client.Do(ctx, req, nil)
+
+	return err
 }
 
 func (s *ConfigService) GetTokens(ctx context.Context, tenantID string) (*TokenConfig, error) {
