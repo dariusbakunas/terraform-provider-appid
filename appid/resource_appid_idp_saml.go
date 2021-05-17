@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDIDPSaml() *schema.Resource {
@@ -97,10 +97,11 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	config := &api.SAMLIDP{
-		IsActive: isActive,
+	config := &appid.SetSAMLIDPOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(isActive),
 	}
 
 	if isActive {
@@ -108,7 +109,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	log.Printf("[DEBUG] Applying SAML config: %v", config)
-	err := c.IDPAPI.UpdateSAMLConfig(ctx, tenantID, config)
+	_, _, err := c.SetSAMLIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -117,8 +118,8 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
 }
 
-func expandAuthNContext(ctx []interface{}) *api.AuthNContext {
-	context := &api.AuthNContext{}
+func expandAuthNContext(ctx []interface{}) *appid.SAMLConfigParamsAuthnContext {
+	context := &appid.SAMLConfigParamsAuthnContext{}
 
 	if len(ctx) == 0 || ctx[0] == nil {
 		return nil
@@ -126,7 +127,7 @@ func expandAuthNContext(ctx []interface{}) *api.AuthNContext {
 
 	mContext := ctx[0].(map[string]interface{})
 
-	context.Comparison = mContext["comparison"].(string)
+	context.Comparison = getStringPtr(mContext["comparison"].(string))
 
 	if class, ok := mContext["class"].([]interface{}); ok && len(class) > 0 {
 		context.Class = expandStringList(class)
@@ -135,8 +136,8 @@ func expandAuthNContext(ctx []interface{}) *api.AuthNContext {
 	return context
 }
 
-func expandSAMLConfig(cfg []interface{}) *api.SAMLConfig {
-	config := &api.SAMLConfig{}
+func expandSAMLConfig(cfg []interface{}) *appid.SAMLConfigParams {
+	config := &appid.SAMLConfigParams{}
 
 	if len(cfg) == 0 || cfg[0] == nil {
 		return nil
@@ -144,9 +145,9 @@ func expandSAMLConfig(cfg []interface{}) *api.SAMLConfig {
 
 	mCfg := cfg[0].(map[string]interface{})
 
-	config.EntityID = mCfg["entity_id"].(string)
-	config.SignInURL = mCfg["sign_in_url"].(string)
-	config.DisplayName = mCfg["display_name"].(string)
+	config.EntityID = getStringPtr(mCfg["entity_id"].(string))
+	config.SignInURL = getStringPtr(mCfg["sign_in_url"].(string))
+	config.DisplayName = getStringPtr(mCfg["display_name"].(string))
 
 	if encResponse, ok := mCfg["encrypt_response"].(bool); ok {
 		config.EncryptResponse = getBoolPtr(encResponse)
@@ -168,25 +169,26 @@ func expandSAMLConfig(cfg []interface{}) *api.SAMLConfig {
 		}
 	}
 
-	config.AuthNContext = expandAuthNContext(mCfg["authn_context"].([]interface{}))
+	config.AuthnContext = expandAuthNContext(mCfg["authn_context"].([]interface{}))
 
 	return config
 }
 
-func samlConfigDefaults() *api.SAMLIDP {
-	return &api.SAMLIDP{
-		IsActive: false,
+func samlConfigDefaults(tenantID string) *appid.SetSAMLIDPOptions {
+	return &appid.SetSAMLIDPOptions{
+		IsActive: getBoolPtr(false),
+		TenantID: getStringPtr(tenantID),
 	}
 }
 
 func resourceAppIDIDPSAMLDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
-	config := samlConfigDefaults()
+	config := samlConfigDefaults(tenantID)
 
 	log.Printf("[DEBUG] Resetting SAML config: %v", config)
-	err := c.IDPAPI.UpdateSAMLConfig(ctx, tenantID, config)
+	_, _, err := c.SetSAMLIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
