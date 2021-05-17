@@ -1,6 +1,6 @@
 site_name: Terraform Provider for AppID
-repo_name: 'watson-health-development/terraform-provider-appid'
-repo_url: 'https://github.ibm.com/watson-health-development/terraform-provider-appid'
+repo_name: 'dariusbakunas/terraform-provider-appid'
+repo_url: 'https://github.com/dariusbakunas/terraform-provider-appid'
 
 theme:
   name: 'material'
@@ -39,4 +39,4 @@ markdown_extensions:
 extra:
   social:
     - icon: 'fontawesome/brands/github-alt'
-      link: 'https://github.ibm.com/watson-health-development/terraform-provider-appid'
+      link: 'https://github.com/dariusbakunas/terraform-provider-appid'
