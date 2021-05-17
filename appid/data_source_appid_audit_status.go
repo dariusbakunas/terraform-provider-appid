@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDAuditStatus() *schema.Resource {
@@ -32,15 +32,17 @@ func dataSourceAppIDAuditStatusRead(ctx context.Context, d *schema.ResourceData,
 
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	auditStatus, err := c.ConfigAPI.GetAuditStatus(ctx, tenantID)
+	auditStatus, _, err := c.GetAuditStatusWithContext(ctx, &appid.GetAuditStatusOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.Errorf("error getting audit status: %s", err)
 	}
 
-	d.Set("is_active", auditStatus.IsActive)
+	d.Set("is_active", *auditStatus.IsActive)
 	d.SetId("auditStatus")
 
 	return diags

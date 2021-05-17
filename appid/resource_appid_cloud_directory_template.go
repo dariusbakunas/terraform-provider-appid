@@ -5,10 +5,10 @@ import (
 	b64 "encoding/base64"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDCloudDirectoryTemplate() *schema.Resource {
@@ -57,22 +57,25 @@ func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	input := &api.EmailTemplate{
-		Subject: d.Get("subject").(string),
+	input := &appid.UpdateTemplateOptions{
+		TenantID:     getStringPtr(tenantID),
+		TemplateName: getStringPtr(templateName),
+		Language:     getStringPtr(language),
+		Subject:      getStringPtr(d.Get("subject").(string)),
 	}
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	if htmlBody, ok := d.GetOk("html_body"); ok {
 		// don't want to set HTMLBody here otherwise might run into issues with Cloudfare filtering
-		input.B64HTMLBody = b64.StdEncoding.EncodeToString([]byte(htmlBody.(string)))
+		input.Base64EncodedHTMLBody = getStringPtr(b64.StdEncoding.EncodeToString([]byte(htmlBody.(string))))
 	}
 
 	if textBody, ok := d.GetOk("plain_text_body"); ok {
-		input.TextBody = textBody.(string)
+		input.PlainTextBody = getStringPtr(textBody.(string))
 	}
 
-	err := c.CloudDirectoryAPI.UpdateEmailTemplate(ctx, tenantID, templateName, language, input)
+	_, _, err := c.UpdateTemplateWithContext(ctx, input)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -88,11 +91,15 @@ func resourceAppIDCloudDirectoryTemplateDelete(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	log.Printf("[DEBUG] Deleting CD Email Template: %s", d.Id())
 
-	err := c.CloudDirectoryAPI.DeleteEmailTemplate(ctx, tenantID, templateName, language)
+	_, err := c.DeleteTemplateWithContext(ctx, &appid.DeleteTemplateOptions{
+		TenantID:     getStringPtr(tenantID),
+		TemplateName: getStringPtr(templateName),
+		Language:     getStringPtr(language),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)

@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDAuditStatus() *schema.Resource {
@@ -32,9 +32,12 @@ func resourceAppIDAuditStatus() *schema.Resource {
 func resourceAppIDAuditStatusCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	err := c.ConfigAPI.SetAuditStatuts(ctx, tenantID, &api.AuditStatus{IsActive: isActive})
+	_, err := c.SetAuditStatusWithContext(ctx, &appid.SetAuditStatusOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(isActive),
+	})
 
 	if err != nil {
 		return diag.Errorf("error setting audit status: %s", err)
@@ -46,9 +49,12 @@ func resourceAppIDAuditStatusCreate(ctx context.Context, d *schema.ResourceData,
 func resourceAppIDAuditStatusDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	err := c.ConfigAPI.SetAuditStatuts(ctx, tenantID, &api.AuditStatus{IsActive: false})
+	_, err := c.SetAuditStatusWithContext(ctx, &appid.SetAuditStatusOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(false),
+	})
 
 	if err != nil {
 		return diag.Errorf("error setting audit status: %s", err)

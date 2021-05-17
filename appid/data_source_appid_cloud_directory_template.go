@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 var supportedTemplates = []string{"USER_VERIFICATION", "RESET_PASSWORD", "WELCOME", "PASSWORD_CHANGED", "MFA_VERIFICATION"}
@@ -57,18 +57,22 @@ func dataSourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.Re
 	templateName := d.Get("template_name").(string)
 	language := d.Get("language").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	template, err := c.CloudDirectoryAPI.GetEmailTemplate(ctx, tenantID, templateName, language)
+	template, _, err := c.GetTemplateWithContext(ctx, &appid.GetTemplateOptions{
+		TenantID:     getStringPtr(tenantID),
+		TemplateName: getStringPtr(templateName),
+		Language:     getStringPtr(language),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.Set("subject", template.Subject)
-	d.Set("html_body", template.HTMLBody)
-	d.Set("base64_encoded_html_body", template.B64HTMLBody)
-	d.Set("plain_text_body", template.TextBody)
+	d.Set("subject", *template.Subject)
+	d.Set("html_body", *template.HTMLBody)
+	d.Set("base64_encoded_html_body", *template.Base64EncodedHTMLBody)
+	d.Set("plain_text_body", *template.PlainTextBody)
 
 	d.SetId(fmt.Sprintf("%s/%s/%s", tenantID, templateName, language))
 
