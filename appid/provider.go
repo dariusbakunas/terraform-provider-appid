@@ -49,6 +49,12 @@ func Provider() *schema.Provider {
 				Description: "The IBM cloud Region (for example 'us-south').",
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IC_REGION", "IBMCLOUD_REGION"}, "us-south"),
 			},
+			"api_max_retry": {
+				Description: "Maximum number of retries for AppID api requests, set to 0 to disable",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     3,
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_application":              resourceAppIDApplication(),
@@ -139,6 +145,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	// log.Printf("[DEBUG] Using client options: %s", dbgPrint(options))
 
 	client, err := appid.NewAppIDManagementV4(options)
+	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client defaults
 
 	if err != nil {
 		return nil, diag.FromErr(err)
