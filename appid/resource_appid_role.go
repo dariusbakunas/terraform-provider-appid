@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDRole() *schema.Resource {
@@ -63,29 +63,30 @@ func resourceAppIDRole() *schema.Resource {
 }
 
 func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	input := &api.RoleInput{
-		Name: d.Get("name").(string),
-	}
-
 	tenantID := d.Get("tenant_id").(string)
 
-	if description, ok := d.GetOk("description"); ok {
-		input.Description = description.(string)
+	input := &appid.CreateRoleOptions{
+		Name:     getStringPtr(d.Get("name").(string)),
+		TenantID: getStringPtr(tenantID),
 	}
 
-	c := m.(*api.Client)
+	if description, ok := d.GetOk("description"); ok {
+		input.Description = getStringPtr(description.(string))
+	}
+
+	c := m.(*appid.AppIDManagementV4)
 
 	input.Access = expandRoleAccess(d.Get("access").(*schema.Set).List())
 
 	log.Printf("[DEBUG] Creating AppID role: %+v", input)
-	role, err := c.RolesAPI.CreateRole(ctx, tenantID, input)
+	role, _, err := c.CreateRoleWithContext(ctx, input)
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(role.ID)
-	d.Set("role_id", role.ID)
+	d.SetId(*role.ID)
+	d.Set("role_id", *role.ID)
 
 	return dataSourceAppIDRoleRead(ctx, d, m)
 }
@@ -93,14 +94,17 @@ func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m inte
 func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	roleID := d.Id()
 	tenantID := d.Get("tenant_id").(string)
 
 	log.Printf("[DEBUG] Deleting AppID role: %s", roleID)
 
-	err := c.RolesAPI.DeleteRole(ctx, tenantID, roleID)
+	_, err := c.DeleteRoleWithContext(ctx, &appid.DeleteRoleOptions{
+		TenantID: getStringPtr(tenantID),
+		RoleID:   getStringPtr(roleID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -111,18 +115,18 @@ func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func expandRoleAccess(l []interface{}) []api.RoleAccess {
+func expandRoleAccess(l []interface{}) []appid.RoleAccessItem {
 	if len(l) == 0 {
-		return []api.RoleAccess{}
+		return []appid.RoleAccessItem{}
 	}
 
-	result := make([]api.RoleAccess, len(l))
+	result := make([]appid.RoleAccessItem, len(l))
 
 	for i, item := range l {
 		aMap := item.(map[string]interface{})
 
-		access := &api.RoleAccess{
-			ApplicationID: aMap["application_id"].(string),
+		access := &appid.RoleAccessItem{
+			ApplicationID: getStringPtr(aMap["application_id"].(string)),
 		}
 
 		if scopes, ok := aMap["scopes"].([]interface{}); ok && len(scopes) > 0 {
@@ -143,20 +147,22 @@ func resourceAppIDRoleUpdate(ctx context.Context, d *schema.ResourceData, m inte
 	tenantID := d.Get("tenant_id").(string)
 	roleID := d.Id()
 
-	input := &api.RoleInput{
-		Name: d.Get("name").(string),
+	input := &appid.UpdateRoleOptions{
+		TenantID: getStringPtr(tenantID),
+		RoleID:   getStringPtr(roleID),
+		Name:     getStringPtr(d.Get("name").(string)),
 	}
 
 	if description, ok := d.GetOk("description"); ok {
-		input.Description = description.(string)
+		input.Description = getStringPtr(description.(string))
 	}
 
 	input.Access = expandRoleAccess(d.Get("access").(*schema.Set).List())
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	log.Printf("[DEBUG] Updating AppID role: %+v", input)
-	_, err := c.RolesAPI.UpdateRole(ctx, tenantID, roleID, input)
+	_, _, err := c.UpdateRoleWithContext(ctx, input)
 
 	if err != nil {
 		return diag.FromErr(err)

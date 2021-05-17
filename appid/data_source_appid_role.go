@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDRole() *schema.Resource {
@@ -59,31 +59,34 @@ func dataSourceAppIDRole() *schema.Resource {
 func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	tenantID := d.Get("tenant_id").(string)
 	id := d.Get("role_id").(string)
 
-	role, err := c.RolesAPI.GetRole(ctx, tenantID, id)
+	role, _, err := c.GetRoleWithContext(ctx, &appid.GetRoleOptions{
+		RoleID:   getStringPtr(id),
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(role.ID)
-	d.Set("name", role.Name)
-	d.Set("description", role.Description)
+	d.SetId(*role.ID)
+	d.Set("name", *role.Name)
+	d.Set("description", *role.Description)
 	d.Set("access", flattenRoleAccess(role.Access))
 
 	return diags
 }
 
-func flattenRoleAccess(ra []api.RoleAccess) []interface{} {
+func flattenRoleAccess(ra []appid.GetRoleResponseAccessItem) []interface{} {
 	var result []interface{}
 
 	for _, a := range ra {
 		access := map[string]interface{}{
-			"application_id": a.ApplicationID,
+			"application_id": *a.ApplicationID,
 			"scopes":         flattenStringList(a.Scopes),
 		}
 
