@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPSAML() *schema.Resource {
@@ -88,9 +88,11 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	saml, err := c.IDPAPI.GetSAMLConfig(ctx, tenantID)
+	saml, _, err := c.GetSAMLIDPWithContext(ctx, &appid.GetSAMLIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -98,7 +100,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 
 	log.Printf("[DEBUG] Got SAML IDP config: %+v", saml)
 
-	d.Set("is_active", saml.IsActive)
+	d.Set("is_active", *saml.IsActive)
 
 	if saml.Config != nil {
 		if err := d.Set("config", flattenSAMLConfig(saml.Config)); err != nil {
@@ -111,16 +113,16 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func flattenSAMLConfig(config *api.SAMLConfig) []interface{} {
+func flattenSAMLConfig(config *appid.SAMLConfigParams) []interface{} {
 	if config == nil {
 		return []interface{}{}
 	}
 
 	mConfig := map[string]interface{}{}
-	mConfig["entity_id"] = config.EntityID
-	mConfig["sign_in_url"] = config.SignInURL
+	mConfig["entity_id"] = *config.EntityID
+	mConfig["sign_in_url"] = *config.SignInURL
 	mConfig["certificates"] = flattenStringList(config.Certificates)
-	mConfig["display_name"] = config.DisplayName
+	mConfig["display_name"] = *config.DisplayName
 
 	if config.SignRequest != nil {
 		mConfig["sign_request"] = *config.SignRequest
@@ -134,14 +136,14 @@ func flattenSAMLConfig(config *api.SAMLConfig) []interface{} {
 		mConfig["include_scoping"] = *config.IncludeScoping
 	}
 
-	if config.AuthNContext != nil {
-		mConfig["authn_context"] = flattenAuthNContext(config.AuthNContext)
+	if config.AuthnContext != nil {
+		mConfig["authn_context"] = flattenAuthNContext(config.AuthnContext)
 	}
 
 	return []interface{}{mConfig}
 }
 
-func flattenAuthNContext(context *api.AuthNContext) []interface{} {
+func flattenAuthNContext(context *appid.SAMLConfigParamsAuthnContext) []interface{} {
 	if context == nil {
 		return []interface{}{}
 	}
@@ -158,7 +160,7 @@ func flattenAuthNContext(context *api.AuthNContext) []interface{} {
 		mContext["class"] = class
 	}
 
-	mContext["comparison"] = context.Comparison
+	mContext["comparison"] = *context.Comparison
 
 	return []interface{}{mContext}
 }

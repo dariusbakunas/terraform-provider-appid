@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDApplication() *schema.Resource {
@@ -72,9 +72,12 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	tenantID := d.Get("tenant_id").(string)
 	clientID := d.Get("client_id").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	app, err := c.ApplicationAPI.GetApplication(ctx, tenantID, clientID)
+	app, _, err := c.GetApplicationWithContext(ctx, &appid.GetApplicationOptions{
+		TenantID: getStringPtr(tenantID),
+		ClientID: getStringPtr(clientID),
+	})
 
 	log.Printf("[DEBUG] Read application: %+v", app)
 
@@ -82,7 +85,10 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	}
 
-	scopes, err := c.ApplicationAPI.GetApplicationScopes(ctx, tenantID, clientID)
+	scopes, _, err := c.GetApplicationScopesWithContext(ctx, &appid.GetApplicationScopesOptions{
+		TenantID: getStringPtr(tenantID),
+		ClientID: getStringPtr(clientID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -90,18 +96,18 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)
 
-	d.Set("name", app.Name)
+	d.Set("name", *app.Name)
 
 	if app.Secret != nil {
 		d.Set("secret", *app.Secret)
 	}
 
-	d.Set("oauth_server_url", app.OAuthServerURL)
-	d.Set("profiles_url", app.ProfilesURL)
-	d.Set("discovery_endpoint", app.DiscoveryEndpoint)
-	d.Set("type", app.Type)
+	d.Set("oauth_server_url", *app.OAuthServerURL)
+	d.Set("profiles_url", *app.ProfilesURL)
+	d.Set("discovery_endpoint", *app.DiscoveryEndpoint)
+	d.Set("type", *app.Type)
 
-	if err := d.Set("scopes", scopes); err != nil {
+	if err := d.Set("scopes", scopes.Scopes); err != nil {
 		return diag.FromErr(err)
 	}
 

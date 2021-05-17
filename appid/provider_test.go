@@ -46,7 +46,10 @@ func init() {
 }
 
 func testAccPreCheck(t *testing.T) {
-	if v := os.Getenv("IAM_API_KEY"); v == "" {
-		t.Fatal("IAM_API_KEY must be set for acceptance tests")
+	apiKey := os.Getenv("IAM_API_KEY")
+	accessToken := os.Getenv("IAM_ACCESS_TOKEN")
+
+	if apiKey == "" && accessToken == "" {
+		t.Fatal("IAM_API_KEY or IAM_ACCESS_TOKEN env must be set for acceptance tests")
 	}
 }

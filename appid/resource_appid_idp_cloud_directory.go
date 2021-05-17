@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDIDPCloudDirectory() *schema.Resource {
@@ -75,23 +75,27 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	config := &api.CloudDirectoryIDP{
-		IsActive: isActive,
-		Config: &api.CloudDirectoryConfig{
-			SelfServiceEnabled: d.Get("self_service_enabled").(bool),
+	config := &appid.SetCloudDirectoryIDPOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(isActive),
+		Config: &appid.CloudDirectoryConfigParams{
+			SelfServiceEnabled: getBoolPtr(d.Get("self_service_enabled").(bool)),
 			SignupEnabled:      getBoolPtr(d.Get("signup_enabled").(bool)),
-			Interactions: &api.CloudDirectoryInteractions{
-				WelcomeEnabled:                   d.Get("welcome_enabled").(bool),
-				ResetPasswordEnabled:             d.Get("reset_password_enabled").(bool),
-				ResetPasswordNotificationEnabled: d.Get("reset_password_notification_enabled").(bool),
-				IdentityConfirmation: &api.IdentityConfirmation{
-					AccessMode: d.Get("identity_confirm_access_mode").(string),
+			Interactions: &appid.CloudDirectoryConfigParamsInteractions{
+				WelcomeEnabled:                  getBoolPtr(d.Get("welcome_enabled").(bool)),
+				ResetPasswordEnabled:            getBoolPtr(d.Get("reset_password_enabled").(bool)),
+				ResetPasswordNotificationEnable: getBoolPtr(d.Get("reset_password_notification_enabled").(bool)),
+				IdentityConfirmation: &appid.CloudDirectoryConfigParamsInteractionsIdentityConfirmation{
+					AccessMode: getStringPtr(d.Get("identity_confirm_access_mode").(string)),
 				},
 			},
-			IdentityField: d.Get("identity_field").(string),
 		},
+	}
+
+	if idField, ok := d.GetOk("identity_field"); ok {
+		config.Config.IdentityField = getStringPtr(idField.(string))
 	}
 
 	if methods, ok := d.GetOk("identity_confirm_methods"); ok {
@@ -99,7 +103,7 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 	}
 
 	log.Printf("[DEBUG] Applying Cloud Directory IDP config: %+v", config)
-	err := c.IDPAPI.UpdateCloudDirectoryConfig(ctx, tenantID, config)
+	_, _, err := c.SetCloudDirectoryIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -115,12 +119,12 @@ func resourceAppIDIDPCloudDirectoryUpdate(ctx context.Context, d *schema.Resourc
 
 func resourceAppIDIDPCloudDirectoryDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
-	config := cloudDirectoryDefaults()
+	config := cloudDirectoryDefaults(tenantID)
 
 	log.Printf("[DEBUG] Resetting Cloud Directory IDP config: %v", config)
-	err := c.IDPAPI.UpdateCloudDirectoryConfig(ctx, tenantID, config)
+	_, _, err := c.SetCloudDirectoryIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -131,19 +135,20 @@ func resourceAppIDIDPCloudDirectoryDelete(ctx context.Context, d *schema.Resourc
 	return diags
 }
 
-func cloudDirectoryDefaults() *api.CloudDirectoryIDP {
-	return &api.CloudDirectoryIDP{
-		IsActive: false,
-		Config: &api.CloudDirectoryConfig{
-			SelfServiceEnabled: true,
-			Interactions: &api.CloudDirectoryInteractions{
-				IdentityConfirmation: &api.IdentityConfirmation{
-					AccessMode: "FULL",
+func cloudDirectoryDefaults(tenantID string) *appid.SetCloudDirectoryIDPOptions {
+	return &appid.SetCloudDirectoryIDPOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(false),
+		Config: &appid.CloudDirectoryConfigParams{
+			SelfServiceEnabled: getBoolPtr(true),
+			Interactions: &appid.CloudDirectoryConfigParamsInteractions{
+				IdentityConfirmation: &appid.CloudDirectoryConfigParamsInteractionsIdentityConfirmation{
+					AccessMode: getStringPtr("FULL"),
 					Methods:    []string{"email"},
 				},
-				WelcomeEnabled:                   true,
-				ResetPasswordEnabled:             true,
-				ResetPasswordNotificationEnabled: true,
+				WelcomeEnabled:                  getBoolPtr(true),
+				ResetPasswordEnabled:            getBoolPtr(true),
+				ResetPasswordNotificationEnable: getBoolPtr(true),
 			},
 		},
 	}

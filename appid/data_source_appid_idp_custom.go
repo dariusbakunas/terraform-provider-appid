@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPCustom() *schema.Resource {
@@ -34,9 +34,11 @@ func dataSourceAppIDIDPCustomRead(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	config, err := c.IDPAPI.GetCustomIDPConfig(ctx, tenantID)
+	config, _, err := c.GetCustomIDPWithContext(ctx, &appid.GetCustomIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -44,10 +46,10 @@ func dataSourceAppIDIDPCustomRead(ctx context.Context, d *schema.ResourceData, m
 
 	log.Printf("[DEBUG] Got Custom IDP config: %+v", config)
 
-	d.Set("is_active", config.IsActive)
+	d.Set("is_active", *config.IsActive)
 
-	if config.Config != nil && config.Config.PublicKey != "" {
-		if err := d.Set("public_key", config.Config.PublicKey); err != nil {
+	if config.Config != nil && config.Config.PublicKey != nil {
+		if err := d.Set("public_key", *config.Config.PublicKey); err != nil {
 			return diag.Errorf("failed setting config: %s", err)
 		}
 	}

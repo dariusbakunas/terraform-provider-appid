@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
+	"path"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
-	"golang.org/x/oauth2"
 )
 
 // Provider -
@@ -47,6 +49,12 @@ func Provider() *schema.Provider {
 				Description: "The IBM cloud Region (for example 'us-south').",
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"IC_REGION", "IBMCLOUD_REGION"}, "us-south"),
 			},
+			"api_max_retry": {
+				Description: "Maximum number of retries for AppID api requests, set to 0 to disable",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     3,
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_application":              resourceAppIDApplication(),
@@ -78,9 +86,7 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var iamApiKey, iamAccesToken string
-
-	clientOptions := &api.Options{}
+	var iamApiKey, iamAccessToken string
 
 	region := d.Get("region").(string)
 	baseURL := d.Get("appid_base_url").(string)
@@ -98,41 +104,52 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}
 
 	if accessToken, ok := d.GetOk("iam_access_token"); ok {
-		iamAccesToken = accessToken.(string)
+		iamAccessToken = accessToken.(string)
 	}
 
+	options := &appid.AppIDManagementV4Options{}
+
 	if region != "" {
-		clientOptions.BaseURL = fmt.Sprintf("https://%s.appid.cloud.ibm.com", region)
+		options.URL = fmt.Sprintf("https://%s.appid.cloud.ibm.com", region)
 	}
 
 	if baseURL != "" {
-		clientOptions.BaseURL = baseURL
+		options.URL = baseURL
 	}
 
-	if iamAccesToken == "" {
+	if iamAccessToken == "" {
 		if iamApiKey == "" {
 			return nil, diag.Errorf("iam_api_key or iam_access_token must be specified")
 		}
 
-		token, err := getAccessToken(ctx, d.Get("iam_base_url").(string), iamApiKey)
+		iamBaseURL := d.Get("iam_base_url").(string)
+
+		u, err := url.Parse(iamBaseURL)
 
 		if err != nil {
-			return nil, diag.FromErr(err)
+			return nil, diag.Errorf("failed parsing iam_base_url")
 		}
 
-		iamAccesToken = token.AccessToken
+		u.Path = path.Join(u.Path, "/identity/token")
+
+		options.Authenticator = &core.IamAuthenticator{
+			ApiKey: iamApiKey,
+			URL:    u.String(),
+		}
+	} else {
+		options.Authenticator = &core.BearerTokenAuthenticator{
+			BearerToken: iamAccessToken,
+		}
 	}
 
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: iamAccesToken},
-	)
+	// log.Printf("[DEBUG] Using client options: %s", dbgPrint(options))
 
-	tc := oauth2.NewClient(ctx, ts)
-	c, err := api.NewClient(clientOptions, tc)
+	client, err := appid.NewAppIDManagementV4(options)
+	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client defaults
 
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
 
-	return c, diags
+	return client, diags
 }

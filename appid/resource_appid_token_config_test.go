@@ -1,21 +1,16 @@
 package appid
 
 import (
-	"context"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func TestAccAppIDTokenConfig_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTokenConfigDestroy,
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckAppIDTokenConfigCreate(testTenantID),
@@ -63,26 +58,4 @@ func testAccCheckAppIDTokenConfigCreate(tenantID string) string {
 			}			
 		}
 	`, tenantID)
-}
-
-func testAccCheckTokenConfigDestroy(s *terraform.State) error {
-	c := testAccProvider.Meta().(*api.Client)
-
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "appid_token_config" {
-			continue
-		}
-
-		tokenConfig, err := c.ConfigAPI.GetTokens(context.Background(), rs.Primary.ID)
-
-		if err != nil {
-			return err
-		}
-
-		if !reflect.DeepEqual(tokenConfig, tokenConfigDefaults()) {
-			return fmt.Errorf("Failed to reset token config: %v", tokenConfig)
-		}
-	}
-
-	return nil
 }

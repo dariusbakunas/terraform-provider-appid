@@ -7,12 +7,10 @@ terraform {
   }
 }
 
-provider "appid" {  
-    iam_access_token = var.iam_access_token  
-    iam_base_url = "https://iam.cloud.ibm.com"
-    appid_base_url = "https://us-south.appid.cloud.ibm.com"
+provider "appid" {      
+    iam_access_token = var.iam_access_token      
+    region = "us-south"
 }
-
 
 resource "appid_token_config" "tokens" {
     tenant_id = var.tenant_id
@@ -54,4 +52,12 @@ resource "appid_token_config" "tokens" {
       source_claim = "userType"
       destination_claim = "userType"
     }
+}
+
+data "appid_token_config" "tokens" {
+  tenant_id = appid_token_config.tokens.tenant_id
+
+  depends_on = [
+    appid_token_config.tokens
+  ]
 }

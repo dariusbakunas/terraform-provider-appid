@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDIDPCloudDirectory() *schema.Resource {
@@ -65,9 +65,11 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 	var diags diag.Diagnostics
 
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	config, err := c.IDPAPI.GetCloudDirectoryConfig(ctx, tenantID)
+	config, _, err := c.GetCloudDirectoryIDPWithContext(ctx, &appid.GetCloudDirectoryIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -75,21 +77,21 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 
 	log.Printf("[DEBUG] Got CloudDirectory IDP config: %+v", config)
 
-	d.Set("is_active", config.IsActive)
+	d.Set("is_active", *config.IsActive)
 
 	if config.Config != nil {
-		d.Set("self_service_enabled", config.Config.SelfServiceEnabled)
-		d.Set("signup_enabled", config.Config.SignupEnabled)
+		d.Set("self_service_enabled", *config.Config.SelfServiceEnabled)
+		d.Set("signup_enabled", *config.Config.SignupEnabled)
 
-		if config.Config.IdentityField != "" {
-			d.Set("identity_field", config.Config.IdentityField)
+		if config.Config.IdentityField != nil {
+			d.Set("identity_field", *config.Config.IdentityField)
 		}
 
 		if config.Config.Interactions != nil {
-			d.Set("welcome_enabled", config.Config.Interactions.WelcomeEnabled)
-			d.Set("reset_password_enabled", config.Config.Interactions.ResetPasswordEnabled)
-			d.Set("reset_password_notification_enabled", config.Config.Interactions.ResetPasswordNotificationEnabled)
-			d.Set("identity_confirm_access_mode", config.Config.Interactions.IdentityConfirmation.AccessMode)
+			d.Set("welcome_enabled", *config.Config.Interactions.WelcomeEnabled)
+			d.Set("reset_password_enabled", *config.Config.Interactions.ResetPasswordEnabled)
+			d.Set("reset_password_notification_enabled", *config.Config.Interactions.ResetPasswordNotificationEnable)
+			d.Set("identity_confirm_access_mode", *config.Config.Interactions.IdentityConfirmation.AccessMode)
 			d.Set("identity_confirm_methods", config.Config.Interactions.IdentityConfirmation.Methods)
 		}
 	}
