@@ -1,3 +1,3 @@
 output "token_config" {
-  value = appid_token_config.tokens
+  value = data.appid_token_config.tokens
 }

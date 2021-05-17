@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
+	"github.com/IBM/go-sdk-core/core"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
-	"golang.org/x/oauth2"
 )
 
 // Provider -
@@ -78,9 +78,7 @@ func Provider() *schema.Provider {
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics
-	var iamApiKey, iamAccesToken string
-
-	clientOptions := &api.Options{}
+	var iamApiKey, iamAccessToken string
 
 	region := d.Get("region").(string)
 	baseURL := d.Get("appid_base_url").(string)
@@ -98,41 +96,39 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}
 
 	if accessToken, ok := d.GetOk("iam_access_token"); ok {
-		iamAccesToken = accessToken.(string)
+		iamAccessToken = accessToken.(string)
 	}
 
+	options := &appid.AppIDManagementV4Options{}
+
 	if region != "" {
-		clientOptions.BaseURL = fmt.Sprintf("https://%s.appid.cloud.ibm.com", region)
+		options.URL = fmt.Sprintf("https://%s.appid.cloud.ibm.com", region)
 	}
 
 	if baseURL != "" {
-		clientOptions.BaseURL = baseURL
+		options.URL = baseURL
 	}
 
-	if iamAccesToken == "" {
+	if iamAccessToken == "" {
 		if iamApiKey == "" {
 			return nil, diag.Errorf("iam_api_key or iam_access_token must be specified")
 		}
 
-		token, err := getAccessToken(ctx, d.Get("iam_base_url").(string), iamApiKey)
-
-		if err != nil {
-			return nil, diag.FromErr(err)
+		options.Authenticator = &core.IamAuthenticator{
+			ApiKey: iamApiKey,
+			URL:    d.Get("iam_base_url").(string),
 		}
-
-		iamAccesToken = token.AccessToken
+	} else {
+		options.Authenticator = &core.BearerTokenAuthenticator{
+			BearerToken: iamAccessToken,
+		}
 	}
 
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: iamAccesToken},
-	)
-
-	tc := oauth2.NewClient(ctx, ts)
-	c, err := api.NewClient(clientOptions, tc)
+	client, err := appid.NewAppIDManagementV4(options)
 
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
 
-	return c, diags
+	return client, diags
 }

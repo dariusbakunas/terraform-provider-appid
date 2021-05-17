@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDTokenConfig() *schema.Resource {
@@ -90,12 +90,12 @@ func dataSourceAppIDTokenConfig() *schema.Resource {
 	}
 }
 
-func flattenTokenClaims(c []api.TokenClaim) []interface{} {
+func flattenTokenClaims(c []appid.TokenClaimMapping) []interface{} {
 	var s []interface{}
 
 	for _, v := range c {
 		claim := map[string]interface{}{
-			"source": v.Source,
+			"source": *v.Source,
 		}
 
 		if v.SourceClaim != nil {
@@ -117,9 +117,9 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	tokenConfig, err := c.ConfigAPI.GetTokens(ctx, tenantID)
+	tokenConfig, _, err := c.GetTokensConfigWithContext(ctx, &appid.GetTokensConfigOptions{TenantID: getStringPtr(tenantID)})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -138,11 +138,11 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if tokenConfig.Access != nil {
-		d.Set("access_token_expires_in", tokenConfig.Access.ExpiresIn)
+		d.Set("access_token_expires_in", *tokenConfig.Access.ExpiresIn)
 	}
 
 	if tokenConfig.Refresh != nil {
-		d.Set("refresh_token_expires_in", tokenConfig.Refresh.ExpiresIn)
+		d.Set("refresh_token_expires_in", *tokenConfig.Refresh.ExpiresIn)
 
 		if tokenConfig.Refresh.Enabled != nil {
 			d.Set("refresh_token_enabled", *tokenConfig.Refresh.Enabled)
@@ -150,7 +150,7 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	if tokenConfig.AnonymousAccess != nil {
-		d.Set("anonymous_token_expires_in", tokenConfig.AnonymousAccess.ExpiresIn)
+		d.Set("anonymous_token_expires_in", *tokenConfig.AnonymousAccess.ExpiresIn)
 
 		if tokenConfig.AnonymousAccess.Enabled != nil {
 			d.Set("anonymous_access_enabled", *tokenConfig.AnonymousAccess.Enabled)

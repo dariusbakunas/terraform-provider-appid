@@ -7,6 +7,11 @@ func getBoolPtr(b bool) *bool {
 	return &val
 }
 
+func getInt64Ptr(i int64) *int64 {
+	val := i
+	return &val
+}
+
 func getStringPtr(s string) *string {
 	val := s
 	return &val

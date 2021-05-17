@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/stretchr/testify/assert"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func TestAccTokenConfigDataSource_basic(t *testing.T) {
@@ -28,13 +28,13 @@ func TestAccTokenConfigDataSource_basic(t *testing.T) {
 
 func TestFlattenTokenClaims(t *testing.T) {
 	testcases := []struct {
-		claims   []api.TokenClaim
+		claims   []appid.TokenClaimMapping
 		expected []interface{}
 	}{
 		{
-			claims: []api.TokenClaim{
-				{Source: "appid_custom", SourceClaim: getStringPtr("sClaim"), DestinationClaim: getStringPtr("dClaim")},
-				{Source: "appid_custom", DestinationClaim: getStringPtr("dClaim")},
+			claims: []appid.TokenClaimMapping{
+				{Source: getStringPtr("appid_custom"), SourceClaim: getStringPtr("sClaim"), DestinationClaim: getStringPtr("dClaim")},
+				{Source: getStringPtr("appid_custom"), DestinationClaim: getStringPtr("dClaim")},
 			},
 			expected: []interface{}{
 				map[string]interface{}{"source": "appid_custom", "source_claim": "sClaim", "destination_claim": "dClaim"},
