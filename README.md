@@ -20,7 +20,7 @@ Check `examples` folder for working examples
 First, clone the repository:
 
 ```bash
-git clone git@github.ibm.com:wh-return-to-work/terraform-provider-appid.git
+git clone git@github.com:dariusbakunas/terraform-provider-appid.git
 ```
 
 To compile the provider, run make build. This will build the provider and put the provider binary in the current directory.
