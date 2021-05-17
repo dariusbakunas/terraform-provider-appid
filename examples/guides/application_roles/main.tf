@@ -1,16 +1,15 @@
 terraform {
   required_providers {
     appid = {
-      version = "0.1"
-      source  = "us.ibm.com/watson-health/appid"
-    }
+      source = "dariusbakunas/appid"
+      version = "0.2.0"
+    } 
   }
 }
 
 provider "appid" {  
-    iam_access_token = var.iam_access_token  
-    iam_base_url = "https://iam.cloud.ibm.com"
-    appid_base_url = "https://us-south.appid.cloud.ibm.com"
+    iam_access_token = var.iam_access_token      
+    region = "us-south"
 }
 
 locals {
