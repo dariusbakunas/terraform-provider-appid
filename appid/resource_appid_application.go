@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDApplication() *schema.Resource {
@@ -87,31 +87,41 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 		}
 	}
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	input := &api.CreateApplicationInput{
-		Name: name,
-		Type: appType,
+	input := &appid.RegisterApplicationOptions{
+		TenantID: getStringPtr(tenantID),
+		Name:     getStringPtr(name),
+		Type:     getStringPtr(appType),
 	}
 
 	log.Printf("[DEBUG] Creating AppID application: %+v", input)
-	app, err := c.ApplicationAPI.CreateApplication(ctx, tenantID, input)
+	app, _, err := c.RegisterApplicationWithContext(ctx, input)
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	if len(scopes) != 0 {
-		_, err := c.ApplicationAPI.SetApplicationScopes(ctx, tenantID, app.ClientID, scopes)
+		scopeOpts := &appid.PutApplicationsScopesOptions{
+			TenantID: getStringPtr(tenantID),
+			ClientID: getStringPtr(*app.ClientID),
+			Scopes:   scopes,
+		}
+
+		_, _, err := c.PutApplicationsScopesWithContext(ctx, scopeOpts)
 
 		if err != nil {
 			// this is not ideal, but we have to delete created app otherwise next apply will fail
 			// another option would be adding separate application_scopes resource
-			deleteErr := c.ApplicationAPI.DeleteApplication(ctx, tenantID, app.ClientID)
+			_, deleteErr := c.DeleteApplicationWithContext(ctx, &appid.DeleteApplicationOptions{
+				TenantID: getStringPtr(tenantID),
+				ClientID: getStringPtr(*app.ClientID),
+			})
 			diags := diag.FromErr(err)
 
 			if deleteErr != nil {
-				log.Printf("[WARN] Failed cleaning up partially created application: %s/%s", app.TenantID, app.ClientID)
+				log.Printf("[WARN] Failed cleaning up partially created application: %s/%s", *app.TenantID, *app.ClientID)
 				diags = append(diags, diag.FromErr(deleteErr)...)
 			}
 
@@ -119,21 +129,25 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 		}
 	}
 
-	d.SetId(fmt.Sprintf("%s/%s", tenantID, app.ClientID))
-	d.Set("client_id", app.ClientID)
+	d.SetId(fmt.Sprintf("%s/%s", tenantID, *app.ClientID))
 
+	// dataSourceAppIDApplicationRead expects client_id to be set (could extract it from id??)
+	d.Set("client_id", *app.ClientID)
 	return dataSourceAppIDApplicationRead(ctx, d, m)
 }
 
 func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
 	clientID := d.Get("client_id").(string)
 
 	log.Printf("[DEBUG] Deleting AppID application: %s", d.Id())
 
-	err := c.ApplicationAPI.DeleteApplication(ctx, tenantID, clientID)
+	_, err := c.DeleteApplicationWithContext(ctx, &appid.DeleteApplicationOptions{
+		TenantID: getStringPtr(tenantID),
+		ClientID: getStringPtr(clientID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -145,7 +159,7 @@ func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData,
 }
 
 func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
 	clientID := d.Get("client_id").(string)
 
@@ -153,7 +167,11 @@ func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData,
 		name := d.Get("name").(string)
 
 		log.Printf("[DEBUG] Updating AppID application: %s", d.Id())
-		_, err := c.ApplicationAPI.UpdateApplication(ctx, tenantID, clientID, name)
+		_, _, err := c.UpdateApplicationWithContext(ctx, &appid.UpdateApplicationOptions{
+			TenantID: getStringPtr(tenantID),
+			Name:     getStringPtr(name),
+			ClientID: getStringPtr(clientID),
+		})
 
 		if err != nil {
 			return diag.FromErr(err)

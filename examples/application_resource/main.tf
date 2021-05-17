@@ -8,9 +8,8 @@ terraform {
 }
 
 provider "appid" {  
-    iam_access_token = var.iam_access_token  
-    iam_base_url = "https://iam.cloud.ibm.com"
-    appid_base_url = "https://us-south.appid.cloud.ibm.com"
+    iam_access_token = var.iam_access_token      
+    region = "us-south"
 }
 
 resource "appid_application" "app" {
@@ -20,6 +19,11 @@ resource "appid_application" "app" {
   scopes = ["test_scope_1", "test_scope_2", "test_scope_3"]
 }
 
+data "appid_application" "app" {
+  tenant_id = var.tenant_id
+  client_id = appid_application.app.client_id
+}
+
 output "application" {
-  value = appid_application.app
+  value = data.appid_application.app
 }
