@@ -4,9 +4,9 @@ import (
 	"context"
 	"log"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDIDPCustom() *schema.Resource {
@@ -37,22 +37,23 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	config := &api.CustomIDP{
-		IsActive: isActive,
+	config := &appid.SetCustomIDPOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(isActive),
 	}
 
 	if isActive {
-		config.Config = &api.CustomIDPConfig{}
+		config.Config = &appid.CustomIDPConfigParamsConfig{}
 
 		if pKey, ok := d.GetOk("public_key"); ok {
-			config.Config.PublicKey = pKey.(string)
+			config.Config.PublicKey = getStringPtr(pKey.(string))
 		}
 	}
 
 	log.Printf("[DEBUG] Applying custom IDP config: %v", config)
-	err := c.IDPAPI.UpdateCustomIDPConfig(ctx, tenantID, config)
+	_, _, err := c.SetCustomIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -61,20 +62,21 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 	return dataSourceAppIDIDPCustomRead(ctx, d, m)
 }
 
-func customIDPDefaults() *api.CustomIDP {
-	return &api.CustomIDP{
-		IsActive: false,
+func customIDPDefaults(tenantID string) *appid.SetCustomIDPOptions {
+	return &appid.SetCustomIDPOptions{
+		TenantID: getStringPtr(tenantID),
+		IsActive: getBoolPtr(false),
 	}
 }
 
 func resourceAppIDIDPCustomDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
-	config := customIDPDefaults()
+	config := customIDPDefaults(tenantID)
 
 	log.Printf("[DEBUG] Resetting custom IDP config: %v", config)
-	err := c.IDPAPI.UpdateCustomIDPConfig(ctx, tenantID, config)
+	_, _, err := c.SetCustomIDPWithContext(ctx, config)
 
 	if err != nil {
 		return diag.FromErr(err)
