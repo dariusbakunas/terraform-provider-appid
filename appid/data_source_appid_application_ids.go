@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDApplicationIDs() *schema.Resource {
@@ -30,9 +30,11 @@ func dataSourceAppIDApplicationIDs() *schema.Resource {
 
 func dataSourceAppIDApplicationIDsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	apps, err := c.ApplicationAPI.ListApplications(ctx, tenantID)
+	apps, _, err := c.ListApplicationsWithContext(ctx, &appid.ListApplicationsOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -40,8 +42,8 @@ func dataSourceAppIDApplicationIDsRead(ctx context.Context, d *schema.ResourceDa
 
 	ids := make([]string, 0)
 
-	for _, app := range apps {
-		ids = append(ids, app.ClientID)
+	for _, app := range apps.Applications {
+		ids = append(ids, *app.ClientID)
 	}
 
 	d.SetId(fmt.Sprintf("%s/ids", tenantID))

@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDApplications() *schema.Resource {
@@ -68,9 +68,11 @@ func dataSourceAppIDApplications() *schema.Resource {
 func dataSourceAppIDApplicationsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
-	apps, err := c.ApplicationAPI.ListApplications(ctx, tenantID)
+	apps, _, err := c.ListApplicationsWithContext(ctx, &appid.ListApplicationsOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -78,27 +80,30 @@ func dataSourceAppIDApplicationsRead(ctx context.Context, d *schema.ResourceData
 
 	applicationList := make([]interface{}, 0)
 
-	for _, app := range apps {
+	for _, app := range apps.Applications {
 		application := map[string]interface{}{}
-		application["client_id"] = app.ClientID
-		application["name"] = app.Name
+		application["client_id"] = *app.ClientID
+		application["name"] = *app.Name
 
 		if app.Secret != nil {
-			application["secret"] = app.Secret
+			application["secret"] = *app.Secret
 		}
 
-		application["oauth_server_url"] = app.OAuthServerURL
-		application["profiles_url"] = app.ProfilesURL
-		application["discovery_endpoint"] = app.DiscoveryEndpoint
-		application["type"] = app.Type
+		application["oauth_server_url"] = *app.OAuthServerURL
+		application["profiles_url"] = *app.ProfilesURL
+		application["discovery_endpoint"] = *app.DiscoveryEndpoint
+		application["type"] = *app.Type
 
-		scopes, err := c.ApplicationAPI.GetApplicationScopes(ctx, tenantID, app.ClientID)
+		scopes, _, err := c.GetApplicationScopesWithContext(ctx, &appid.GetApplicationScopesOptions{
+			TenantID: getStringPtr(tenantID),
+			ClientID: app.ClientID,
+		})
 
 		if err != nil {
 			return diag.FromErr(err)
 		}
 
-		application["scopes"] = flattenStringList(scopes)
+		application["scopes"] = flattenStringList(scopes.Scopes)
 		applicationList = append(applicationList, application)
 	}
 
