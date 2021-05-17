@@ -23,6 +23,7 @@ provider "appid" {
 
 ### Optional
 
+- **api_max_retry** (Number) Maximum number of retries for AppID api requests, set to 0 to disable
 - **appid_base_url** (String) AppID API base URL (for example 'https://us-south.appid.cloud.ibm.com')
 - **iam_access_token** (String, Sensitive) The IBM Cloud Identity and Access Management token used to access AppID APIs
 - **iam_api_key** (String, Sensitive) The IBM Cloud IAM api key used to retrieve IAM access token if `iam_access_token` is not specified
