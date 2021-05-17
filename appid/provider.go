@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
+	"path"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/IBM/go-sdk-core/core"
@@ -114,15 +116,27 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 			return nil, diag.Errorf("iam_api_key or iam_access_token must be specified")
 		}
 
+		iamBaseURL := d.Get("iam_base_url").(string)
+
+		u, err := url.Parse(iamBaseURL)
+
+		if err != nil {
+			return nil, diag.Errorf("failed parsing iam_base_url")
+		}
+
+		u.Path = path.Join(u.Path, "/identity/token")
+
 		options.Authenticator = &core.IamAuthenticator{
 			ApiKey: iamApiKey,
-			URL:    d.Get("iam_base_url").(string),
+			URL:    u.String(),
 		}
 	} else {
 		options.Authenticator = &core.BearerTokenAuthenticator{
 			BearerToken: iamAccessToken,
 		}
 	}
+
+	// log.Printf("[DEBUG] Using client options: %s", dbgPrint(options))
 
 	client, err := appid.NewAppIDManagementV4(options)
 

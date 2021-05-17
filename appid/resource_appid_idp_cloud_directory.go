@@ -91,8 +91,11 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 					AccessMode: getStringPtr(d.Get("identity_confirm_access_mode").(string)),
 				},
 			},
-			IdentityField: getStringPtr(d.Get("identity_field").(string)),
 		},
+	}
+
+	if idField, ok := d.GetOk("identity_field"); ok {
+		config.Config.IdentityField = getStringPtr(idField.(string))
 	}
 
 	if methods, ok := d.GetOk("identity_confirm_methods"); ok {
