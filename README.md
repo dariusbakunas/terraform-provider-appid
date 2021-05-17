@@ -6,7 +6,7 @@
 
 Check `examples` folder for working examples
 
-(WIP) [documentation](https://pages.github.ibm.com/watson-health-development/terraform-provider-appid/)
+[documentation](https://registry.terraform.io/providers/dariusbakunas/appid/latest/docs)
 
 ## Development
 
