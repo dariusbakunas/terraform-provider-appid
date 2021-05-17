@@ -6,6 +6,8 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
+        <meta name="description" content="Tenant audit status">
+      
       
       
       
@@ -14,7 +16,7 @@
     
     
       
-        <title>appid_idp_custom (Resource) - Terraform Provider for AppID</title>
+        <title>appid_audit_status (Data Source) - Terraform Provider for AppID</title>
       
     
     
@@ -63,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#appid_idp_custom-resource" class="md-skip">
+        <a href="#appid_audit_status-data-source" class="md-skip">
           Skip to content
         </a>
       
@@ -93,7 +95,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              appid_idp_custom (Resource)
+              appid_audit_status (Data Source)
             
           </span>
         </div>
@@ -203,10 +205,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
+    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     <label class="md-nav__link" for="nav-2">
       Data sources
       <span class="md-nav__icon md-icon"></span>
@@ -225,7 +229,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/application/" class="md-nav__link">
+    <a href="../application/" class="md-nav__link">
       appid_application (Data Source)
     </a>
   </li>
@@ -237,7 +241,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/application_ids/" class="md-nav__link">
+    <a href="../application_ids/" class="md-nav__link">
       appid_application_ids (Data Source)
     </a>
   </li>
@@ -249,7 +253,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/applications/" class="md-nav__link">
+    <a href="../applications/" class="md-nav__link">
       appid_applications (Data Source)
     </a>
   </li>
@@ -259,11 +263,76 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../data-sources/audit_status/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        appid_audit_status (Data Source)
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       appid_audit_status (Data Source)
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    Schema
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    Required
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional" class="md-nav__link">
+    Optional
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    Read-Only
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -273,7 +342,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/cloud_directory_template/" class="md-nav__link">
+    <a href="../cloud_directory_template/" class="md-nav__link">
       appid_cloud_directory_template (Data Source)
     </a>
   </li>
@@ -285,7 +354,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/idp_cloud_directory/" class="md-nav__link">
+    <a href="../idp_cloud_directory/" class="md-nav__link">
       appid_idp_cloud_directory (Data Source)
     </a>
   </li>
@@ -297,7 +366,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/idp_custom/" class="md-nav__link">
+    <a href="../idp_custom/" class="md-nav__link">
       appid_idp_custom (Data Source)
     </a>
   </li>
@@ -309,7 +378,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/idp_saml/" class="md-nav__link">
+    <a href="../idp_saml/" class="md-nav__link">
       appid_idp_saml (Data Source)
     </a>
   </li>
@@ -321,7 +390,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/redirect_urls/" class="md-nav__link">
+    <a href="../redirect_urls/" class="md-nav__link">
       appid_redirect_urls (Data Source)
     </a>
   </li>
@@ -333,7 +402,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/role/" class="md-nav__link">
+    <a href="../role/" class="md-nav__link">
       appid_role (Data Source)
     </a>
   </li>
@@ -345,7 +414,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../data-sources/token_config/" class="md-nav__link">
+    <a href="../token_config/" class="md-nav__link">
       appid_token_config (Data Source)
     </a>
   </li>
@@ -397,12 +466,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" >
     <label class="md-nav__link" for="nav-4">
       Resources
       <span class="md-nav__icon md-icon"></span>
@@ -421,7 +488,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../application/" class="md-nav__link">
+    <a href="../../resources/application/" class="md-nav__link">
       appid_application (Resource)
     </a>
   </li>
@@ -433,7 +500,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../audit_status/" class="md-nav__link">
+    <a href="../../resources/audit_status/" class="md-nav__link">
       appid_audit_status (Resource)
     </a>
   </li>
@@ -445,7 +512,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../cloud_directory_template/" class="md-nav__link">
+    <a href="../../resources/cloud_directory_template/" class="md-nav__link">
       appid_cloud_directory_template (Resource)
     </a>
   </li>
@@ -457,7 +524,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../idp_cloud_directory/" class="md-nav__link">
+    <a href="../../resources/idp_cloud_directory/" class="md-nav__link">
       appid_idp_cloud_directory (Resource)
     </a>
   </li>
@@ -467,69 +534,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        appid_idp_custom (Resource)
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../resources/idp_custom/" class="md-nav__link">
       appid_idp_custom (Resource)
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#schema" class="md-nav__link">
-    Schema
-  </a>
-  
-    <nav class="md-nav" aria-label="Schema">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#required" class="md-nav__link">
-    Required
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional" class="md-nav__link">
-    Optional
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -539,7 +548,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../idp_saml/" class="md-nav__link">
+    <a href="../../resources/idp_saml/" class="md-nav__link">
       appid_idp_saml (Resource)
     </a>
   </li>
@@ -551,7 +560,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../redirect_urls/" class="md-nav__link">
+    <a href="../../resources/redirect_urls/" class="md-nav__link">
       appid_redirect_urls (Resource)
     </a>
   </li>
@@ -563,7 +572,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../role/" class="md-nav__link">
+    <a href="../../resources/role/" class="md-nav__link">
       appid_role (Resource)
     </a>
   </li>
@@ -575,7 +584,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../token_config/" class="md-nav__link">
+    <a href="../../resources/token_config/" class="md-nav__link">
       appid_token_config (Resource)
     </a>
   </li>
@@ -631,6 +640,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#read-only" class="md-nav__link">
+    Read-Only
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -649,18 +665,21 @@
               
                 
                 
-                <h1 id="appid_idp_custom-resource">appid_idp_custom (Resource)</h1>
+                <h1 id="appid_audit_status-data-source">appid_audit_status (Data Source)</h1>
+<p>Tenant audit status</p>
 <!-- schema generated by tfplugindocs -->
 <h2 id="schema">Schema</h2>
 <h3 id="required">Required</h3>
 <ul>
-<li><strong>is_active</strong> (Boolean)</li>
-<li><strong>tenant_id</strong> (String)</li>
+<li><strong>tenant_id</strong> (String) The service <code>tenantId</code></li>
 </ul>
 <h3 id="optional">Optional</h3>
 <ul>
 <li><strong>id</strong> (String) The ID of this resource.</li>
-<li><strong>public_key</strong> (String)</li>
+</ul>
+<h3 id="read-only">Read-Only</h3>
+<ul>
+<li><strong>is_active</strong> (Boolean) The auditing status of the tenant.</li>
 </ul>
                 
                   
@@ -670,7 +689,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-04-29T20:22:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-04-29</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-17T19:31:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-17</span>
     
   </small>
 </div>
@@ -693,7 +712,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../idp_cloud_directory/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../applications/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -702,19 +721,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                appid_idp_cloud_directory (Resource)
+                appid_applications (Data Source)
               </div>
             </div>
           </a>
         
         
-          <a href="../idp_saml/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../cloud_directory_template/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                appid_idp_saml (Resource)
+                appid_cloud_directory_template (Data Source)
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

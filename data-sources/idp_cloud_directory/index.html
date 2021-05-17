@@ -263,6 +263,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../audit_status/" class="md-nav__link">
+      appid_audit_status (Data Source)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../cloud_directory_template/" class="md-nav__link">
       appid_cloud_directory_template (Data Source)
     </a>
@@ -334,27 +346,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-config" class="md-nav__link">
-    Nested Schema for config
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-configinteractions" class="md-nav__link">
-    Nested Schema for config.interactions
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-configinteractionsidentity_confirmation" class="md-nav__link">
-    Nested Schema for config.interactions.identity_confirmation
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -387,6 +378,18 @@
   <li class="md-nav__item">
     <a href="../idp_saml/" class="md-nav__link">
       appid_idp_saml (Data Source)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../redirect_urls/" class="md-nav__link">
+      appid_redirect_urls (Data Source)
     </a>
   </li>
 
@@ -495,8 +498,32 @@
 
 
   <li class="md-nav__item">
+    <a href="../../resources/audit_status/" class="md-nav__link">
+      appid_audit_status (Resource)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../../resources/cloud_directory_template/" class="md-nav__link">
       appid_cloud_directory_template (Resource)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../resources/idp_cloud_directory/" class="md-nav__link">
+      appid_idp_cloud_directory (Resource)
     </a>
   </li>
 
@@ -521,6 +548,18 @@
   <li class="md-nav__item">
     <a href="../../resources/idp_saml/" class="md-nav__link">
       appid_idp_saml (Resource)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../resources/redirect_urls/" class="md-nav__link">
+      appid_redirect_urls (Resource)
     </a>
   </li>
 
@@ -606,27 +645,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-config" class="md-nav__link">
-    Nested Schema for config
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-configinteractions" class="md-nav__link">
-    Nested Schema for config.interactions
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nested-schema-for-configinteractionsidentity_confirmation" class="md-nav__link">
-    Nested Schema for config.interactions.identity_confirmation
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -658,33 +676,15 @@
 </ul>
 <h3 id="read-only">Read-Only</h3>
 <ul>
-<li><strong>config</strong> (List of Object) (see <a href="#nestedatt--config">below for nested schema</a>)</li>
-<li><strong>is_active</strong> (Boolean)</li>
-</ul>
-<p><a id="nestedatt--config"></a></p>
-<h3 id="nested-schema-for-config">Nested Schema for <code>config</code></h3>
-<p>Read-Only:</p>
-<ul>
+<li><strong>identity_confirm_access_mode</strong> (String)</li>
+<li><strong>identity_confirm_methods</strong> (List of String)</li>
 <li><strong>identity_field</strong> (String)</li>
-<li><strong>interactions</strong> (List of Object) (see <a href="#nestedobjatt--config--interactions">below for nested schema</a>)</li>
-<li><strong>self_service_enabled</strong> (Boolean)</li>
-<li><strong>signup_enabled</strong> (Boolean)</li>
-</ul>
-<p><a id="nestedobjatt--config--interactions"></a></p>
-<h3 id="nested-schema-for-configinteractions">Nested Schema for <code>config.interactions</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><strong>identity_confirmation</strong> (List of Object) (see <a href="#nestedobjatt--config--interactions--identity_confirmation">below for nested schema</a>)</li>
+<li><strong>is_active</strong> (Boolean)</li>
 <li><strong>reset_password_enabled</strong> (Boolean)</li>
 <li><strong>reset_password_notification_enabled</strong> (Boolean)</li>
+<li><strong>self_service_enabled</strong> (Boolean)</li>
+<li><strong>signup_enabled</strong> (Boolean)</li>
 <li><strong>welcome_enabled</strong> (Boolean)</li>
-</ul>
-<p><a id="nestedobjatt--config--interactions--identity_confirmation"></a></p>
-<h3 id="nested-schema-for-configinteractionsidentity_confirmation">Nested Schema for <code>config.interactions.identity_confirmation</code></h3>
-<p>Read-Only:</p>
-<ul>
-<li><strong>access_mode</strong> (String)</li>
-<li><strong>methods</strong> (List of String)</li>
 </ul>
                 
                   
@@ -694,7 +694,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-04-29T20:22:37+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-04-29</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2021-05-17T19:31:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2021-05-17</span>
     
   </small>
 </div>
