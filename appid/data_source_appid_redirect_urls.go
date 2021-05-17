@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func dataSourceAppIDRedirectURLs() *schema.Resource {
@@ -33,16 +33,18 @@ func dataSourceAppIDRedirectURLs() *schema.Resource {
 func dataSourceAppIDRedirectURLsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	tenantID := d.Get("tenant_id").(string)
 
-	urls, err := c.ConfigAPI.ListRedirectURLs(ctx, tenantID)
+	urls, _, err := c.GetRedirectUrisWithContext(ctx, &appid.GetRedirectUrisOptions{
+		TenantID: getStringPtr(tenantID),
+	})
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	if err := d.Set("urls", urls); err != nil {
+	if err := d.Set("urls", urls.RedirectUris); err != nil {
 		return diag.FromErr(err)
 	}
 

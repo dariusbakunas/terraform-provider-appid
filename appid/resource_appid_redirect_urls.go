@@ -3,9 +3,9 @@ package appid
 import (
 	"context"
 
+	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.ibm.com/dbakuna/terraform-provider-appid/api"
 )
 
 func resourceAppIDRedirectURLs() *schema.Resource {
@@ -35,11 +35,17 @@ func resourceAppIDRedirectURLs() *schema.Resource {
 
 func resourceAppIDRedirectURLsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 
 	if urls, ok := d.GetOk("urls"); ok {
 		redirectURLs := expandStringList(urls.([]interface{}))
-		err := c.ConfigAPI.UpdateRedirectURLs(ctx, tenantID, redirectURLs)
+		_, err := c.UpdateRedirectUrisWithContext(ctx, &appid.UpdateRedirectUrisOptions{
+			TenantID: getStringPtr(tenantID),
+			RedirectUrisArray: &appid.RedirectURIConfig{
+				RedirectUris: redirectURLs,
+			},
+		})
+
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -55,10 +61,16 @@ func resourceAppIDRedirectURLsUpdate(ctx context.Context, d *schema.ResourceData
 
 func resourceAppIDRedirectURLsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
-	c := m.(*api.Client)
+	c := m.(*appid.AppIDManagementV4)
 	tenantID := d.Get("tenant_id").(string)
 
-	err := c.ConfigAPI.UpdateRedirectURLs(ctx, tenantID, []string{})
+	_, err := c.UpdateRedirectUrisWithContext(ctx, &appid.UpdateRedirectUrisOptions{
+		TenantID: getStringPtr(tenantID),
+		RedirectUrisArray: &appid.RedirectURIConfig{
+			RedirectUris: []string{},
+		},
+	})
+
 	if err != nil {
 		return diag.FromErr(err)
 	}
