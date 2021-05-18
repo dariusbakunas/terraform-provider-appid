@@ -1,12 +1,19 @@
 
+<a name="v0.3.0"></a>
+## [v0.3.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.2.0...v0.3.0)
+
+> 2021-05-18
+
+### Feat
+
+* add google idp resource/datasource
+* add facebook idp datasource/resource
+
+
 <a name="v0.2.0"></a>
 ## v0.2.0
 
 > 2021-05-17
-
-### Docs
-
-* go generate
 
 ### Feat
 
