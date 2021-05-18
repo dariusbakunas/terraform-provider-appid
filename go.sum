@@ -120,6 +120,8 @@ github.com/dariusbakunas/appid-go-sdk v0.0.0-20210517173207-9055f7b6d797 h1:CN1D
 github.com/dariusbakunas/appid-go-sdk v0.0.0-20210517173207-9055f7b6d797/go.mod h1:AQLVQmSlfeqa7wq2okn44XvNJl/0PzPdbVKUf2bmPKU=
 github.com/dariusbakunas/appid-go-sdk v0.0.0-20210518133225-20453cd70152 h1:TtaUMEt7OzrTJzHnu6m1rPO/Q2ZyL9X6Ouw4pTXUdyw=
 github.com/dariusbakunas/appid-go-sdk v0.0.0-20210518133225-20453cd70152/go.mod h1:AQLVQmSlfeqa7wq2okn44XvNJl/0PzPdbVKUf2bmPKU=
+github.com/dariusbakunas/appid-go-sdk v0.0.0-20210518174800-a36add35b271 h1:NxdSfLJzWXrIM+nrquGsiiPBHsMxD0TAp2uGZoTLCvA=
+github.com/dariusbakunas/appid-go-sdk v0.0.0-20210518174800-a36add35b271/go.mod h1:AQLVQmSlfeqa7wq2okn44XvNJl/0PzPdbVKUf2bmPKU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
