@@ -11,15 +11,17 @@ import (
 
 func resourceAppIDIDPFacebook() *schema.Resource {
 	return &schema.Resource{
+		Description:   "Update Facebook identity provider configuration.",
 		CreateContext: resourceAppIDIDPFacebookCreate,
 		ReadContext:   dataSourceAppIDIDPFacebookRead,
 		DeleteContext: resourceAppIDIDPFacebookDelete,
 		UpdateContext: resourceAppIDIDPFacebookUpdate,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
@@ -32,19 +34,22 @@ func resourceAppIDIDPFacebook() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"application_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Facebook application id",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 						"application_secret": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Facebook application secret",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"redirect_url": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "Paste the URI into the Valid OAuth redirect URIs field in the Facebook Login section of the Facebook Developers Portal",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
