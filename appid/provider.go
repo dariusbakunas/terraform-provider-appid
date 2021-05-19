@@ -151,11 +151,12 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	// log.Printf("[DEBUG] Using client options: %s", dbgPrint(options))
 
 	client, err := appid.NewAppIDManagementV4(options)
-	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client defaults
 
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
+
+	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client defaults
 
 	return client, diags
 }
