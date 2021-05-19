@@ -19,6 +19,7 @@ func resourceAppIDTokenConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:     schema.TypeString,
+				ForceNew: true,
 				Required: true,
 			},
 			"access_token_expires_in": {

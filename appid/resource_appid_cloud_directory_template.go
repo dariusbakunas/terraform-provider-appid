@@ -21,16 +21,19 @@ func resourceAppIDCloudDirectoryTemplate() *schema.Resource {
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"template_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validation.StringInSlice(supportedTemplates, false),
+				ForceNew:     true,
 			},
 			"language": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "en",
+				ForceNew: true,
 			},
 			"subject": {
 				Type:     schema.TypeString,
@@ -75,6 +78,7 @@ func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.Re
 		input.PlainTextBody = getStringPtr(textBody.(string))
 	}
 
+	log.Printf("[DEBUG] Updating CD Email Template: %+v", input)
 	_, _, err := c.UpdateTemplateWithContext(ctx, input)
 
 	if err != nil {
@@ -111,6 +115,6 @@ func resourceAppIDCloudDirectoryTemplateDelete(ctx context.Context, d *schema.Re
 }
 
 func resourceAppIDCloudDirectoryTemplateUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// TODO: implement template update
-	return dataSourceAppIDCloudDirectoryTemplateRead(ctx, d, m)
+	// this is just a configuration, can reuse create method
+	return resourceAppIDCloudDirectoryTemplateCreate(ctx, d, m)
 }

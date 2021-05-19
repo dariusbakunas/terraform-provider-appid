@@ -19,6 +19,7 @@ func resourceAppIDRedirectURLs() *schema.Resource {
 			"tenant_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The service `tenantId`",
 			},
 			"urls": {

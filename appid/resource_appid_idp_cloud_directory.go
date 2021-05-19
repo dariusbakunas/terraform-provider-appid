@@ -20,6 +20,7 @@ func resourceAppIDIDPCloudDirectory() *schema.Resource {
 			"tenant_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
