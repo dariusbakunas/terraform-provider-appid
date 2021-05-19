@@ -10,6 +10,7 @@ import (
 
 func dataSourceAppIDPasswordRegex() *schema.Resource {
 	return &schema.Resource{
+		Description: "The regular expression used by App ID for password strength validation",
 		ReadContext: dataSourceAppIDPasswordRegexRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {

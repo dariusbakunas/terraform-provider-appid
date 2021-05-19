@@ -12,6 +12,7 @@ import (
 
 func resourceAppIDPasswordRegex() *schema.Resource {
 	return &schema.Resource{
+		Description:   "The regular expression used by App ID for password strength validation",
 		CreateContext: resourceAppIDPasswordRegexCreate,
 		ReadContext:   dataSourceAppIDPasswordRegexRead,
 		DeleteContext: resourceAppIDPasswordRegexDelete,
