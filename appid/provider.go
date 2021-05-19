@@ -75,6 +75,7 @@ func Provider() *schema.Provider {
 			"appid_application_ids":          dataSourceAppIDApplicationIDs(),
 			"appid_audit_status":             dataSourceAppIDAuditStatus(),
 			"appid_cloud_directory_template": dataSourceAppIDCloudDirectoryTemplate(),
+			"appid_password_regex":           dataSourceAppIDPasswordRegex(),
 			"appid_idp_cloud_directory":      dataSourceAppIDIDPCloudDirectory(),
 			"appid_idp_custom":               dataSourceAppIDIDPCustom(),
 			"appid_idp_facebook":             dataSourceAppIDIDPFacebook(),
