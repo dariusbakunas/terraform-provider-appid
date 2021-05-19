@@ -65,6 +65,7 @@ func Provider() *schema.Provider {
 			"appid_idp_facebook":             resourceAppIDIDPFacebook(),
 			"appid_idp_google":               resourceAppIDIDPGoogle(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_password_regex":           resourceAppIDPasswordRegex(),
 			"appid_redirect_urls":            resourceAppIDRedirectURLs(),
 			"appid_role":                     resourceAppIDRole(),
 			"appid_token_config":             resourceAppIDTokenConfig(),
