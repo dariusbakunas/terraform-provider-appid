@@ -1,4 +1,19 @@
 
+<a name="v0.4.0"></a>
+## [v0.4.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.3.0...v0.4.0)
+
+> 2021-05-19
+
+### Feat
+
+* add password regex resource
+* add appid password regex data source
+
+### Fix
+
+* make sure resources are re-created on tenant_id change
+
+
 <a name="v0.3.0"></a>
 ## [v0.3.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.2.0...v0.3.0)
 
