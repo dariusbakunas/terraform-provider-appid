@@ -29,7 +29,7 @@ To compile the provider, run make build. This will build the provider and put th
 make build
 ```
 
-Run `make install` to install provider binary under `~/.terraform.d/plugins/ibm.com/watson-health/appid/{VERSION}/{OS_ARCH}`.
+Run `make install` to install provider binary under `~/.terraform.d/plugins/dariusbakunas/appid/{VERSION}/{OS_ARCH}`.
 
 After it is installed, terraform should be able to detect it during `terraform init` phase.
 
