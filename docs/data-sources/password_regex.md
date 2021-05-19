@@ -3,12 +3,12 @@
 page_title: "appid_password_regex Data Source - terraform-provider-appid"
 subcategory: ""
 description: |-
-  
+  The regular expression used by App ID for password strength validation
 ---
 
 # appid_password_regex (Data Source)
 
-
+The regular expression used by App ID for password strength validation
 
 ## Example Usage
 
