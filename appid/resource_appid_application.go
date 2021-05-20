@@ -153,6 +153,8 @@ func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData,
 		return diag.FromErr(err)
 	}
 
+	d.SetId("")
+
 	log.Printf("[DEBUG] Finished deleting AppID application: %s", d.Id())
 
 	return diags

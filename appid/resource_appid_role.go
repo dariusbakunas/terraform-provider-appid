@@ -110,6 +110,8 @@ func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m inte
 		return diag.FromErr(err)
 	}
 
+	d.SetId("")
+
 	log.Printf("[DEBUG] Finished deleting AppID role: %s", d.Id())
 
 	return diags
