@@ -67,7 +67,10 @@ func dataSourceAppIDIDPGoogleRead(ctx context.Context, d *schema.ResourceData, m
 	log.Printf("[DEBUG] Got Google IDP config: %+v", googleIDP)
 
 	d.Set("is_active", *googleIDP.IsActive)
-	d.Set("redirect_url", *googleIDP.RedirectURL)
+
+	if googleIDP.RedirectURL != nil {
+		d.Set("redirect_url", *googleIDP.RedirectURL)
+	}
 
 	if googleIDP.Config != nil {
 		if err := d.Set("config", flattenGoogleIDPConfig(googleIDP.Config)); err != nil {

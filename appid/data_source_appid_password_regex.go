@@ -51,9 +51,17 @@ func dataSourceAppIDPasswordRegexRead(ctx context.Context, d *schema.ResourceDat
 		return diag.FromErr(err)
 	}
 
-	d.Set("base64_encoded_regex", *pw.Base64EncodedRegex)
-	d.Set("regex", *pw.Regex)
-	d.Set("error_message", *pw.ErrorMessage)
+	if pw.Base64EncodedRegex != nil {
+		d.Set("base64_encoded_regex", *pw.Base64EncodedRegex)
+	}
+
+	if pw.Regex != nil {
+		d.Set("regex", *pw.Regex)
+	}
+
+	if pw.ErrorMessage != nil {
+		d.Set("error_message", *pw.ErrorMessage)
+	}
 
 	d.SetId(tenantID)
 

@@ -67,7 +67,10 @@ func dataSourceAppIDIDPFacebookRead(ctx context.Context, d *schema.ResourceData,
 	log.Printf("[DEBUG] Got Facebook IDP config: %+v", fb)
 
 	d.Set("is_active", *fb.IsActive)
-	d.Set("redirect_url", *fb.RedirectURL)
+
+	if fb.RedirectURL != nil {
+		d.Set("redirect_url", *fb.RedirectURL)
+	}
 
 	if fb.Config != nil {
 		if err := d.Set("config", flattenFacebookIDPConfig(fb.Config)); err != nil {

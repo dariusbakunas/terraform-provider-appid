@@ -75,7 +75,11 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 
 	d.SetId(*role.ID)
 	d.Set("name", *role.Name)
-	d.Set("description", *role.Description)
+
+	if role.Description != nil {
+		d.Set("description", *role.Description)
+	}
+
 	d.Set("access", flattenRoleAccess(role.Access))
 
 	return diags
@@ -86,8 +90,11 @@ func flattenRoleAccess(ra []appid.GetRoleResponseAccessItem) []interface{} {
 
 	for _, a := range ra {
 		access := map[string]interface{}{
-			"application_id": *a.ApplicationID,
-			"scopes":         flattenStringList(a.Scopes),
+			"scopes": flattenStringList(a.Scopes),
+		}
+
+		if a.ApplicationID != nil {
+			access["application_id"] = *a.ApplicationID
 		}
 
 		result = append(result, access)

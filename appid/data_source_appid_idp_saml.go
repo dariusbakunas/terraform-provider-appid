@@ -122,7 +122,10 @@ func flattenSAMLConfig(config *appid.SAMLConfigParams) []interface{} {
 	mConfig["entity_id"] = *config.EntityID
 	mConfig["sign_in_url"] = *config.SignInURL
 	mConfig["certificates"] = flattenStringList(config.Certificates)
-	mConfig["display_name"] = *config.DisplayName
+
+	if config.DisplayName != nil {
+		mConfig["display_name"] = *config.DisplayName
+	}
 
 	if config.SignRequest != nil {
 		mConfig["sign_request"] = *config.SignRequest
@@ -160,7 +163,9 @@ func flattenAuthNContext(context *appid.SAMLConfigParamsAuthnContext) []interfac
 		mContext["class"] = class
 	}
 
-	mContext["comparison"] = *context.Comparison
+	if context.Comparison != nil {
+		mContext["comparison"] = *context.Comparison
+	}
 
 	return []interface{}{mContext}
 }

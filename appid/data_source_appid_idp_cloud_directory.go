@@ -81,7 +81,10 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 
 	if config.Config != nil {
 		d.Set("self_service_enabled", *config.Config.SelfServiceEnabled)
-		d.Set("signup_enabled", *config.Config.SignupEnabled)
+
+		if config.Config.SignupEnabled != nil {
+			d.Set("signup_enabled", *config.Config.SignupEnabled)
+		}
 
 		if config.Config.IdentityField != nil {
 			d.Set("identity_field", *config.Config.IdentityField)

@@ -89,10 +89,21 @@ func dataSourceAppIDApplicationsRead(ctx context.Context, d *schema.ResourceData
 			application["secret"] = *app.Secret
 		}
 
-		application["oauth_server_url"] = *app.OAuthServerURL
-		application["profiles_url"] = *app.ProfilesURL
-		application["discovery_endpoint"] = *app.DiscoveryEndpoint
-		application["type"] = *app.Type
+		if app.OAuthServerURL != nil {
+			application["oauth_server_url"] = *app.OAuthServerURL
+		}
+
+		if app.ProfilesURL != nil {
+			application["profiles_url"] = *app.ProfilesURL
+		}
+
+		if app.DiscoveryEndpoint != nil {
+			application["discovery_endpoint"] = *app.DiscoveryEndpoint
+		}
+
+		if app.Type != nil {
+			application["type"] = *app.Type
+		}
 
 		scopes, _, err := c.GetApplicationScopesWithContext(ctx, &appid.GetApplicationScopesOptions{
 			TenantID: getStringPtr(tenantID),

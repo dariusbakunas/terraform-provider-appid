@@ -96,16 +96,29 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)
 
-	d.Set("name", *app.Name)
+	if app.Name != nil {
+		d.Set("name", *app.Name)
+	}
 
 	if app.Secret != nil {
 		d.Set("secret", *app.Secret)
 	}
 
-	d.Set("oauth_server_url", *app.OAuthServerURL)
-	d.Set("profiles_url", *app.ProfilesURL)
-	d.Set("discovery_endpoint", *app.DiscoveryEndpoint)
-	d.Set("type", *app.Type)
+	if app.OAuthServerURL != nil {
+		d.Set("oauth_server_url", *app.OAuthServerURL)
+	}
+
+	if app.ProfilesURL != nil {
+		d.Set("profiles_url", *app.ProfilesURL)
+	}
+
+	if app.DiscoveryEndpoint != nil {
+		d.Set("discovery_endpoint", *app.DiscoveryEndpoint)
+	}
+
+	if app.Type != nil {
+		d.Set("type", *app.Type)
+	}
 
 	if err := d.Set("scopes", scopes.Scopes); err != nil {
 		return diag.FromErr(err)
