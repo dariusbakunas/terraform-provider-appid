@@ -79,11 +79,11 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 		ClientID: getStringPtr(clientID),
 	})
 
-	log.Printf("[DEBUG] Read application: %+v", app)
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
+	log.Printf("[DEBUG] Read application: %+v", app)
 
 	scopes, _, err := c.GetApplicationScopesWithContext(ctx, &appid.GetApplicationScopesOptions{
 		TenantID: getStringPtr(tenantID),
