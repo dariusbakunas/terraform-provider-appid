@@ -1,4 +1,26 @@
 
+<a name="v0.4.2"></a>
+## [v0.4.2](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.4.1...v0.4.2)
+
+> 2021-05-20
+
+### Fix
+
+* add more nil checks
+
+
+<a name="v0.4.1"></a>
+## [v0.4.1](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.4.0...v0.4.1)
+
+> 2021-05-20
+
+### Fix
+
+* handle empty fields in cd template data source
+* move err block
+* error block should be before enabling retries
+
+
 <a name="v0.4.0"></a>
 ## [v0.4.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.3.0...v0.4.0)
 
