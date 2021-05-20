@@ -33,7 +33,7 @@ func setupActionURLConfig(tenantID string) string {
 		}
 
 		data "appid_action_url" "url" {
-			tenant_id = appid_action_url.url
+			tenant_id = appid_action_url.url.tenant_id
 			action = "on_user_verified"
 
 			depends_on = [
