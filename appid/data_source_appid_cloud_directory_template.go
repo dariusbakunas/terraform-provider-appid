@@ -69,10 +69,21 @@ func dataSourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.Re
 		return diag.FromErr(err)
 	}
 
-	d.Set("subject", *template.Subject)
-	d.Set("html_body", *template.HTMLBody)
-	d.Set("base64_encoded_html_body", *template.Base64EncodedHTMLBody)
-	d.Set("plain_text_body", *template.PlainTextBody)
+	if template.Subject != nil {
+		d.Set("subject", *template.Subject)
+	}
+
+	if template.HTMLBody != nil {
+		d.Set("html_body", *template.HTMLBody)
+	}
+
+	if template.Base64EncodedHTMLBody != nil {
+		d.Set("base64_encoded_html_body", *template.Base64EncodedHTMLBody)
+	}
+
+	if template.PlainTextBody != nil {
+		d.Set("plain_text_body", *template.PlainTextBody)
+	}
 
 	d.SetId(fmt.Sprintf("%s/%s/%s", tenantID, templateName, language))
 
