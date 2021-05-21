@@ -1,4 +1,19 @@
 
+<a name="v0.5.0"></a>
+## [v0.5.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.4.2...v0.5.0)
+
+> 2021-05-20
+
+### Feat
+
+* add action_url resource
+* add action_url datasource
+
+### Fix
+
+* clear id on deletion
+
+
 <a name="v0.4.2"></a>
 ## [v0.4.2](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.4.1...v0.4.2)
 
