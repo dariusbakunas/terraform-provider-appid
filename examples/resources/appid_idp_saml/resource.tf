@@ -1,19 +1,5 @@
-terraform {
-  required_providers {
-    appid = {
-      source = "dariusbakunas/appid"
-      version = "0.2.0"
-    } 
-  }
-}
-
-provider "appid" {  
-    iam_access_token = var.iam_access_token      
-    region = "us-south"
-}
-
 resource "appid_idp_saml" "saml" {
-  tenant_id = var.tenant_id
+  tenant_id = "<your appid tenant_id>"
   is_active = true
 
   config {
@@ -64,8 +50,4 @@ VrWz2D2R2MUEAyw8m/J1d5k+agb/BmTguAa/pdhI4w6S2Gg0h67eU48Omdr+fQ==
       comparison = "exact"
     }
   }
-}
-
-output "saml" {
-  value = appid_idp_saml.saml
 }
