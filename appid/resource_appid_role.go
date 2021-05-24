@@ -82,7 +82,7 @@ func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m inte
 	role, _, err := c.CreateRoleWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error creating Cloud Directory role: %s", err)
 	}
 
 	d.SetId(*role.ID)
@@ -107,7 +107,7 @@ func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m inte
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error deleting Cloud Directory role: %s", err)
 	}
 
 	d.SetId("")
@@ -167,7 +167,7 @@ func resourceAppIDRoleUpdate(ctx context.Context, d *schema.ResourceData, m inte
 	_, _, err := c.UpdateRoleWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error updating Cloud Directory role: %s", err)
 	}
 
 	return dataSourceAppIDRoleRead(ctx, d, m)

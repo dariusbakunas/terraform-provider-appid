@@ -48,7 +48,7 @@ func resourceAppIDRedirectURLsCreate(ctx context.Context, d *schema.ResourceData
 		})
 
 		if err != nil {
-			return diag.FromErr(err)
+			return diag.Errorf("Error updating Cloud Directory redirect URLs: %s", err)
 		}
 	}
 
@@ -73,7 +73,7 @@ func resourceAppIDRedirectURLsDelete(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting Cloud Directory redirect URLs: %s", err)
 	}
 
 	d.SetId("")

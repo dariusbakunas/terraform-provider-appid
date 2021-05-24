@@ -112,7 +112,7 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	_, _, err := c.SetSAMLIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error applying SAML IDP configuration: %s", err)
 	}
 
 	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
@@ -191,7 +191,7 @@ func resourceAppIDIDPSAMLDelete(ctx context.Context, d *schema.ResourceData, m i
 	_, _, err := c.SetSAMLIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting SAML IDP configuration: %s", err)
 	}
 
 	d.SetId("")

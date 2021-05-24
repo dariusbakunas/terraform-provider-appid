@@ -105,7 +105,7 @@ func resourceAppIDTokenConfigCreate(ctx context.Context, d *schema.ResourceData,
 	_, _, err := c.PutTokensConfigWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error updating AppID token configuration: %s", err)
 	}
 
 	d.SetId(tenantID)
@@ -125,7 +125,7 @@ func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error reading AppID token configuration: %s", err)
 	}
 
 	log.Printf("[DEBUG] Received AppID token config: %v", tokenConfig)
@@ -285,7 +285,7 @@ func resourceAppIDTokenConfigDelete(ctx context.Context, d *schema.ResourceData,
 	_, _, err := c.PutTokensConfigWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting AppID token configuration: %s", err)
 	}
 
 	d.SetId("")

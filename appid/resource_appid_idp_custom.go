@@ -56,7 +56,7 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 	_, _, err := c.SetCustomIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error applying custom IDP configuration: %s", err)
 	}
 
 	return dataSourceAppIDIDPCustomRead(ctx, d, m)
@@ -79,7 +79,7 @@ func resourceAppIDIDPCustomDelete(ctx context.Context, d *schema.ResourceData, m
 	_, _, err := c.SetCustomIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting custom IDP configuration: %s", err)
 	}
 
 	d.SetId("")

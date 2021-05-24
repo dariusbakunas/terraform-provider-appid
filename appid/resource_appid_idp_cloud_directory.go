@@ -107,7 +107,7 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 	_, _, err := c.SetCloudDirectoryIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error applying Cloud Directory IDP configuration: %s", err)
 	}
 
 	return dataSourceAppIDIDPCloudDirectoryRead(ctx, d, m)
@@ -128,7 +128,7 @@ func resourceAppIDIDPCloudDirectoryDelete(ctx context.Context, d *schema.Resourc
 	_, _, err := c.SetCloudDirectoryIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting Cloud Directory IDP configuration: %s", err)
 	}
 
 	d.SetId("")

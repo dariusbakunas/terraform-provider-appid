@@ -61,7 +61,7 @@ func resourceAppIDPasswordRegexCreate(ctx context.Context, d *schema.ResourceDat
 	_, _, err := c.SetCloudDirectoryPasswordRegexWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error setting Cloud Directory password regex: %s", err)
 	}
 
 	return dataSourceAppIDPasswordRegexRead(ctx, d, m)
@@ -85,7 +85,7 @@ func resourceAppIDPasswordRegexDelete(ctx context.Context, d *schema.ResourceDat
 	_, _, err := c.SetCloudDirectoryPasswordRegexWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting Cloud Directory password regex: %s", err)
 	}
 
 	d.SetId("")

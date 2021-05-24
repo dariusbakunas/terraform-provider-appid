@@ -82,7 +82,7 @@ func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.Re
 	_, _, err := c.UpdateTemplateWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error updating Cloud Directory email template: %s", err)
 	}
 
 	return dataSourceAppIDCloudDirectoryTemplateRead(ctx, d, m)
@@ -106,7 +106,7 @@ func resourceAppIDCloudDirectoryTemplateDelete(ctx context.Context, d *schema.Re
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error deleting Cloud Directory email template: %s", err)
 	}
 
 	d.SetId("")

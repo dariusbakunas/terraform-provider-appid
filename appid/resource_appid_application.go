@@ -99,7 +99,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	app, _, err := c.RegisterApplicationWithContext(ctx, input)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error creating AppID application: %s", err)
 	}
 
 	if len(scopes) != 0 {
@@ -150,7 +150,7 @@ func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error deleting AppID application: %s", err)
 	}
 
 	d.SetId("")
@@ -176,7 +176,7 @@ func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData,
 		})
 
 		if err != nil {
-			return diag.FromErr(err)
+			return diag.Errorf("Error updating AppID application: %s", err)
 		}
 
 		log.Printf("[DEBUG] Finished updating AppID application: %s", d.Id())

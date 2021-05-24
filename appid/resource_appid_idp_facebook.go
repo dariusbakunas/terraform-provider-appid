@@ -76,7 +76,7 @@ func resourceAppIDIDPFacebookCreate(ctx context.Context, d *schema.ResourceData,
 	_, _, err := c.SetFacebookIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error applying Facebook IDP configuration: %s", err)
 	}
 
 	return dataSourceAppIDIDPFacebookRead(ctx, d, m)
@@ -92,7 +92,7 @@ func resourceAppIDIDPFacebookDelete(ctx context.Context, d *schema.ResourceData,
 	_, _, err := c.SetFacebookIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting Facebook IDP configuration: %s", err)
 	}
 
 	d.SetId("")

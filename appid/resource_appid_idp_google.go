@@ -76,7 +76,7 @@ func resourceAppIDIDPGoogleCreate(ctx context.Context, d *schema.ResourceData, m
 	_, _, err := c.SetGoogleIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error applying Google IDP configuration: %s", err)
 	}
 
 	return dataSourceAppIDIDPGoogleRead(ctx, d, m)
@@ -92,7 +92,7 @@ func resourceAppIDIDPGoogleDelete(ctx context.Context, d *schema.ResourceData, m
 	_, _, err := c.SetGoogleIDPWithContext(ctx, config)
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error resetting Google IDP configuration: %s", err)
 	}
 
 	d.SetId("")
