@@ -87,6 +87,7 @@ func Provider() *schema.Provider {
 			"appid_redirect_urls":            dataSourceAppIDRedirectURLs(),
 			"appid_role":                     dataSourceAppIDRole(),
 			"appid_roles":                    dataSourceAppIDRoles(),
+			"appid_theme_color":              dataSourceAppIDThemeColor(),
 			"appid_token_config":             dataSourceAppIDTokenConfig(),
 		},
 		ConfigureContextFunc: providerConfigure,
