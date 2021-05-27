@@ -2,6 +2,7 @@ package appid
 
 import (
 	"context"
+	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -43,7 +44,7 @@ func dataSourceAppIDAuditStatusRead(ctx context.Context, d *schema.ResourceData,
 	}
 
 	d.Set("is_active", *auditStatus.IsActive)
-	d.SetId("auditStatus")
+	d.SetId(fmt.Sprintf("%s/auditStatus", tenantID))
 
 	return diags
 }
