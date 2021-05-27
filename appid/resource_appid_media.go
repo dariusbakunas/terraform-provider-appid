@@ -54,7 +54,7 @@ func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m int
 	file, err := os.Open(path)
 
 	if err != nil {
-		return diag.Errorf("Error opening AppID media source file: %s", path, err)
+		return diag.Errorf("Error opening AppID media source file: %s", err)
 	}
 
 	defer func() {
