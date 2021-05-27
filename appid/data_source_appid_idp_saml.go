@@ -15,8 +15,9 @@ func dataSourceAppIDIDPSAML() *schema.Resource {
 		ReadContext: dataSourceAppIDIDPSAMLRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,

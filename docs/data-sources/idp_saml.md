@@ -23,7 +23,7 @@ data "appid_idp_saml" "saml" {
 
 ### Required
 
-- **tenant_id** (String)
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
