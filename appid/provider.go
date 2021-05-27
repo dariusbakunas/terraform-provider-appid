@@ -89,6 +89,7 @@ func Provider() *schema.Provider {
 			"appid_idp_google":               dataSourceAppIDIDPGoogle(),
 			"appid_idp_saml":                 dataSourceAppIDIDPSAML(),
 			"appid_media":                    dataSourceAppIDMedia(),
+			"appid_mfa":                      dataSourceAppIDMFA(),
 			"appid_redirect_urls":            dataSourceAppIDRedirectURLs(),
 			"appid_role":                     dataSourceAppIDRole(),
 			"appid_roles":                    dataSourceAppIDRoles(),
