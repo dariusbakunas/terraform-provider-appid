@@ -75,7 +75,7 @@ func dataSourceAppIDApplicationsRead(ctx context.Context, d *schema.ResourceData
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error listing AppID applications: %s", err)
 	}
 
 	applicationList := make([]interface{}, 0)

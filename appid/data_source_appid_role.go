@@ -85,7 +85,7 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func flattenRoleAccess(ra []appid.GetRoleResponseAccessItem) []interface{} {
+func flattenRoleAccess(ra []appid.RoleAccessItem) []interface{} {
 	var result []interface{}
 
 	for _, a := range ra {

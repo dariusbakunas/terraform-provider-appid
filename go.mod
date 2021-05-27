@@ -3,7 +3,7 @@ module github.ibm.com/dbakuna/terraform-provider-appid
 go 1.15
 
 // TEMPORARY: until it is merged into official IBM repository
-replace github.com/IBM/appid-go-sdk => github.com/dariusbakunas/appid-go-sdk v0.0.0-20210518174800-a36add35b271
+replace github.com/IBM/appid-go-sdk => github.com/dariusbakunas/appid-go-sdk v0.0.0-20210527003917-11e6c896435f
 
 require (
 	cloud.google.com/go/storage v1.15.0 // indirect
