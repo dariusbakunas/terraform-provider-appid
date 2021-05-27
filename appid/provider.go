@@ -9,6 +9,8 @@ import (
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/IBM/go-sdk-core/core"
+
+	//v5core "github.com/IBM/go-sdk-core/v5/core"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -85,6 +87,7 @@ func Provider() *schema.Provider {
 			"appid_idp_facebook":             dataSourceAppIDIDPFacebook(),
 			"appid_idp_google":               dataSourceAppIDIDPGoogle(),
 			"appid_idp_saml":                 dataSourceAppIDIDPSAML(),
+			"appid_media":                    dataSourceAppIDMedia(),
 			"appid_redirect_urls":            dataSourceAppIDRedirectURLs(),
 			"appid_role":                     dataSourceAppIDRole(),
 			"appid_roles":                    dataSourceAppIDRoles(),
@@ -153,15 +156,13 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 	}
 
-	// log.Printf("[DEBUG] Using client options: %s", dbgPrint(options))
-
+	//v5core.GetLogger().SetLogLevel(v5core.LevelDebug)
 	client, err := appid.NewAppIDManagementV4(options)
 
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
 
-	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client defaults
-
+	client.EnableRetries(d.Get("api_max_retry").(int), 0) // 0 delay - using client default
 	return client, diags
 }

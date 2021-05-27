@@ -3,12 +3,14 @@ module github.ibm.com/dbakuna/terraform-provider-appid
 go 1.15
 
 // TEMPORARY: until it is merged into official IBM repository
+// replace github.com/IBM/appid-go-sdk => /Users/darius/Projects/appid-go-sdk
 replace github.com/IBM/appid-go-sdk => github.com/dariusbakunas/appid-go-sdk v0.0.0-20210527003917-11e6c896435f
 
 require (
 	cloud.google.com/go/storage v1.15.0 // indirect
 	github.com/IBM/appid-go-sdk v0.0.0-20210510121547-84997d5df141
 	github.com/IBM/go-sdk-core v1.1.0
+	github.com/IBM/go-sdk-core/v5 v5.4.4
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/aws/aws-sdk-go v1.38.40 // indirect
@@ -26,6 +28,7 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.6.1
 	github.com/hashicorp/yamux v0.0.0-20210316155119-a95892c5f864 // indirect
 	github.com/klauspost/compress v1.12.2 // indirect
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
