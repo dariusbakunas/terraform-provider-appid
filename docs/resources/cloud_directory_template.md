@@ -27,19 +27,19 @@ resource "appid_cloud_directory_template" "tpl" {
 
 ### Required
 
-- **subject** (String)
-- **template_name** (String)
-- **tenant_id** (String)
+- **subject** (String) The subject of the email
+- **template_name** (String) The type of email template. This can be `USER_VERIFICATION`, `WELCOME`, `PASSWORD_CHANGED`, `RESET_PASSWORD` or `MFA_VERIFICATION`
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
-- **html_body** (String)
+- **html_body** (String) The HTML body of the email
 - **id** (String) The ID of this resource.
-- **language** (String)
-- **plain_text_body** (String)
+- **language** (String) Preferred language for resource. Format as described at RFC5646. According to the configured languages codes returned from the `GET /management/v4/{tenantId}/config/ui/languages API`.
+- **plain_text_body** (String) The text body of the email.
 
 ### Read-Only
 
-- **base64_encoded_html_body** (String)
+- **base64_encoded_html_body** (String) The HTML body of the email encoded in Base64
 
 

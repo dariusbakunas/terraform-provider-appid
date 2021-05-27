@@ -14,8 +14,9 @@ func dataSourceAppIDApplications() *schema.Resource {
 		ReadContext: dataSourceAppIDApplicationsRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"applications": {
 				Type:     schema.TypeList,
@@ -23,36 +24,43 @@ func dataSourceAppIDApplications() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"client_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "The `client_id` is a public identifier for applications",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The application name",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"secret": {
-							Type:      schema.TypeString,
-							Computed:  true,
-							Sensitive: true,
+							Description: "The `secret` is a secret known only to the application and the authorization server",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
 						},
 						"oauth_server_url": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "Base URL for common OAuth endpoints, like `/authorization`, `/token` and `/publickeys`",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"profiles_url": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 						"discovery_endpoint": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "This URL returns OAuth Authorization Server Metadata",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Description: "The type of application to be registered. Allowed types are `regularwebapp` and `singlepageapp`.",
+							Type:        schema.TypeString,
+							Computed:    true,
 						},
 						"scopes": {
-							Type: schema.TypeList,
+							Description: "A `scope` is a runtime action in your application that you register with IBM Cloud App ID to create an access permission",
+							Type:        schema.TypeList,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

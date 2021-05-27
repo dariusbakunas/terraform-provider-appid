@@ -24,19 +24,19 @@ data "appid_cloud_directory_template" "template" {
 
 ### Required
 
-- **template_name** (String)
-- **tenant_id** (String)
+- **template_name** (String) The type of email template. This can be `USER_VERIFICATION`, `WELCOME`, `PASSWORD_CHANGED`, `RESET_PASSWORD` or `MFA_VERIFICATION`
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **language** (String)
+- **language** (String) Preferred language for resource. Format as described at RFC5646. According to the configured languages codes returned from the `GET /management/v4/{tenantId}/config/ui/languages API`.
 
 ### Read-Only
 
-- **base64_encoded_html_body** (String)
-- **html_body** (String)
-- **plain_text_body** (String)
-- **subject** (String)
+- **base64_encoded_html_body** (String) The HTML body of the email encoded in Base64
+- **html_body** (String) The HTML body of the email
+- **plain_text_body** (String) The text body of the email.
+- **subject** (String) The subject of the email
 
 

@@ -18,11 +18,11 @@ description: |-
 ### Required
 
 - **is_active** (Boolean)
-- **tenant_id** (String)
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **public_key** (String)
+- **public_key** (String) This is the public key used to validate your signed JWT. It is required to be a PEM in the RS256 or greater format.
 
 

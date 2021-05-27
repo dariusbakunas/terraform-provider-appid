@@ -18,19 +18,22 @@ func resourceAppIDTokenConfig() *schema.Resource {
 		DeleteContext: resourceAppIDTokenConfigDelete,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
 			},
 			"access_token_expires_in": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
+				Description: "The length of time for which access tokens are valid in seconds",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
 			},
 			"refresh_token_expires_in": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  2592000,
+				Description: "The length of time for which refresh tokens are valid in seconds",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     2592000,
 			},
 			"anonymous_token_expires_in": {
 				Type:     schema.TypeInt,
@@ -38,9 +41,10 @@ func resourceAppIDTokenConfig() *schema.Resource {
 				Optional: true,
 			},
 			"anonymous_access_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Computed: true,
+				Description: "The length of time for which an anonymous token is valid in seconds",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
 			},
 			"refresh_token_enabled": {
 				Type:     schema.TypeBool,
@@ -48,29 +52,34 @@ func resourceAppIDTokenConfig() *schema.Resource {
 				Computed: true,
 			},
 			"access_token_claim": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A set of objects that are created when claims that are related to access tokens are mapped",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {
+							Description:  "Defines the source of the claim. Options include: `saml`, `cloud_directory`, `facebook`, `google`, `appid_custom`, and `attributes`.",
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validation.StringInSlice([]string{"saml", "cloud_directory", "appid_custom", "facebook", "google", "ibmid", "attributes", "roles"}, false),
 						},
 						"source_claim": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "Defines the claim as provided by the source. It can refer to the identity provider's user information or the user's App ID custom attributes.",
+							Type:        schema.TypeString,
+							Optional:    true,
 						},
 						"destination_claim": {
-							Type:     schema.TypeString,
-							Required: true,
+							Description: "Optional: Defines the custom attribute that can override the current claim in token.",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
 			},
 			"id_token_claim": {
-				Type:     schema.TypeSet,
-				Optional: true,
+				Description: "A set of objects that are created when claims that are related to identity tokens are mapped",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {

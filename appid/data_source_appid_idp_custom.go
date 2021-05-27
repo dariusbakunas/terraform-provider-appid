@@ -15,16 +15,18 @@ func dataSourceAppIDIDPCustom() *schema.Resource {
 		ReadContext: dataSourceAppIDIDPCustomRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
 			"public_key": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Description: "This is the public key used to validate your signed JWT. It is required to be a PEM in the RS256 or greater format.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}

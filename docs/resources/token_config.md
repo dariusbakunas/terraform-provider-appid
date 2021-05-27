@@ -44,30 +44,30 @@ resource "appid_token_config" "tc" {
 
 ### Required
 
-- **tenant_id** (String)
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
-- **access_token_claim** (Block Set) (see [below for nested schema](#nestedblock--access_token_claim))
-- **access_token_expires_in** (Number)
-- **anonymous_access_enabled** (Boolean)
+- **access_token_claim** (Block Set) A set of objects that are created when claims that are related to access tokens are mapped (see [below for nested schema](#nestedblock--access_token_claim))
+- **access_token_expires_in** (Number) The length of time for which access tokens are valid in seconds
+- **anonymous_access_enabled** (Boolean) The length of time for which an anonymous token is valid in seconds
 - **anonymous_token_expires_in** (Number)
 - **id** (String) The ID of this resource.
-- **id_token_claim** (Block Set) (see [below for nested schema](#nestedblock--id_token_claim))
+- **id_token_claim** (Block Set) A set of objects that are created when claims that are related to identity tokens are mapped (see [below for nested schema](#nestedblock--id_token_claim))
 - **refresh_token_enabled** (Boolean)
-- **refresh_token_expires_in** (Number)
+- **refresh_token_expires_in** (Number) The length of time for which refresh tokens are valid in seconds
 
 <a id="nestedblock--access_token_claim"></a>
 ### Nested Schema for `access_token_claim`
 
 Required:
 
-- **destination_claim** (String)
-- **source** (String)
+- **destination_claim** (String) Optional: Defines the custom attribute that can override the current claim in token.
+- **source** (String) Defines the source of the claim. Options include: `saml`, `cloud_directory`, `facebook`, `google`, `appid_custom`, and `attributes`.
 
 Optional:
 
-- **source_claim** (String)
+- **source_claim** (String) Defines the claim as provided by the source. It can refer to the identity provider's user information or the user's App ID custom attributes.
 
 
 <a id="nestedblock--id_token_claim"></a>

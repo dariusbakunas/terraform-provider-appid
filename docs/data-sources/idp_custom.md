@@ -23,7 +23,7 @@ data "appid_idp_custom" "ic" {
 
 ### Required
 
-- **tenant_id** (String)
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
@@ -32,6 +32,6 @@ data "appid_idp_custom" "ic" {
 ### Read-Only
 
 - **is_active** (Boolean)
-- **public_key** (String)
+- **public_key** (String) This is the public key used to validate your signed JWT. It is required to be a PEM in the RS256 or greater format.
 
 

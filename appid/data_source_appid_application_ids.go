@@ -14,11 +14,13 @@ func dataSourceAppIDApplicationIDs() *schema.Resource {
 		ReadContext: dataSourceAppIDApplicationIDsRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"client_ids": {
-				Type: schema.TypeList,
+				Description: "A List of application client IDs for current applications in AppID instance",
+				Type:        schema.TypeList,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

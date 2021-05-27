@@ -15,20 +15,23 @@ func dataSourceAppIDIDPCloudDirectory() *schema.Resource {
 		ReadContext: dataSourceAppIDIDPCloudDirectoryRead,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
 			"self_service_enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "Allow users to manage their account from your app",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"signup_enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Description: "Allow users to sign-up to your app",
+				Type:        schema.TypeBool,
+				Computed:    true,
 			},
 			"welcome_enabled": {
 				Type:     schema.TypeBool,

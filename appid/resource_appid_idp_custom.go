@@ -17,17 +17,19 @@ func resourceAppIDIDPCustom() *schema.Resource {
 		UpdateContext: resourceAppIDIDPCustomUpdate,
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Description: "The service `tenantId`",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
 			"public_key": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Description: "This is the public key used to validate your signed JWT. It is required to be a PEM in the RS256 or greater format.",
+				Type:        schema.TypeString,
+				Optional:    true,
 			},
 		},
 	}

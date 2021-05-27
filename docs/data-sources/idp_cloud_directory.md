@@ -23,7 +23,7 @@ data "appid_idp_cloud_directory" "cd" {
 
 ### Required
 
-- **tenant_id** (String)
+- **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
@@ -37,8 +37,8 @@ data "appid_idp_cloud_directory" "cd" {
 - **is_active** (Boolean)
 - **reset_password_enabled** (Boolean)
 - **reset_password_notification_enabled** (Boolean)
-- **self_service_enabled** (Boolean)
-- **signup_enabled** (Boolean)
+- **self_service_enabled** (Boolean) Allow users to manage their account from your app
+- **signup_enabled** (Boolean) Allow users to sign-up to your app
 - **welcome_enabled** (Boolean)
 
 
