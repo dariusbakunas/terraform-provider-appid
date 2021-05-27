@@ -60,6 +60,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"appid_action_url":               resourceAppIDActionURL(),
+			"appid_apm":                      resourceAppIDAPM(),
 			"appid_application":              resourceAppIDApplication(),
 			"appid_audit_status":             resourceAppIDAuditStatus(),
 			"appid_cloud_directory_template": resourceAppIDCloudDirectoryTemplate(),
