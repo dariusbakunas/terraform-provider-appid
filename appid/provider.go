@@ -69,6 +69,7 @@ func Provider() *schema.Provider {
 			"appid_password_regex":           resourceAppIDPasswordRegex(),
 			"appid_redirect_urls":            resourceAppIDRedirectURLs(),
 			"appid_role":                     resourceAppIDRole(),
+			"appid_theme_color":              resourceAppIDThemeColor(),
 			"appid_token_config":             resourceAppIDTokenConfig(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
