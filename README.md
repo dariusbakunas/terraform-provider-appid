@@ -47,6 +47,12 @@ To run acceptance tests, make sure `IAM_API_KEY` environment variable is set and
 make testacc
 ```
 
+In order to run a particular Acceptance test, export the variable TESTARGS. For example
+
+```bash
+export TESTARGS="-run TestAccAppIDActionURLDataSource_basic"
+```
+
 **Note:** Acceptance tests create/destroy real resources, while they are named using `tf_acc_test` testing prefix, use some caution. Check `provider_test.go` contents for supported environment variables and their default values.
 
 ### Documentation
