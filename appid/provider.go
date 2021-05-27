@@ -78,6 +78,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"appid_action_url":               dataSourceAppIDActionURL(),
+			"appid_apm":                      dataSourceAppIDAPM(),
 			"appid_application":              dataSourceAppIDApplication(),
 			"appid_applications":             dataSourceAppIDApplications(),
 			"appid_application_ids":          dataSourceAppIDApplicationIDs(),
