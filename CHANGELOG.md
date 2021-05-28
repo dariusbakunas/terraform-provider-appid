@@ -1,4 +1,82 @@
 
+<a name="v0.9.0"></a>
+## [v0.9.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.8.1...v0.9.0)
+
+> 2021-05-27
+
+### Feat
+
+* add appid apm resource
+* add appid apm data source
+* add mfa resource
+* add mfa datasource
+* add media resource
+* add media datasource
+
+### Fix
+
+* minor bugfix
+* add tenantID to theme colors resource id
+* include tenantID in audit status resource id
+
+
+<a name="v0.8.1"></a>
+## [v0.8.1](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.8.0...v0.8.1)
+
+> 2021-05-27
+
+
+<a name="v0.8.0"></a>
+## [v0.8.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.7.0...v0.8.0)
+
+> 2021-05-27
+
+### Feat
+
+* add support for additional env variables for provider config
+
+
+<a name="v0.7.0"></a>
+## [v0.7.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.6.0...v0.7.0)
+
+> 2021-05-27
+
+### Feat
+
+* add theme color resource
+* add theme color data source
+
+
+<a name="v0.6.0"></a>
+## [v0.6.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.5.2...v0.6.0)
+
+> 2021-05-26
+
+### Feat
+
+* add appid roles datasource
+
+### Refactor
+
+* switch to newer go sdk, more error details
+
+
+<a name="v0.5.2"></a>
+## [v0.5.2](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.5.1...v0.5.2)
+
+> 2021-05-24
+
+### Refactor
+
+* more descriptive error messages
+
+
+<a name="v0.5.1"></a>
+## [v0.5.1](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.5.0...v0.5.1)
+
+> 2021-05-21
+
+
 <a name="v0.5.0"></a>
 ## [v0.5.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.4.2...v0.5.0)
 
