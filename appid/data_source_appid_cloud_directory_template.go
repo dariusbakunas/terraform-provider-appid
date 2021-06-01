@@ -73,7 +73,7 @@ func dataSourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.Re
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading Cloud Directory template: %s", err)
 	}
 
 	if template.Subject != nil {

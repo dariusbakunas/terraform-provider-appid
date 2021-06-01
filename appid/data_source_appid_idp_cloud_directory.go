@@ -75,7 +75,7 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading Cloud Directory IDP: %s", err)
 	}
 
 	log.Printf("[DEBUG] Got CloudDirectory IDP config: %+v", config)

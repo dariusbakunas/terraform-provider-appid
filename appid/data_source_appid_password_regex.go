@@ -48,7 +48,7 @@ func dataSourceAppIDPasswordRegexRead(ctx context.Context, d *schema.ResourceDat
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading Cloud Directory password regex: %s", err)
 	}
 
 	if pw.Base64EncodedRegex != nil {

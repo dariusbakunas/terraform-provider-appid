@@ -80,7 +80,7 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error getting AppID application: %s", err)
 	}
 
 	log.Printf("[DEBUG] Read application: %+v", app)
@@ -91,7 +91,7 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error getting AppID application scopes: %s", err)
 	}
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)

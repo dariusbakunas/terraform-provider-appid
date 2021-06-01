@@ -61,7 +61,7 @@ func dataSourceAppIDIDPGoogleRead(ctx context.Context, d *schema.ResourceData, m
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading Google IDP: %s", err)
 	}
 
 	log.Printf("[DEBUG] Got Google IDP config: %+v", googleIDP)

@@ -70,7 +70,7 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading AppID role: %s", err)
 	}
 
 	d.SetId(*role.ID)

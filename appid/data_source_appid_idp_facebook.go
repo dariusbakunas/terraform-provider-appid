@@ -61,7 +61,7 @@ func dataSourceAppIDIDPFacebookRead(ctx context.Context, d *schema.ResourceData,
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading Facebook IDP: %s", err)
 	}
 
 	log.Printf("[DEBUG] Got Facebook IDP config: %+v", fb)

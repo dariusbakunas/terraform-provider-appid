@@ -96,7 +96,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 	})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading SAML IDP: %s", err)
 	}
 
 	log.Printf("[DEBUG] Got SAML IDP config: %+v", saml)

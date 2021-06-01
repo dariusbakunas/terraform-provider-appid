@@ -41,7 +41,7 @@ func dataSourceAppIDRedirectURLsRead(ctx context.Context, d *schema.ResourceData
 		TenantID: getStringPtr(tenantID),
 	})
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading redirect urls: %s", err)
 	}
 
 	if err := d.Set("urls", urls.RedirectUris); err != nil {

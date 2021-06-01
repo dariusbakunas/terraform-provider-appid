@@ -122,7 +122,7 @@ func dataSourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData,
 	tokenConfig, _, err := c.GetTokensConfigWithContext(ctx, &appid.GetTokensConfigOptions{TenantID: getStringPtr(tenantID)})
 
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("Error loading AppID token config: %s", err)
 	}
 
 	if tokenConfig.AccessTokenClaims != nil {
