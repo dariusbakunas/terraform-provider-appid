@@ -11,6 +11,7 @@ import (
 
 func resourceAppIDLanguages() *schema.Resource {
 	return &schema.Resource{
+		Description:   "User localization configuration",
 		CreateContext: resourceAppIDLanguagesCreate,
 		ReadContext:   dataSourceAppIDLanguagesRead,
 		DeleteContext: resourceAppIDLanguagesDelete,
@@ -22,7 +23,8 @@ func resourceAppIDLanguages() *schema.Resource {
 				Required:    true,
 			},
 			"languages": {
-				Type: schema.TypeList,
+				Description: "The list of languages that can be used to customize email templates for Cloud Directory",
+				Type:        schema.TypeList,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
