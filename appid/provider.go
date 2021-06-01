@@ -69,6 +69,7 @@ func Provider() *schema.Provider {
 			"appid_idp_facebook":             resourceAppIDIDPFacebook(),
 			"appid_idp_google":               resourceAppIDIDPGoogle(),
 			"appid_idp_saml":                 resourceAppIDIDPSaml(),
+			"appid_languages":                resourceAppIDLanguages(),
 			"appid_media":                    resourceAppIDMedia(),
 			"appid_mfa":                      resourceAppIDMFA(),
 			"appid_password_regex":           resourceAppIDPasswordRegex(),
