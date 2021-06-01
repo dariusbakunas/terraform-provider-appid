@@ -42,6 +42,7 @@ func resourceAppIDIDPGoogle() *schema.Resource {
 							Description: "Google application secret",
 							Type:        schema.TypeString,
 							Required:    true,
+							Sensitive:   true,
 						},
 					},
 				},

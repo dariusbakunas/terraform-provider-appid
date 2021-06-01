@@ -42,6 +42,7 @@ func resourceAppIDIDPFacebook() *schema.Resource {
 							Description: "Facebook application secret",
 							Type:        schema.TypeString,
 							Required:    true,
+							Sensitive:   true,
 						},
 					},
 				},
