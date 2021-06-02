@@ -13,9 +13,12 @@ func resourceAppIDIDPGoogle() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Update Google identity provider configuration.",
 		CreateContext: resourceAppIDIDPGoogleCreate,
-		ReadContext:   dataSourceAppIDIDPGoogleRead,
+		ReadContext:   resourceAppIDIDPGoogleRead,
 		DeleteContext: resourceAppIDIDPGoogleDelete,
 		UpdateContext: resourceAppIDIDPGoogleUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -56,6 +59,39 @@ func resourceAppIDIDPGoogle() *schema.Resource {
 	}
 }
 
+func resourceAppIDIDPGoogleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	googleIDP, _, err := c.GetGoogleIDPWithContext(ctx, &appid.GetGoogleIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading Google IDP: %s", err)
+	}
+
+	log.Printf("[DEBUG] Got Google IDP config: %+v", googleIDP)
+
+	d.Set("is_active", *googleIDP.IsActive)
+
+	if googleIDP.RedirectURL != nil {
+		d.Set("redirect_url", *googleIDP.RedirectURL)
+	}
+
+	if googleIDP.Config != nil {
+		if err := d.Set("config", flattenGoogleIDPConfig(googleIDP.Config)); err != nil {
+			return diag.Errorf("failed setting config: %s", err)
+		}
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDIDPGoogleCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
@@ -80,7 +116,9 @@ func resourceAppIDIDPGoogleCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("Error applying Google IDP configuration: %s", err)
 	}
 
-	return dataSourceAppIDIDPGoogleRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDIDPGoogleRead(ctx, d, m)
 }
 
 func resourceAppIDIDPGoogleDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
