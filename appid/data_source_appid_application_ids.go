@@ -11,7 +11,8 @@ import (
 
 func dataSourceAppIDApplicationIDs() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceAppIDApplicationIDsRead,
+		ReadContext:        dataSourceAppIDApplicationIDsRead,
+		DeprecationMessage: "This datasource will be removed in next release, use appid_applications instead",
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
