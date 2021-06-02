@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -137,7 +136,7 @@ func dataSourceAppIDAPMRead(ctx context.Context, d *schema.ResourceData, m inter
 
 	}
 
-	d.SetId(fmt.Sprintf("%s/apm", tenantID))
+	d.SetId(tenantID)
 	return diags
 }
 

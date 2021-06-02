@@ -11,9 +11,12 @@ import (
 func resourceAppIDAuditStatus() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDAuditStatusCreate,
-		ReadContext:   dataSourceAppIDAuditStatusRead, // reusing data source read, same schema
+		ReadContext:   resourceAppIDAuditStatusRead, // reusing data source read, same schema
 		DeleteContext: resourceAppIDAuditStatusDelete,
 		UpdateContext: resourceAppIDAuditStatusUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:        schema.TypeString,
@@ -30,6 +33,27 @@ func resourceAppIDAuditStatus() *schema.Resource {
 	}
 }
 
+func resourceAppIDAuditStatusRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+
+	c := m.(*appid.AppIDManagementV4)
+
+	auditStatus, _, err := c.GetAuditStatusWithContext(ctx, &appid.GetAuditStatusOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("error getting audit status: %s", err)
+	}
+
+	d.Set("is_active", *auditStatus.IsActive)
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDAuditStatusCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
@@ -44,7 +68,8 @@ func resourceAppIDAuditStatusCreate(ctx context.Context, d *schema.ResourceData,
 		return diag.Errorf("error setting audit status: %s", err)
 	}
 
-	return dataSourceAppIDAuditStatusRead(ctx, d, m)
+	d.SetId(tenantID)
+	return resourceAppIDAuditStatusRead(ctx, d, m)
 }
 
 func resourceAppIDAuditStatusDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
