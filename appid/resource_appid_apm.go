@@ -11,10 +11,13 @@ import (
 func resourceAppIDAPM() *schema.Resource {
 	return &schema.Resource{
 		Description:   "AppID advanced password management configuration",
-		ReadContext:   dataSourceAppIDAPMRead,
+		ReadContext:   resourceAppIDAPMRead,
 		CreateContext: resourceAppIDAPMCreate,
 		UpdateContext: resourceAppIDAPMCreate,
 		DeleteContext: resourceAppIDAPMDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -112,6 +115,47 @@ func resourceAppIDAPM() *schema.Resource {
 	}
 }
 
+func resourceAppIDAPMRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	apm, _, err := c.GetCloudDirectoryAdvancedPasswordManagementWithContext(ctx, &appid.GetCloudDirectoryAdvancedPasswordManagementOptions{
+		TenantID: &tenantID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID APM configuration: %s", err)
+	}
+
+	if apm.AdvancedPasswordManagement != nil {
+		d.Set("enabled", *apm.AdvancedPasswordManagement.Enabled)
+
+		if err := d.Set("password_reuse", flattenPasswordReuse(apm.AdvancedPasswordManagement.PasswordReuse)); err != nil {
+			return diag.Errorf("Failed setting password_reuse: %s", err)
+		}
+
+		if apm.AdvancedPasswordManagement.PreventPasswordWithUsername != nil {
+			d.Set("prevent_password_with_username", *apm.AdvancedPasswordManagement.PreventPasswordWithUsername.Enabled)
+		}
+
+		if err := d.Set("password_expiration", flattenPasswordExpiration(apm.AdvancedPasswordManagement.PasswordExpiration)); err != nil {
+			return diag.Errorf("Failed setting password_expiration: %s", err)
+		}
+
+		if err := d.Set("lockout_policy", flattenLockoutPolicy(apm.AdvancedPasswordManagement.LockOutPolicy)); err != nil {
+			return diag.Errorf("Failed setting lockout_policy: %s", err)
+		}
+		if err := d.Set("min_password_change_interval", flattenPasswordChangeInterval(apm.AdvancedPasswordManagement.MinPasswordChangeInterval)); err != nil {
+			return diag.Errorf("Failed setting min_password_change_interval: %s", err)
+		}
+
+	}
+
+	d.Set("tenant_id", tenantID)
+	return diags
+}
+
 func resourceAppIDAPMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	enabled := d.Get("enabled").(bool)
@@ -138,7 +182,8 @@ func resourceAppIDAPMCreate(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.Errorf("Error updating AppID APM configuration: %s", err)
 	}
 
-	return dataSourceAppIDAPMRead(ctx, d, m)
+	d.SetId(tenantID)
+	return resourceAppIDAPMRead(ctx, d, m)
 }
 
 func expandPasswordReuse(reuse []interface{}) *appid.ApmSchemaAdvancedPasswordManagementPasswordReuse {
