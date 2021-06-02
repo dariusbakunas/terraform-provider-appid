@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -14,9 +15,12 @@ import (
 func resourceAppIDApplication() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDApplicationCreate,
-		ReadContext:   dataSourceAppIDApplicationRead, // reusing data source read, same schema
+		ReadContext:   resourceAppIDApplicationRead, // reusing data source read, same schema
 		DeleteContext: resourceAppIDApplicationDelete,
 		UpdateContext: resourceAppIDApplicationUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -75,6 +79,73 @@ func resourceAppIDApplication() *schema.Resource {
 	}
 }
 
+func resourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	id := d.Id()
+	idParts := strings.Split(id, "/")
+
+	tenantID := idParts[0]
+	clientID := idParts[1]
+
+	c := m.(*appid.AppIDManagementV4)
+
+	app, _, err := c.GetApplicationWithContext(ctx, &appid.GetApplicationOptions{
+		TenantID: getStringPtr(tenantID),
+		ClientID: getStringPtr(clientID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID application: %s", err)
+	}
+
+	log.Printf("[DEBUG] Read application: %+v", app)
+
+	scopes, _, err := c.GetApplicationScopesWithContext(ctx, &appid.GetApplicationScopesOptions{
+		TenantID: getStringPtr(tenantID),
+		ClientID: getStringPtr(clientID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID application scopes: %s", err)
+	}
+
+	log.Printf("[DEBUG] Read application scopes: %v", scopes)
+
+	if app.Name != nil {
+		d.Set("name", *app.Name)
+	}
+
+	if app.Secret != nil {
+		d.Set("secret", *app.Secret)
+	}
+
+	if app.OAuthServerURL != nil {
+		d.Set("oauth_server_url", *app.OAuthServerURL)
+	}
+
+	if app.ProfilesURL != nil {
+		d.Set("profiles_url", *app.ProfilesURL)
+	}
+
+	if app.DiscoveryEndpoint != nil {
+		d.Set("discovery_endpoint", *app.DiscoveryEndpoint)
+	}
+
+	if app.Type != nil {
+		d.Set("type", *app.Type)
+	}
+
+	if err := d.Set("scopes", scopes.Scopes); err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.Set("tenant_id", tenantID)
+	d.Set("client_id", clientID)
+
+	return diags
+}
+
 func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	name := d.Get("name").(string)
@@ -131,9 +202,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, *app.ClientID))
 
-	// dataSourceAppIDApplicationRead expects client_id to be set (could extract it from id??)
-	d.Set("client_id", *app.ClientID)
-	return dataSourceAppIDApplicationRead(ctx, d, m)
+	return resourceAppIDApplicationRead(ctx, d, m)
 }
 
 func resourceAppIDApplicationDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -182,5 +251,5 @@ func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData,
 		log.Printf("[DEBUG] Finished updating AppID application: %s", d.Id())
 	}
 
-	return dataSourceAppIDApplicationRead(ctx, d, m)
+	return resourceAppIDApplicationRead(ctx, d, m)
 }
