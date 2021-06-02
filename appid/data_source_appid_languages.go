@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -46,7 +45,7 @@ func dataSourceAppIDLanguagesRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	d.Set("languages", langs.Languages)
-	d.SetId(fmt.Sprintf("%s/languages", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }

@@ -13,9 +13,12 @@ func resourceAppIDLanguages() *schema.Resource {
 	return &schema.Resource{
 		Description:   "User localization configuration",
 		CreateContext: resourceAppIDLanguagesCreate,
-		ReadContext:   dataSourceAppIDLanguagesRead,
+		ReadContext:   resourceAppIDLanguagesRead,
 		DeleteContext: resourceAppIDLanguagesDelete,
 		UpdateContext: resourceAppIDLanguagesCreate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -32,6 +35,26 @@ func resourceAppIDLanguages() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceAppIDLanguagesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	langs, _, err := c.GetLocalizationWithContext(ctx, &appid.GetLocalizationOptions{
+		TenantID: &tenantID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting languages: %s", err)
+	}
+
+	d.Set("languages", langs.Languages)
+	d.Set("tenant_id", tenantID)
+
+	return diags
 }
 
 func resourceAppIDLanguagesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -52,7 +75,9 @@ func resourceAppIDLanguagesCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("Error updating languages: %s", err)
 	}
 
-	return dataSourceAppIDLanguagesRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDLanguagesRead(ctx, d, m)
 }
 
 func resourceAppIDLanguagesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
