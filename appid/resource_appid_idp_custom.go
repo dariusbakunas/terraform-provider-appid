@@ -12,9 +12,12 @@ import (
 func resourceAppIDIDPCustom() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDIDPCustomCreate,
-		ReadContext:   dataSourceAppIDIDPCustomRead,
+		ReadContext:   resourceAppIDIDPCustomRead,
 		DeleteContext: resourceAppIDIDPCustomDelete,
 		UpdateContext: resourceAppIDIDPCustomUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -33,6 +36,35 @@ func resourceAppIDIDPCustom() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceAppIDIDPCustomRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	config, _, err := c.GetCustomIDPWithContext(ctx, &appid.GetCustomIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading custom IDP: %s", err)
+	}
+
+	log.Printf("[DEBUG] Got Custom IDP config: %+v", config)
+
+	d.Set("is_active", *config.IsActive)
+
+	if config.Config != nil && config.Config.PublicKey != nil {
+		if err := d.Set("public_key", *config.Config.PublicKey); err != nil {
+			return diag.Errorf("failed setting config: %s", err)
+		}
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
 }
 
 func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -61,7 +93,9 @@ func resourceAppIDIDPCustomCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("Error applying custom IDP configuration: %s", err)
 	}
 
-	return dataSourceAppIDIDPCustomRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDIDPCustomRead(ctx, d, m)
 }
 
 func customIDPDefaults(tenantID string) *appid.SetCustomIDPOptions {

@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
@@ -56,7 +55,7 @@ func dataSourceAppIDIDPCustomRead(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
-	d.SetId(fmt.Sprintf("%s/idp/custom_idp", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }
