@@ -2,7 +2,9 @@ package appid
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -14,9 +16,12 @@ func resourceAppIDActionURL() *schema.Resource {
 	return &schema.Resource{
 		Description:   "The custom url to redirect to when Cloud Directory action is executed.",
 		CreateContext: resourceAppIDActionURLCreate,
-		ReadContext:   dataSourceAppIDActionURLRead, // reusing data source read, same schema
+		ReadContext:   resourceAppIDActionURLRead,
 		DeleteContext: resourceAppIDActionURLDelete,
 		UpdateContext: resourceAppIDActionURLUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -40,6 +45,36 @@ func resourceAppIDActionURL() *schema.Resource {
 	}
 }
 
+func resourceAppIDActionURLRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	id := d.Id()
+	idParts := strings.Split(id, "/")
+
+	tenantID := idParts[0]
+	action := idParts[1]
+
+	c := m.(*appid.AppIDManagementV4)
+
+	resp, _, err := c.GetCloudDirectoryActionURLWithContext(ctx, &appid.GetCloudDirectoryActionURLOptions{
+		TenantID: getStringPtr(tenantID),
+		Action:   getStringPtr(action),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting actionURL: %s", err)
+	}
+
+	if resp.ActionURL != nil {
+		d.Set("url", *resp.ActionURL)
+	}
+
+	d.Set("tenant_id", tenantID)
+	d.Set("action", action)
+
+	return diags
+}
+
 func resourceAppIDActionURLCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	action := d.Get("action").(string)
@@ -61,7 +96,9 @@ func resourceAppIDActionURLCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.Errorf("Error setting Cloud Directory action URL: %s", err)
 	}
 
-	return dataSourceAppIDActionURLRead(ctx, d, m)
+	d.SetId(fmt.Sprintf("%s/%s", tenantID, action))
+
+	return resourceAppIDActionURLRead(ctx, d, m)
 }
 
 func resourceAppIDActionURLDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
