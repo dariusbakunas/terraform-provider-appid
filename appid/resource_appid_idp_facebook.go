@@ -13,9 +13,12 @@ func resourceAppIDIDPFacebook() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Update Facebook identity provider configuration.",
 		CreateContext: resourceAppIDIDPFacebookCreate,
-		ReadContext:   dataSourceAppIDIDPFacebookRead,
+		ReadContext:   resourceAppIDIDPFacebookRead,
 		DeleteContext: resourceAppIDIDPFacebookDelete,
 		UpdateContext: resourceAppIDIDPFacebookUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -56,6 +59,39 @@ func resourceAppIDIDPFacebook() *schema.Resource {
 	}
 }
 
+func resourceAppIDIDPFacebookRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	fb, _, err := c.GetFacebookIDPWithContext(ctx, &appid.GetFacebookIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading Facebook IDP: %s", err)
+	}
+
+	log.Printf("[DEBUG] Got Facebook IDP config: %+v", fb)
+
+	d.Set("is_active", *fb.IsActive)
+
+	if fb.RedirectURL != nil {
+		d.Set("redirect_url", *fb.RedirectURL)
+	}
+
+	if fb.Config != nil {
+		if err := d.Set("config", flattenFacebookIDPConfig(fb.Config)); err != nil {
+			return diag.Errorf("failed setting config: %s", err)
+		}
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDIDPFacebookCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
@@ -80,7 +116,9 @@ func resourceAppIDIDPFacebookCreate(ctx context.Context, d *schema.ResourceData,
 		return diag.Errorf("Error applying Facebook IDP configuration: %s", err)
 	}
 
-	return dataSourceAppIDIDPFacebookRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDIDPFacebookRead(ctx, d, m)
 }
 
 func resourceAppIDIDPFacebookDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
