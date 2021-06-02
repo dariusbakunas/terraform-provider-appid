@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
@@ -102,7 +101,7 @@ func dataSourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.Resourc
 		}
 	}
 
-	d.SetId(fmt.Sprintf("%s/idp/cloud_directory", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }

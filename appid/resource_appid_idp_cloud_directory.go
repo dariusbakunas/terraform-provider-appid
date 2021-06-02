@@ -13,9 +13,12 @@ import (
 func resourceAppIDIDPCloudDirectory() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDIDPCloudDirectoryCreate,
-		ReadContext:   dataSourceAppIDIDPCloudDirectoryRead,
+		ReadContext:   resourceAppIDIDPCloudDirectoryRead,
 		DeleteContext: resourceAppIDIDPCloudDirectoryDelete,
 		UpdateContext: resourceAppIDIDPCloudDirectoryUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:     schema.TypeString,
@@ -72,6 +75,49 @@ func resourceAppIDIDPCloudDirectory() *schema.Resource {
 	}
 }
 
+func resourceAppIDIDPCloudDirectoryRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	config, _, err := c.GetCloudDirectoryIDPWithContext(ctx, &appid.GetCloudDirectoryIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading Cloud Directory IDP: %s", err)
+	}
+
+	log.Printf("[DEBUG] Got CloudDirectory IDP config: %+v", config)
+
+	d.Set("is_active", *config.IsActive)
+
+	if config.Config != nil {
+		d.Set("self_service_enabled", *config.Config.SelfServiceEnabled)
+
+		if config.Config.SignupEnabled != nil {
+			d.Set("signup_enabled", *config.Config.SignupEnabled)
+		}
+
+		if config.Config.IdentityField != nil {
+			d.Set("identity_field", *config.Config.IdentityField)
+		}
+
+		if config.Config.Interactions != nil {
+			d.Set("welcome_enabled", *config.Config.Interactions.WelcomeEnabled)
+			d.Set("reset_password_enabled", *config.Config.Interactions.ResetPasswordEnabled)
+			d.Set("reset_password_notification_enabled", *config.Config.Interactions.ResetPasswordNotificationEnable)
+			d.Set("identity_confirm_access_mode", *config.Config.Interactions.IdentityConfirmation.AccessMode)
+			d.Set("identity_confirm_methods", config.Config.Interactions.IdentityConfirmation.Methods)
+		}
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
@@ -110,7 +156,9 @@ func resourceAppIDIDPCloudDirectoryCreate(ctx context.Context, d *schema.Resourc
 		return diag.Errorf("Error applying Cloud Directory IDP configuration: %s", err)
 	}
 
-	return dataSourceAppIDIDPCloudDirectoryRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDIDPCloudDirectoryRead(ctx, d, m)
 }
 
 func resourceAppIDIDPCloudDirectoryUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
