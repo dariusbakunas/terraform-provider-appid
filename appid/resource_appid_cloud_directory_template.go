@@ -3,7 +3,9 @@ package appid
 import (
 	"context"
 	b64 "encoding/base64"
+	"fmt"
 	"log"
+	"strings"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -14,9 +16,12 @@ import (
 func resourceAppIDCloudDirectoryTemplate() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDCloudDirectoryTemplateCreate,
-		ReadContext:   dataSourceAppIDCloudDirectoryTemplateRead,
+		ReadContext:   resourceAppIDCloudDirectoryTemplateRead,
 		DeleteContext: resourceAppIDCloudDirectoryTemplateDelete,
 		UpdateContext: resourceAppIDCloudDirectoryTemplateUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -62,6 +67,51 @@ func resourceAppIDCloudDirectoryTemplate() *schema.Resource {
 	}
 }
 
+func resourceAppIDCloudDirectoryTemplateRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	id := d.Id()
+	idParts := strings.Split(id, "/")
+
+	tenantID := idParts[0]
+	templateName := idParts[1]
+	language := idParts[2]
+
+	c := m.(*appid.AppIDManagementV4)
+
+	template, _, err := c.GetTemplateWithContext(ctx, &appid.GetTemplateOptions{
+		TenantID:     getStringPtr(tenantID),
+		TemplateName: getStringPtr(templateName),
+		Language:     getStringPtr(language),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading Cloud Directory template: %s", err)
+	}
+
+	if template.Subject != nil {
+		d.Set("subject", *template.Subject)
+	}
+
+	if template.HTMLBody != nil {
+		d.Set("html_body", *template.HTMLBody)
+	}
+
+	if template.Base64EncodedHTMLBody != nil {
+		d.Set("base64_encoded_html_body", *template.Base64EncodedHTMLBody)
+	}
+
+	if template.PlainTextBody != nil {
+		d.Set("plain_text_body", *template.PlainTextBody)
+	}
+
+	d.Set("tenant_id", tenantID)
+	d.Set("template_name", templateName)
+	d.Set("language", language)
+
+	return diags
+}
+
 func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	templateName := d.Get("template_name").(string)
@@ -92,7 +142,9 @@ func resourceAppIDCloudDirectoryTemplateCreate(ctx context.Context, d *schema.Re
 		return diag.Errorf("Error updating Cloud Directory email template: %s", err)
 	}
 
-	return dataSourceAppIDCloudDirectoryTemplateRead(ctx, d, m)
+	d.SetId(fmt.Sprintf("%s/%s/%s", tenantID, templateName, language))
+
+	return resourceAppIDCloudDirectoryTemplateRead(ctx, d, m)
 }
 
 func resourceAppIDCloudDirectoryTemplateDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
