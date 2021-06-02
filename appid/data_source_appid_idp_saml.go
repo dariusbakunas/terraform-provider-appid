@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
@@ -109,7 +108,7 @@ func dataSourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	d.SetId(fmt.Sprintf("%s/idp/saml", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }

@@ -12,9 +12,12 @@ import (
 func resourceAppIDIDPSaml() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAppIDIDPSAMLCreate,
-		ReadContext:   dataSourceAppIDIDPSAMLRead,
+		ReadContext:   resourceAppIDIDPSAMLRead,
 		DeleteContext: resourceAppIDIDPSAMLDelete,
 		UpdateContext: resourceAppIDIDPSAMLUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:     schema.TypeString,
@@ -93,6 +96,35 @@ func resourceAppIDIDPSaml() *schema.Resource {
 	}
 }
 
+func resourceAppIDIDPSAMLRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	saml, _, err := c.GetSAMLIDPWithContext(ctx, &appid.GetSAMLIDPOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading SAML IDP: %s", err)
+	}
+
+	log.Printf("[DEBUG] Got SAML IDP config: %+v", saml)
+
+	d.Set("is_active", *saml.IsActive)
+
+	if saml.Config != nil {
+		if err := d.Set("config", flattenSAMLConfig(saml.Config)); err != nil {
+			return diag.Errorf("failed setting config: %s", err)
+		}
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	isActive := d.Get("is_active").(bool)
@@ -115,7 +147,9 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 		return diag.Errorf("Error applying SAML IDP configuration: %s", err)
 	}
 
-	return dataSourceAppIDIDPSAMLRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDIDPSAMLRead(ctx, d, m)
 }
 
 func expandAuthNContext(ctx []interface{}) *appid.SAMLConfigParamsAuthnContext {
