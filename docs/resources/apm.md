@@ -106,4 +106,10 @@ Optional:
 
 - **max_password_reuse** (Number)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_apm.apm <tenant_id>
+```

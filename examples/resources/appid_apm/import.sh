@@ -1,0 +1,1 @@
+terraform import appid_apm.apm <tenant_id>

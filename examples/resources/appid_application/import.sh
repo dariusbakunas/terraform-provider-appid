@@ -1,0 +1,1 @@
+terraform import appid_application.app <tenant_id>/<client_id>

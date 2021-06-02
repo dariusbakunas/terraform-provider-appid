@@ -43,4 +43,10 @@ resource "appid_application" "app" {
 - **profiles_url** (String)
 - **secret** (String, Sensitive) The `secret` is a secret known only to the application and the authorization server
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_application.app <tenant_id>/<client_id>
+```
