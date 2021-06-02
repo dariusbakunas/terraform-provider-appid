@@ -1,0 +1,1 @@
+terraform import appid_action_url.url "<tenant_id>/on_reset_password"

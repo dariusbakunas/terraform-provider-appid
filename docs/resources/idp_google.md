@@ -47,6 +47,6 @@ resource "appid_idp_google" "gg" {
 Required:
 
 - **application_id** (String) Google application id
-- **application_secret** (String) Google application secret
+- **application_secret** (String, Sensitive) Google application secret
 
 

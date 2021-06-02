@@ -47,6 +47,6 @@ resource "appid_idp_facebook" "fb" {
 Required:
 
 - **application_id** (String) Facebook application id
-- **application_secret** (String) Facebook application secret
+- **application_secret** (String, Sensitive) Facebook application secret
 
 

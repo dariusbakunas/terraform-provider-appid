@@ -33,4 +33,10 @@ resource "appid_action_url" "url" {
 
 - **id** (String) The ID of this resource.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_action_url.url "<tenant_id>/on_reset_password"
+```
