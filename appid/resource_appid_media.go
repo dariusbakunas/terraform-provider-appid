@@ -16,10 +16,13 @@ import (
 func resourceAppIDMedia() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Custom logo image of the login widget. *Note:* Currently there is no supported way of deleting the image",
-		ReadContext:   dataSourceAppIDMediaRead,
+		ReadContext:   resourceAppIDMediaRead,
 		CreateContext: resourceAppIDMediaCreate,
 		UpdateContext: resourceAppIDMediaCreate,
 		DeleteContext: resourceAppIDMediaDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -38,6 +41,27 @@ func resourceAppIDMedia() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceAppIDMediaRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	media, _, err := c.GetMediaWithContext(ctx, &appid.GetMediaOptions{
+		TenantID: &tenantID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID media: %s", err)
+	}
+
+	if media.Image != nil {
+		d.Set("logo_url", *media.Image)
+	}
+
+	d.Set("tenant_id", tenantID)
+	return diags
 }
 
 func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -86,7 +110,9 @@ func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m int
 		return diag.Errorf("Error uploading AppID media: %s", err)
 	}
 
-	return dataSourceAppIDMediaRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDMediaRead(ctx, d, m)
 }
 
 func resourceAppIDMediaDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
