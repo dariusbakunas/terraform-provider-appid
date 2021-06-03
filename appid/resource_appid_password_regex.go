@@ -14,9 +14,12 @@ func resourceAppIDPasswordRegex() *schema.Resource {
 	return &schema.Resource{
 		Description:   "The regular expression used by App ID for password strength validation",
 		CreateContext: resourceAppIDPasswordRegexCreate,
-		ReadContext:   dataSourceAppIDPasswordRegexRead,
+		ReadContext:   resourceAppIDPasswordRegexRead,
 		DeleteContext: resourceAppIDPasswordRegexDelete,
 		UpdateContext: resourceAppIDPasswordRegexUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -43,6 +46,37 @@ func resourceAppIDPasswordRegex() *schema.Resource {
 	}
 }
 
+func resourceAppIDPasswordRegexRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	tenantID := d.Id()
+	c := m.(*appid.AppIDManagementV4)
+
+	pw, _, err := c.GetCloudDirectoryPasswordRegexWithContext(ctx, &appid.GetCloudDirectoryPasswordRegexOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading Cloud Directory password regex: %s", err)
+	}
+
+	if pw.Base64EncodedRegex != nil {
+		d.Set("base64_encoded_regex", *pw.Base64EncodedRegex)
+	}
+
+	if pw.Regex != nil {
+		d.Set("regex", *pw.Regex)
+	}
+
+	if pw.ErrorMessage != nil {
+		d.Set("error_message", *pw.ErrorMessage)
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
+}
+
 func resourceAppIDPasswordRegexCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 	regex := d.Get("regex").(string)
@@ -64,7 +98,9 @@ func resourceAppIDPasswordRegexCreate(ctx context.Context, d *schema.ResourceDat
 		return diag.Errorf("Error setting Cloud Directory password regex: %s", err)
 	}
 
-	return dataSourceAppIDPasswordRegexRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDPasswordRegexRead(ctx, d, m)
 }
 
 func resourceAppIDPasswordRegexUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
