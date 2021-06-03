@@ -134,8 +134,11 @@ func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m inte
 
 	c := m.(*appid.AppIDManagementV4)
 
-	roleID := d.Id()
-	tenantID := d.Get("tenant_id").(string)
+	id := d.Id()
+	idParts := strings.Split(id, "/")
+
+	tenantID := idParts[0]
+	roleID := idParts[1]
 
 	log.Printf("[DEBUG] Deleting AppID role: %s", roleID)
 
