@@ -1,4 +1,8 @@
-# Terraform AppID Provider Version 1 Upgrade Guide
+---
+subcategory: ""
+page_title: "Terraform AppID Provider Version 1 Upgrade Guide"
+description: ""
+---
 
 Version 1.0.0 of the AppID provider for Terraform is a major release and includes some breaking changes.
 Few resources had their ID format changed, to support new Terraform import functionality.
