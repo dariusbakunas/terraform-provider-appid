@@ -49,4 +49,10 @@ Required:
 - **application_id** (String) Google application id
 - **application_secret** (String, Sensitive) Google application secret
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_idp_google.gg <tenant_id>
+```

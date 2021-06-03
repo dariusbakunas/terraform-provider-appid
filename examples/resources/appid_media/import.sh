@@ -1,0 +1,1 @@
+terraform import appid_media.media <tenant_id>

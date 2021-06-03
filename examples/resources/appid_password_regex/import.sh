@@ -1,0 +1,1 @@
+terraform import appid_password_regex.rgx <tenant_id>

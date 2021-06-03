@@ -1,0 +1,1 @@
+terraform import appid_idp_custom.idp <tenant_id>

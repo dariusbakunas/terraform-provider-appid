@@ -1,0 +1,1 @@
+terraform import appid_idp_saml.saml <tenant_id>

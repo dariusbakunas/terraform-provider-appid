@@ -1,0 +1,1 @@
+terraform import appid_mfa.mfa <tenant_id>

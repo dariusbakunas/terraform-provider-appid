@@ -1,0 +1,1 @@
+terraform import appid_cloud_directory_template.tpl <tenant_id>/WELCOME/en

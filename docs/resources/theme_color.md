@@ -31,4 +31,10 @@ resource "appid_theme_color" "color" {
 
 - **id** (String) The ID of this resource.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_theme_color.color <tenant_id>
+```

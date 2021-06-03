@@ -106,4 +106,10 @@ Optional:
 - **class** (List of String)
 - **comparison** (String)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_idp_saml.saml <tenant_id>
+```

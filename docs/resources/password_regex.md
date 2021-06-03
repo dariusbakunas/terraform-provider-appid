@@ -37,4 +37,10 @@ resource "appid_password_regex" "rgx" {
 
 - **base64_encoded_regex** (String) The regex expression rule for acceptable password encoded in base64
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_password_regex.rgx <tenant_id>
+```

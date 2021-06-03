@@ -35,4 +35,10 @@ resource "appid_languages" "langs" {
 
 - **id** (String) The ID of this resource.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_languages.langs <tenant_id>
+```

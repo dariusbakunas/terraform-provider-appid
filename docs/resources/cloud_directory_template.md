@@ -42,4 +42,10 @@ resource "appid_cloud_directory_template" "tpl" {
 
 - **base64_encoded_html_body** (String) The HTML body of the email encoded in Base64
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_cloud_directory_template.tpl <tenant_id>/WELCOME/en
+```

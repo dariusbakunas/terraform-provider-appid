@@ -1,0 +1,1 @@
+terraform import appid_theme_color.color <tenant_id>

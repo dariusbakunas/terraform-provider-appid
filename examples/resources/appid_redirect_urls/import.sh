@@ -1,0 +1,1 @@
+terraform import appid_redirect_urls.urls <tenant_id>

@@ -35,4 +35,10 @@ resource "appid_media" "media" {
 
 - **logo_url** (String) AppID Login logo URL
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_media.media <tenant_id>
+```

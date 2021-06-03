@@ -69,4 +69,10 @@ Required:
 - **application_id** (String) Application `client_id`
 - **scopes** (List of String)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_role.role <tenant_id>/<role_id>
+```

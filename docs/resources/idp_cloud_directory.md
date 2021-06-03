@@ -44,4 +44,10 @@ resource "appid_idp_cloud_directory" "cd" {
 - **signup_enabled** (Boolean)
 - **welcome_enabled** (Boolean)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_idp_cloud_directory.cd <tenant_id>
+```

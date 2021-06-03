@@ -1,0 +1,1 @@
+terraform import appid_languages.langs <tenant_id>

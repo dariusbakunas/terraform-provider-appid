@@ -82,4 +82,10 @@ Optional:
 - **destination_claim** (String)
 - **source_claim** (String)
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import appid_token_config.tc <tenant_id>
+```

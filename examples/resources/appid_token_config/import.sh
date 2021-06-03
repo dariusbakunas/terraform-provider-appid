@@ -1,0 +1,1 @@
+terraform import appid_token_config.tc <tenant_id>

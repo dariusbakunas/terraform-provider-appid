@@ -1,0 +1,1 @@
+terraform import appid_idp_cloud_directory.cd <tenant_id>

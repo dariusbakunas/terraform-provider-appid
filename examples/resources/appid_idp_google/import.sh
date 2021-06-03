@@ -1,0 +1,1 @@
+terraform import appid_idp_google.gg <tenant_id>
