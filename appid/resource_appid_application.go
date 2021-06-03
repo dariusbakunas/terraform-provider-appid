@@ -80,12 +80,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	name := d.Get("name").(string)
 	appType := d.Get("type").(string)
 
-	var scopes = make([]string, 0)
-	if data, ok := d.GetOk("scopes"); ok {
-		for _, scope := range data.([]interface{}) {
-			scopes = append(scopes, scope.(string))
-		}
-	}
+	scopes := expandStringList(d.Get("scopes").([]interface{}))
 
 	c := m.(*appid.AppIDManagementV4)
 
@@ -178,9 +173,24 @@ func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData,
 		if err != nil {
 			return diag.Errorf("Error updating AppID application: %s", err)
 		}
-
-		log.Printf("[DEBUG] Finished updating AppID application: %s", d.Id())
 	}
 
+	if d.HasChange("scopes") {
+		scopes := expandStringList(d.Get("scopes").([]interface{}))
+
+		scopeOpts := &appid.PutApplicationsScopesOptions{
+			TenantID: &tenantID,
+			ClientID: &clientID,
+			Scopes:   scopes,
+		}
+
+		_, _, err := c.PutApplicationsScopesWithContext(ctx, scopeOpts)
+
+		if err != nil {
+			return diag.Errorf("Error updating application scopes: %s", err)
+		}
+	}
+
+	log.Printf("[DEBUG] Finished updating AppID application: %s", d.Id())
 	return dataSourceAppIDApplicationRead(ctx, d, m)
 }
