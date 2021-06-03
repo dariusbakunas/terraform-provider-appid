@@ -16,6 +16,9 @@ func resourceAppIDTokenConfig() *schema.Resource {
 		ReadContext:   resourceAppIDTokenConfigRead,
 		UpdateContext: resourceAppIDTokenConfigUpdate,
 		DeleteContext: resourceAppIDTokenConfigDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Description: "The service `tenantId`",
@@ -125,7 +128,7 @@ func resourceAppIDTokenConfigCreate(ctx context.Context, d *schema.ResourceData,
 func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	tenantID := d.Get("tenant_id").(string)
+	tenantID := d.Id()
 
 	c := m.(*appid.AppIDManagementV4)
 
@@ -174,6 +177,8 @@ func resourceAppIDTokenConfigRead(ctx context.Context, d *schema.ResourceData, m
 			return diag.FromErr(err)
 		}
 	}
+
+	d.Set("tenant_id", tenantID)
 
 	return diags
 }
