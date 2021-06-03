@@ -2,6 +2,7 @@ package appid
 
 import (
 	"context"
+	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -73,7 +74,6 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 		return diag.Errorf("Error loading AppID role: %s", err)
 	}
 
-	d.SetId(*role.ID)
 	d.Set("name", *role.Name)
 
 	if role.Description != nil {
@@ -81,6 +81,8 @@ func dataSourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	d.Set("access", flattenRoleAccess(role.Access))
+
+	d.SetId(fmt.Sprintf("%s/%s", tenantID, *role.ID))
 
 	return diags
 }

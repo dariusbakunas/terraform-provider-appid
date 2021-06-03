@@ -2,7 +2,9 @@ package appid
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -13,9 +15,12 @@ func resourceAppIDRole() *schema.Resource {
 	return &schema.Resource{
 		Description:   "A role is a collection of `scopes` that allow varying permissions to different types of app users",
 		CreateContext: resourceAppIDRoleCreate,
-		ReadContext:   dataSourceAppIDRoleRead,
+		ReadContext:   resourceAppIDRoleRead,
 		DeleteContext: resourceAppIDRoleDelete,
 		UpdateContext: resourceAppIDRoleUpdate,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"role_id": {
 				Type:        schema.TypeString,
@@ -62,6 +67,40 @@ func resourceAppIDRole() *schema.Resource {
 	}
 }
 
+func resourceAppIDRoleRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	c := m.(*appid.AppIDManagementV4)
+
+	id := d.Id()
+	idParts := strings.Split(id, "/")
+
+	tenantID := idParts[0]
+	roleID := idParts[1]
+
+	role, _, err := c.GetRoleWithContext(ctx, &appid.GetRoleOptions{
+		RoleID:   &roleID,
+		TenantID: &tenantID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error loading AppID role: %s", err)
+	}
+
+	d.Set("name", *role.Name)
+
+	if role.Description != nil {
+		d.Set("description", *role.Description)
+	}
+
+	d.Set("access", flattenRoleAccess(role.Access))
+
+	d.Set("tenant_id", tenantID)
+	d.Set("role_id", roleID)
+
+	return diags
+}
+
 func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	tenantID := d.Get("tenant_id").(string)
 
@@ -85,10 +124,9 @@ func resourceAppIDRoleCreate(ctx context.Context, d *schema.ResourceData, m inte
 		return diag.Errorf("Error creating Cloud Directory role: %s", err)
 	}
 
-	d.SetId(*role.ID)
-	d.Set("role_id", *role.ID)
+	d.SetId(fmt.Sprintf("%s/%s", tenantID, *role.ID))
 
-	return dataSourceAppIDRoleRead(ctx, d, m)
+	return resourceAppIDRoleRead(ctx, d, m)
 }
 
 func resourceAppIDRoleDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
