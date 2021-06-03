@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -46,7 +45,7 @@ func dataSourceAppIDThemeColorRead(ctx context.Context, d *schema.ResourceData, 
 		d.Set("header_color", *colors.HeaderColor)
 	}
 
-	d.SetId(fmt.Sprintf("%s/themeColors", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }

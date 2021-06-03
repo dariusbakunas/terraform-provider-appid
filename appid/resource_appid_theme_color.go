@@ -16,8 +16,11 @@ func resourceAppIDThemeColor() *schema.Resource {
 		Description:   "Colors of the App ID login widget",
 		CreateContext: resourceAppIDThemeColorCreate,
 		UpdateContext: resourceAppIDThemeColorCreate,
-		ReadContext:   dataSourceAppIDThemeColorRead,
+		ReadContext:   resourceAppIDThemeColorRead,
 		DeleteContext: resourceAppIDThemeColorDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:        schema.TypeString,
@@ -30,6 +33,30 @@ func resourceAppIDThemeColor() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceAppIDThemeColorRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	c := m.(*appid.AppIDManagementV4)
+
+	tenantID := d.Id()
+
+	colors, _, err := c.GetThemeColorWithContext(ctx, &appid.GetThemeColorOptions{
+		TenantID: &tenantID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID theme colors: %s", err)
+	}
+
+	if colors.HeaderColor != nil {
+		d.Set("header_color", *colors.HeaderColor)
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
 }
 
 func resourceAppIDThemeColorCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -50,7 +77,9 @@ func resourceAppIDThemeColorCreate(ctx context.Context, d *schema.ResourceData, 
 		return diag.Errorf("Error setting AppID theme color: %s", err)
 	}
 
-	return dataSourceAppIDThemeColorRead(ctx, d, m)
+	d.SetId(tenantID)
+
+	return resourceAppIDThemeColorRead(ctx, d, m)
 }
 
 func resourceAppIDThemeColorDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
