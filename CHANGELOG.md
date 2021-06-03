@@ -1,4 +1,52 @@
 
+<a name="v1.0.0"></a>
+## [v1.0.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.10.0...v1.0.0)
+
+> 2021-06-02
+
+### Feat
+
+* add import support for appid_token_config resource
+* add import support for appid_theme_color resource
+* add import support for appid_role resource
+* add import support for appid_redirect_urls resource
+* add import support for appid_password_regex
+* add import support for appid_mfa resource
+* add import support for appid_media resource
+* add import support for appid_languages resource
+* add import support for appid_idp_saml resource
+* add import support for appid_idp_google
+* add import support for appid_idp_facebook resource
+* add import support for idp_cloud_directory resourccec
+* add import support for appid_idp_custom resource
+* add import support for cd template resource
+* add import support for appid_audit_status resource
+* add import support to appid application resource
+* deprecate application ids datasource
+* add import support for apm resource
+* add action_url import support
+
+### Fix
+
+* role deletion logic
+* mark sensitive fields
+
+### Refactor
+
+* add more error details
+
+
+<a name="v0.10.0"></a>
+## [v0.10.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.9.0...v0.10.0)
+
+> 2021-06-01
+
+### Feat
+
+* added languages resource
+* added languages datasource
+
+
 <a name="v0.9.0"></a>
 ## [v0.9.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.8.1...v0.9.0)
 
