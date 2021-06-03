@@ -2,7 +2,6 @@ package appid
 
 import (
 	"context"
-	"fmt"
 
 	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -45,7 +44,7 @@ func dataSourceAppIDMFARead(ctx context.Context, d *schema.ResourceData, m inter
 		d.Set("is_active", *mfa.IsActive)
 	}
 
-	d.SetId(fmt.Sprintf("%s/mfa", tenantID))
+	d.SetId(tenantID)
 
 	return diags
 }
