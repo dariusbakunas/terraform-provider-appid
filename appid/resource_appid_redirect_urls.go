@@ -12,9 +12,12 @@ func resourceAppIDRedirectURLs() *schema.Resource {
 	return &schema.Resource{
 		Description:   "Redirect URIs that can be used as callbacks of App ID authentication flow",
 		CreateContext: resourceAppIDRedirectURLsCreate,
-		ReadContext:   dataSourceAppIDRedirectURLsRead,
+		ReadContext:   resourceAppIDRedirectURLsRead,
 		UpdateContext: resourceAppIDRedirectURLsUpdate,
 		DeleteContext: resourceAppIDRedirectURLsDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"tenant_id": {
 				Type:        schema.TypeString,
@@ -32,6 +35,29 @@ func resourceAppIDRedirectURLs() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceAppIDRedirectURLsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	c := m.(*appid.AppIDManagementV4)
+
+	tenantID := d.Id()
+
+	urls, _, err := c.GetRedirectUrisWithContext(ctx, &appid.GetRedirectUrisOptions{
+		TenantID: getStringPtr(tenantID),
+	})
+	if err != nil {
+		return diag.Errorf("Error loading redirect urls: %s", err)
+	}
+
+	if err := d.Set("urls", urls.RedirectUris); err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.Set("tenant_id", tenantID)
+
+	return diags
 }
 
 func resourceAppIDRedirectURLsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -53,7 +79,7 @@ func resourceAppIDRedirectURLsCreate(ctx context.Context, d *schema.ResourceData
 	}
 
 	d.SetId(tenantID)
-	return nil
+	return resourceAppIDRedirectURLsRead(ctx, d, m)
 }
 
 func resourceAppIDRedirectURLsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
