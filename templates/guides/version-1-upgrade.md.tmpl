@@ -9,7 +9,7 @@ Few resources had their ID format changed, to support new Terraform import funct
 
 Resources affected:
 
-* **appid_apm** (id changed from `<tenant_id>/apm` to `<tenant_id>)
+* **appid_apm** (id changed from `<tenant_id>/apm` to `<tenant_id>`)
 * **appid_audit_status** (id changed from `<tenant_id>/auditStatus` to `<tenant_id>`)
 * **appid_idp_cloud_directory** (id changed from `<tenant_id>/idp/cloud_directory` to `<tenant_id>`)
 * **appid_idp_custom** (id changed from `<tenant_id>/idp/custom_idp` to `<tenant_id>`)
