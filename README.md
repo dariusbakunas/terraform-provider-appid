@@ -93,7 +93,7 @@ export TESTARGS="-run TestAccAppIDActionURLDataSource_basic"
 
 3. To push changes to `gh-pages` branch, run `mkdocs gh-deploy`
 
-#### Debugging
+### Debugging
 
 Run your debugger (eg. [delve](https://github.com/go-delve/delve)), and pass it the provider binary as the command to run, specifying whatever flags, environment variables, or other input is necessary to start the provider in debug mode:
 
