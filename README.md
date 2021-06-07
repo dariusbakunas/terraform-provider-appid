@@ -92,3 +92,37 @@ export TESTARGS="-run TestAccAppIDActionURLDataSource_basic"
 2. To serve mk-docs locally, run `mkdocs serve`.
 
 3. To push changes to `gh-pages` branch, run `mkdocs gh-deploy`
+
+#### Debugging
+
+Run your debugger (eg. [delve](https://github.com/go-delve/delve)), and pass it the provider binary as the command to run, specifying whatever flags, environment variables, or other input is necessary to start the provider in debug mode:
+
+```bash
+dlv exec --headless ~/.terraform.d/plugins/ibm.com/dariusbakunas/appid/0.1/darwin_amd64/terraform-provider-appid -- --debug
+```
+
+Connect your debugger (whether it's your IDE or the debugger client) to the debugger server. Example launch configuration for VSCode:
+
+```json
+{
+    "apiVersion": 1,
+    "name": "Debug",
+    "type": "go",
+    "request": "attach",
+    "mode": "remote",
+    "port": 49816, // get this port from `dlv exec...` output 
+    "host": "127.0.0.1",
+    "showLog": true,
+    //"trace": "verbose",            
+}
+```
+
+Have it continue execution and it will print output like the following to stdout:
+
+```bash
+Provider started, to attach Terraform set the TF_REATTACH_PROVIDERS env var:
+
+        TF_REATTACH_PROVIDERS='{"dariusbakunas/appid":{"Protocol":"grpc","Pid":36174,"Test":true,"Addr":{"Network":"unix","String":"/var/folders/mq/00hw97gj08323ybqfm763plr0000gn/T/plugin703832405"}}}'
+```
+
+Copy the line starting with `TF_REATTACH_PROVIDERS` from your provider's output. Either export it, or prefix every Terraform command with it. Run Terraform as usual. Any breakpoints you have set will halt execution and show you the current variable values.
