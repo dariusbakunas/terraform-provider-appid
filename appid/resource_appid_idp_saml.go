@@ -172,7 +172,9 @@ func expandSAMLConfig(cfg []interface{}) *appid.SAMLConfigParams {
 		config.Certificates = []string{}
 
 		for _, cert := range certificates.([]interface{}) {
-			config.Certificates = append(config.Certificates, cert.(string))
+			if cert != nil {
+				config.Certificates = append(config.Certificates, cert.(string))
+			}
 		}
 	}
 
