@@ -137,7 +137,9 @@ func resourceAppIDIDPSAMLCreate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	if isActive {
-		config.Config = expandSAMLConfig(d.Get("config").([]interface{}))
+		if cfg, ok := d.GetOk("config"); ok {
+			config.Config = expandSAMLConfig(cfg.([]interface{}))
+		}
 	}
 
 	log.Printf("[DEBUG] Applying SAML config: %v", config)
@@ -161,10 +163,12 @@ func expandAuthNContext(ctx []interface{}) *appid.SAMLConfigParamsAuthnContext {
 
 	mContext := ctx[0].(map[string]interface{})
 
-	context.Comparison = getStringPtr(mContext["comparison"].(string))
+	if comparison, ok := mContext["comparison"]; ok {
+		context.Comparison = getStringPtr(comparison.(string))
+	}
 
-	if class, ok := mContext["class"].([]interface{}); ok && len(class) > 0 {
-		context.Class = expandStringList(class)
+	if class, ok := mContext["class"]; ok {
+		context.Class = expandStringList(class.([]interface{}))
 	}
 
 	return context
@@ -181,29 +185,34 @@ func expandSAMLConfig(cfg []interface{}) *appid.SAMLConfigParams {
 
 	config.EntityID = getStringPtr(mCfg["entity_id"].(string))
 	config.SignInURL = getStringPtr(mCfg["sign_in_url"].(string))
-	config.DisplayName = getStringPtr(mCfg["display_name"].(string))
 
-	if encResponse, ok := mCfg["encrypt_response"].(bool); ok {
-		config.EncryptResponse = getBoolPtr(encResponse)
+	if dispName, ok := mCfg["display_name"]; ok {
+		config.DisplayName = getStringPtr(dispName.(string))
 	}
 
-	if signRequest, ok := mCfg["sign_request"].(bool); ok {
-		config.SignRequest = getBoolPtr(signRequest)
+	if encResponse, ok := mCfg["encrypt_response"]; ok {
+		config.EncryptResponse = getBoolPtr(encResponse.(bool))
 	}
 
-	if includeScoping, ok := mCfg["include_scoping"].(bool); ok {
-		config.IncludeScoping = getBoolPtr(includeScoping)
+	if signRequest, ok := mCfg["sign_request"]; ok {
+		config.SignRequest = getBoolPtr(signRequest.(bool))
 	}
 
-	if certificates, ok := mCfg["certificates"].([]interface{}); ok && len(certificates) > 0 {
+	if includeScoping, ok := mCfg["include_scoping"]; ok {
+		config.IncludeScoping = getBoolPtr(includeScoping.(bool))
+	}
+
+	if certificates, ok := mCfg["certificates"]; ok {
 		config.Certificates = []string{}
 
-		for _, cert := range certificates {
+		for _, cert := range certificates.([]interface{}) {
 			config.Certificates = append(config.Certificates, cert.(string))
 		}
 	}
 
-	config.AuthnContext = expandAuthNContext(mCfg["authn_context"].([]interface{}))
+	if context, ok := mCfg["authn_context"]; ok {
+		config.AuthnContext = expandAuthNContext(context.([]interface{}))
+	}
 
 	return config
 }
