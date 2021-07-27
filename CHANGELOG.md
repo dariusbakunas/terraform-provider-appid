@@ -1,4 +1,169 @@
 
+<a name="v1.0.6"></a>
+## [v1.0.6](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.5...v1.0.6)
+
+> 2021-07-27
+
+### Refactor
+
+* switch to official appid go sdk
+
+
+<a name="v1.0.5"></a>
+## [v1.0.5](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.10.3...v1.0.5)
+
+> 2021-06-22
+
+### Feat
+
+* add debug support
+* add import support for appid_token_config resource
+* add import support for appid_theme_color resource
+* add import support for appid_role resource
+* add import support for appid_redirect_urls resource
+* add import support for appid_password_regex
+* add import support for appid_mfa resource
+* add import support for appid_media resource
+* add import support for appid_languages resource
+* add import support for appid_idp_saml resource
+* add import support for appid_idp_google
+* add import support for appid_idp_facebook resource
+* add import support for idp_cloud_directory resourccec
+* add import support for appid_idp_custom resource
+* add import support for cd template resource
+* add import support for appid_audit_status resource
+* add import support to appid application resource
+* deprecate application ids datasource
+* add import support for apm resource
+* add action_url import support
+
+### Fix
+
+* role deletion logic
+* mark sensitive fields
+
+### Refactor
+
+* add more error details
+
+
+<a name="v0.10.3"></a>
+## [v0.10.3](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.4...v0.10.3)
+
+> 2021-06-22
+
+### Fix
+
+* another nil check
+
+
+<a name="v1.0.4"></a>
+## [v1.0.4](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.10.2...v1.0.4)
+
+> 2021-06-22
+
+### Feat
+
+* add debug support
+* add import support for appid_token_config resource
+* add import support for appid_theme_color resource
+* add import support for appid_role resource
+* add import support for appid_redirect_urls resource
+* add import support for appid_password_regex
+* add import support for appid_mfa resource
+* add import support for appid_media resource
+* add import support for appid_languages resource
+* add import support for appid_idp_saml resource
+* add import support for appid_idp_google
+* add import support for appid_idp_facebook resource
+* add import support for idp_cloud_directory resourccec
+* add import support for appid_idp_custom resource
+* add import support for cd template resource
+* add import support for appid_audit_status resource
+* add import support to appid application resource
+* deprecate application ids datasource
+* add import support for apm resource
+* add action_url import support
+
+### Fix
+
+* role deletion logic
+* mark sensitive fields
+
+### Refactor
+
+* add more error details
+
+
+<a name="v0.10.2"></a>
+## [v0.10.2](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.3...v0.10.2)
+
+> 2021-06-22
+
+### Fix
+
+* improve optional handling for saml idp resource
+
+
+<a name="v1.0.3"></a>
+## [v1.0.3](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.2...v1.0.3)
+
+> 2021-06-03
+
+
+<a name="v1.0.2"></a>
+## [v1.0.2](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.1...v1.0.2)
+
+> 2021-06-03
+
+
+<a name="v1.0.1"></a>
+## [v1.0.1](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.10.1...v1.0.1)
+
+> 2021-06-03
+
+### Feat
+
+* add import support for appid_token_config resource
+* add import support for appid_theme_color resource
+* add import support for appid_role resource
+* add import support for appid_redirect_urls resource
+* add import support for appid_password_regex
+* add import support for appid_mfa resource
+* add import support for appid_media resource
+* add import support for appid_languages resource
+* add import support for appid_idp_saml resource
+* add import support for appid_idp_google
+* add import support for appid_idp_facebook resource
+* add import support for idp_cloud_directory resourccec
+* add import support for appid_idp_custom resource
+* add import support for cd template resource
+* add import support for appid_audit_status resource
+* add import support to appid application resource
+* deprecate application ids datasource
+* add import support for apm resource
+* add action_url import support
+
+### Fix
+
+* role deletion logic
+* mark sensitive fields
+
+### Refactor
+
+* add more error details
+
+
+<a name="v0.10.1"></a>
+## [v0.10.1](https://github.com/dariusbakunas/terraform-provider-appid/compare/v1.0.0...v0.10.1)
+
+> 2021-06-03
+
+### Fix
+
+* add missing application scope update
+
+
 <a name="v1.0.0"></a>
 ## [v1.0.0](https://github.com/dariusbakunas/terraform-provider-appid/compare/v0.10.0...v1.0.0)
 
