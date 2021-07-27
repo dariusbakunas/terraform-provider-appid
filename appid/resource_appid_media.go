@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
+	appid "github.com/IBM/appid-management-go-sdk/appidmanagementv4"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"

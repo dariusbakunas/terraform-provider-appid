@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"path"
 
-	appid "github.com/IBM/appid-go-sdk/appidmanagementv4"
+	appid "github.com/IBM/appid-management-go-sdk/appidmanagementv4"
 	"github.com/IBM/go-sdk-core/core"
 
 	//v5core "github.com/IBM/go-sdk-core/v5/core"
