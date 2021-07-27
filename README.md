@@ -98,8 +98,11 @@ export TESTARGS="-run TestAccAppIDActionURLDataSource_basic"
 Run your debugger (eg. [delve](https://github.com/go-delve/delve)), and pass it the provider binary as the command to run, specifying whatever flags, environment variables, or other input is necessary to start the provider in debug mode:
 
 ```bash
-dlv exec --headless ~/.terraform.d/plugins/ibm.com/dariusbakunas/appid/0.1/darwin_amd64/terraform-provider-appid -- --debug
+make build-debug
+dlv exec --listen=:54526 --headless ./terraform-provider-appid -- --debug
 ```
+
+Note: IntelliJ may need additional flag `--api-version=2`
 
 Connect your debugger (whether it's your IDE or the debugger client) to the debugger server. Example launch configuration for VSCode:
 
