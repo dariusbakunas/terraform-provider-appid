@@ -29,9 +29,30 @@ To compile the provider, run make build. This will build the provider and put th
 make build
 ```
 
-Run `make install` to install provider binary under `~/.terraform.d/plugins/dariusbakunas/appid/{VERSION}/{OS_ARCH}`.
+To test new binary, create `.terraformrc` in your home folder, with contents:
 
-After it is installed, terraform should be able to detect it during `terraform init` phase.
+```terraform
+provider_installation {
+	dev_overrides {
+    	"registry.terraform.io/dariusbakunas/appid" = "<PATH TO BINARY (location of this git clone)>/terraform-provider-appid"
+  	}
+
+  	direct {}
+}
+```
+
+You will get a warning next time you run terraform:
+```bash
+╷
+│ Warning: Provider development overrides are in effect
+│ 
+│ The following provider development overrides are set in the CLI configuration:
+│  - dariusbakunas/appid in <...>/terraform-provider-appid
+│ 
+│ The behavior may therefore not match any released version of the provider and applying changes may cause the state to become incompatible with published releases.
+╵
+```
+When done, remove `.terraformrc` or comment out `dev_overrides` section.
 
 ### Testing
 
