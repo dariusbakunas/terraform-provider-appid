@@ -69,14 +69,14 @@ func dataSourceAppIDApplication() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type: schema.TypeString,
+							Type:        schema.TypeString,
 							Description: "Application role ID",
-							Computed: true,
+							Computed:    true,
 						},
 						"name": {
-							Type: schema.TypeString,
+							Type:        schema.TypeString,
 							Description: "Application role name",
-							Computed: true,
+							Computed:    true,
 						},
 					},
 				},
