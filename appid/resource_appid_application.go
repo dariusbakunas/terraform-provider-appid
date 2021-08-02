@@ -75,6 +75,14 @@ func resourceAppIDApplication() *schema.Resource {
 				},
 				Optional: true,
 			},
+			"roles": {
+				Description: "Role IDS for roles that you want to be assigned to application (this is different from role access)",
+				Type:        schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true,
+			},
 		},
 	}
 }
@@ -111,6 +119,27 @@ func resourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)
+
+	roles, _, err := c.GetApplicationRolesWithContext(ctx, &appid.GetApplicationRolesOptions{
+		TenantID: &tenantID,
+		ClientID: &clientID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID application roles: %s", err)
+	}
+
+	var appRoles []interface{}
+
+	if roles.Roles != nil {
+		for _, v := range roles.Roles {
+			appRoles = append(appRoles, map[string]interface{}{
+				"id": *v.ID,
+			})
+		}
+	}
+
+	d.Set("roles", appRoles)
 
 	if app.Name != nil {
 		d.Set("name", *app.Name)
@@ -152,6 +181,7 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 	appType := d.Get("type").(string)
 
 	scopes := expandStringList(d.Get("scopes").([]interface{}))
+	roles := expandStringList(d.Get("roles").([]interface{}))
 
 	c := m.(*appid.AppIDManagementV4)
 
@@ -184,6 +214,32 @@ func resourceAppIDApplicationCreate(ctx context.Context, d *schema.ResourceData,
 				TenantID: getStringPtr(tenantID),
 				ClientID: getStringPtr(*app.ClientID),
 			})
+			diags := diag.FromErr(err)
+
+			if deleteErr != nil {
+				log.Printf("[WARN] Failed cleaning up partially created application: %s/%s", *app.TenantID, *app.ClientID)
+				diags = append(diags, diag.FromErr(deleteErr)...)
+			}
+
+			return diags
+		}
+	}
+
+	if len(roles) != 0 {
+		_, _, err := c.PutApplicationsRolesWithContext(ctx, &appid.PutApplicationsRolesOptions{
+			TenantID: getStringPtr(tenantID),
+			ClientID: getStringPtr(*app.ClientID),
+			Roles: &appid.UpdateUserRolesParamsRoles{
+				Ids: roles,
+			},
+		})
+
+		if err != nil {
+			_, deleteErr := c.DeleteApplicationWithContext(ctx, &appid.DeleteApplicationOptions{
+				TenantID: getStringPtr(tenantID),
+				ClientID: getStringPtr(*app.ClientID),
+			})
+
 			diags := diag.FromErr(err)
 
 			if deleteErr != nil {
@@ -257,6 +313,22 @@ func resourceAppIDApplicationUpdate(ctx context.Context, d *schema.ResourceData,
 
 		if err != nil {
 			return diag.Errorf("Error updating application scopes: %s", err)
+		}
+	}
+
+	if d.HasChange("roles") {
+		roles := expandStringList(d.Get("roles").([]interface{}))
+
+		_, _, err := c.PutApplicationsRolesWithContext(ctx, &appid.PutApplicationsRolesOptions{
+			TenantID: &tenantID,
+			ClientID: &clientID,
+			Roles: &appid.UpdateUserRolesParamsRoles{
+				Ids: roles,
+			},
+		})
+
+		if err != nil {
+			return diag.Errorf("Error updating application roles: %s", err)
 		}
 	}
 

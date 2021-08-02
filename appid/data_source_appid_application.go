@@ -161,10 +161,10 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 }
 
 func flattenApplicationRoles(r []appid.GetUserRolesResponseRolesItem) []interface{} {
-	var s []interface{}
+	var result []interface{}
 
 	if r == nil {
-		return s
+		return result
 	}
 
 	for _, v := range r {
@@ -176,8 +176,8 @@ func flattenApplicationRoles(r []appid.GetUserRolesResponseRolesItem) []interfac
 			role["name"] = *v.Name
 		}
 
-		s = append(s, role)
+		result = append(result, role)
 	}
 
-	return s
+	return result
 }
