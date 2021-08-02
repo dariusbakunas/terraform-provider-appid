@@ -62,6 +62,25 @@ func dataSourceAppIDApplication() *schema.Resource {
 				},
 				Computed: true,
 			},
+			"roles": {
+				Description: "Defined roles for an application that is registered with an App ID instance",
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Description: "Application role ID",
+							Computed:    true,
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Description: "Application role name",
+							Computed:    true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -96,6 +115,19 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	log.Printf("[DEBUG] Read application scopes: %v", scopes)
 
+	roles, _, err := c.GetApplicationRolesWithContext(ctx, &appid.GetApplicationRolesOptions{
+		TenantID: &tenantID,
+		ClientID: &clientID,
+	})
+
+	if err != nil {
+		return diag.Errorf("Error getting AppID application roles: %s", err)
+	}
+
+	log.Printf("[DEBUG] Read application roles: %v", roles)
+
+	d.Set("roles", flattenApplicationRoles(roles.Roles))
+
 	if app.Name != nil {
 		d.Set("name", *app.Name)
 	}
@@ -126,4 +158,26 @@ func dataSourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData,
 
 	d.SetId(fmt.Sprintf("%s/%s", tenantID, clientID))
 	return diags
+}
+
+func flattenApplicationRoles(r []appid.GetUserRolesResponseRolesItem) []interface{} {
+	var result []interface{}
+
+	if r == nil {
+		return result
+	}
+
+	for _, v := range r {
+		role := map[string]interface{}{
+			"id": *v.ID,
+		}
+
+		if v.Name != nil {
+			role["name"] = *v.Name
+		}
+
+		result = append(result, role)
+	}
+
+	return result
 }

@@ -20,7 +20,7 @@ var iamBaseURL string
 func init() {
 	testTenantID = os.Getenv("APPID_TENANT_ID")
 	if testTenantID == "" {
-		testTenantID = "5fa344a8-d361-4bc2-9051-58ca253f4b2b"
+		testTenantID = "4be72312-63b7-45fa-9b58-3ae6cd2c90e7"
 		log.Printf("[INFO] Set the environment variable APPID_TENANT_ID for testing AppID resources else it is set to default '%s'", testTenantID)
 	}
 
