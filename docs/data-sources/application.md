@@ -37,8 +37,17 @@ data "appid_application" "app" {
 - **name** (String) The application name
 - **oauth_server_url** (String) Base URL for common OAuth endpoints, like `/authorization`, `/token` and `/publickeys`
 - **profiles_url** (String)
+- **roles** (Set of Object) Defined roles for an application that is registered with an App ID instance (see [below for nested schema](#nestedatt--roles))
 - **scopes** (List of String) A `scope` is a runtime action in your application that you register with IBM Cloud App ID to create an access permission
 - **secret** (String, Sensitive) The `secret` is a secret known only to the application and the authorization server
 - **type** (String) The type of application to be registered. Allowed types are `regularwebapp` and `singlepageapp`.
+
+<a id="nestedatt--roles"></a>
+### Nested Schema for `roles`
+
+Read-Only:
+
+- **id** (String)
+- **name** (String)
 
 
