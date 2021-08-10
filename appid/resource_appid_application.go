@@ -133,13 +133,13 @@ func resourceAppIDApplicationRead(ctx context.Context, d *schema.ResourceData, m
 
 	if roles.Roles != nil {
 		for _, v := range roles.Roles {
-			appRoles = append(appRoles, map[string]interface{}{
-				"id": *v.ID,
-			})
+			appRoles = append(appRoles, *v.ID)
 		}
 	}
 
-	d.Set("roles", appRoles)
+	if err := d.Set("roles", appRoles); err != nil {
+		return diag.Errorf("Error setting application roles: %s", err)
+	}
 
 	if app.Name != nil {
 		d.Set("name", *app.Name)
