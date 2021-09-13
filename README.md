@@ -4,6 +4,8 @@
 
 # Terraform Provider for AppID
 
+**NOTE:** Most resources are now part of an official IBM terraform [provider](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs)
+
 Check `examples` folder for working examples
 
 [documentation](https://registry.terraform.io/providers/dariusbakunas/appid/latest/docs)
