@@ -101,7 +101,12 @@ func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m int
 		}
 
 		defer func() {
-			err := os.Remove(contentFile.Name())
+			err = contentFile.Close()
+			if err != nil {
+				log.Printf("[WARN] Error closing AppID media temporary file: %s", err)
+			}
+
+			err = os.Remove(contentFile.Name())
 			if err != nil {
 				log.Printf("[WARN] Error removing temporary AppID media source file: %s", err)
 			}
@@ -112,11 +117,6 @@ func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m int
 		}
 
 		sourcePath = contentFile.Name()
-
-		err = contentFile.Close()
-		if err != nil {
-			log.Printf("[WARN] Error closing AppID media temporary file: %s", err)
-		}
 	}
 
 	path, err := homedir.Expand(sourcePath)
