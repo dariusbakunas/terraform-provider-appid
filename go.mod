@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.15.0 // indirect
 	github.com/IBM/appid-management-go-sdk v0.0.0-20210727091553-7e0e5823e707
 	github.com/IBM/go-sdk-core v1.1.0
-	github.com/IBM/go-sdk-core/v5 v5.6.0 // indirect
+	github.com/IBM/go-sdk-core/v5 v5.6.3 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/aws/aws-sdk-go v1.38.40 // indirect

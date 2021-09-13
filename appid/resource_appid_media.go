@@ -2,6 +2,7 @@ package appid
 
 import (
 	"context"
+	"encoding/base64"
 	"io"
 	"log"
 	"net/http"
@@ -35,9 +36,16 @@ func resourceAppIDMedia() *schema.Resource {
 				Computed:    true,
 			},
 			"source": {
-				Description: "Path to logo image",
-				Type:        schema.TypeString,
-				Required:    true,
+				Description:   "Path to logo image",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"source_content"},
+			},
+			"source_content": {
+				Description:   "base64 encoded logo image contents",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"source"},
 			},
 		},
 	}
@@ -65,45 +73,86 @@ func resourceAppIDMediaRead(ctx context.Context, d *schema.ResourceData, m inter
 }
 
 func resourceAppIDMediaCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var contentFile io.ReadSeekCloser
+	var contentType string
+
 	tenantID := d.Get("tenant_id").(string)
-	source := d.Get("source").(string)
 	c := m.(*appid.AppIDManagementV4)
 
-	path, err := homedir.Expand(source)
+	source, sourceOK := d.GetOk("source")
+	sourcePath := source.(string)
+	content, contentOK := d.GetOk("source_content")
+
+	if !sourceOK && !contentOK {
+		return diag.Errorf("AppID media `source` or `source_content` must be specified")
+	}
+
+	if contentOK {
+		decoded, err := base64.StdEncoding.DecodeString(content.(string))
+
+		if err != nil {
+			// if this is not base64 encoded string use it as is
+			decoded = []byte(content.(string))
+		}
+
+		contentFile, err := os.CreateTemp(os.TempDir(), "appid-media-")
+		if err != nil {
+			return diag.Errorf("Error creating AppID media temporary file: %s", err)
+		}
+
+		defer func() {
+			err := os.Remove(contentFile.Name())
+			if err != nil {
+				log.Printf("[WARN] Error removing temporary AppID media source file: %s", err)
+			}
+		}()
+
+		if _, err = contentFile.Write(decoded); err != nil {
+			return diag.Errorf("Error writing source content to temporary file: %s", err)
+		}
+
+		sourcePath = contentFile.Name()
+
+		err = contentFile.Close()
+		if err != nil {
+			log.Printf("[WARN] Error closing AppID media temporary file: %s", err)
+		}
+	}
+
+	path, err := homedir.Expand(sourcePath)
 
 	if err != nil {
 		return diag.Errorf("Error parsing source: %s", err)
 	}
 
-	file, err := os.Open(path)
+	contentFile, err = os.Open(path)
 
 	if err != nil {
 		return diag.Errorf("Error opening AppID media source file: %s", err)
 	}
 
 	defer func() {
-		err := file.Close()
+		err := contentFile.Close()
 		if err != nil {
 			log.Printf("[WARN] Error closing AppID media source file: %s", err)
 		}
 	}()
 
-	fileContentType, err := detectFileContentType(file)
+	contentType, err = detectFileContentType(contentFile)
 
 	if err != nil {
 		return diag.Errorf("Error detecting source content type: %s", err)
 	}
 
-	if fileContentType != "image/png" && fileContentType != "image/jpg" {
-		return diag.Errorf("Only PNG and JPG images are supported, detected type: %s", fileContentType)
+	if contentType != "image/png" && contentType != "image/jpg" {
+		return diag.Errorf("Only PNG and JPG images are supported, detected type: %s", contentType)
 	}
 
-	log.Printf("[DEBUG] Uploading AppID media: %s", source)
 	_, err = c.PostMediaWithContext(ctx, &appid.PostMediaOptions{
 		TenantID:        &tenantID,
 		MediaType:       getStringPtr("logo"),
-		File:            file,
-		FileContentType: &fileContentType,
+		File:            contentFile,
+		FileContentType: &contentType,
 	})
 
 	if err != nil {

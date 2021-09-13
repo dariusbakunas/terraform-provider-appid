@@ -47,8 +47,8 @@ github.com/IBM/appid-management-go-sdk v0.0.0-20210727091553-7e0e5823e707/go.mod
 github.com/IBM/go-sdk-core v1.1.0 h1:pV73lZqr9r1xKb3h08c1uNG3AphwoV5KzUzhS+pfEqY=
 github.com/IBM/go-sdk-core v1.1.0/go.mod h1:2pcx9YWsIsZ3I7kH+1amiAkXvLTZtAq9kbxsfXilSoY=
 github.com/IBM/go-sdk-core/v5 v5.5.1/go.mod h1:Sn+z+qTDREQvCr+UFa22TqqfXNxx3o723y8GsfLV8e0=
-github.com/IBM/go-sdk-core/v5 v5.6.0 h1:sb1oZqfUnXgbtaAGgfAntm/nQ8u7qQ7bqngPUN2aoyI=
-github.com/IBM/go-sdk-core/v5 v5.6.0/go.mod h1:tt/B9rxLkRtglE7pvqLuYikgCXaZFL3btdruJaoUeek=
+github.com/IBM/go-sdk-core/v5 v5.6.3 h1:xj44tzfBnjGJXKthMeaIn9wcYH+z4dXTuhntsBp+NdQ=
+github.com/IBM/go-sdk-core/v5 v5.6.3/go.mod h1:tt/B9rxLkRtglE7pvqLuYikgCXaZFL3btdruJaoUeek=
 github.com/Masterminds/goutils v1.1.0 h1:zukEsf/1JZwCMgHiK3GZftabmxiCw4apj3a28RPBiVg=
 github.com/Masterminds/goutils v1.1.0/go.mod h1:8cTjp+g8YejhMuvIA5y2vz3BpJxksy863GQaJW2MFNU=
 github.com/Masterminds/semver v1.5.0 h1:H65muMkzWKEuNDnfl9d70GUjFniHKHRbFPGBuZ3QEww=
