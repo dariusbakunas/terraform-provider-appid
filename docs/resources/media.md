@@ -24,12 +24,13 @@ resource "appid_media" "media" {
 
 ### Required
 
-- **source** (String) Path to logo image
 - **tenant_id** (String) The service `tenantId`
 
 ### Optional
 
 - **id** (String) The ID of this resource.
+- **source** (String) Path to logo image
+- **source_content** (String) base64 encoded logo image contents
 
 ### Read-Only
 
